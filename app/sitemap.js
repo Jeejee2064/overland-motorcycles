@@ -1,4 +1,4 @@
-import { locales } from '../navigation';
+import { locales } from '../../navigation';
 
 export default function sitemap() {
   // Dynamic base URL - works in development and production
