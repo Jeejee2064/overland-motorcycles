@@ -1,0 +1,38 @@
+{
+  "HomePage": {
+    "title": "Bem-vindo à Overland Motorcycles",
+    "description": "Descubra motocicletas de aventura e equipamentos incríveis para sua jornada overland",
+    "hero": "Sua aventura começa aqui"
+  },
+  "AboutPage": {
+    "title": "Sobre a Overland Motorcycles",
+    "description": "Saiba mais sobre nossa paixão por motocicletas de aventura e viagens overland",
+    "content": "Somos dedicados a fornecer as melhores motocicletas e equipamentos para suas aventuras"
+  },
+  "ContactPage": {
+    "title": "Entre em Contato",
+    "description": "Entre em contato com nossos especialistas em motocicletas de aventura",
+    "content": "Adoraríamos ajudá-lo a planejar sua próxima aventura overland"
+  },
+  "Navigation": {
+    "home": "Início",
+    "about": "Sobre",
+    "contact": "Contato"
+  },
+  "LocaleSwitcher": {
+    "label": "Mudar idioma",
+    "en": "English",
+    "es": "Español",
+    "pt": "Português",
+    "fr": "Français"
+  },
+  "Metadata": {
+    "title": "Overland Motorcycles",
+    "description": "Motocicletas de aventura premium e equipamentos para viagens overland"
+  },
+  "NotFound": {
+    "title": "Página Não Encontrada",
+    "description": "Desculpe, não conseguimos encontrar a página que você está procurando.",
+    "backHome": "Voltar ao início"
+  }
+}

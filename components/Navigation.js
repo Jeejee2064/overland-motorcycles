@@ -1,0 +1,241 @@
+
+'use client'
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Menu, X } from 'lucide-react';
+
+const Navigation = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 20;
+      setScrolled(isScrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navItems = [
+    { name: 'The Fleet', href: '#' },
+    { name: 'Trips', href: '#' },
+    { name: 'Pricing', href: '#' },
+    { name: 'About', href: '#' },
+    { name: 'Contact', href: '#' }
+  ];
+
+  const toggleMenu = () => setIsOpen(!isOpen);
+
+  return (
+    <motion.nav
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled 
+          ? 'bg-gray-900/95 backdrop-blur-md shadow-2xl' 
+          : 'bg-transparent'
+      }`}
+    >
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/5 to-transparent pointer-events-none" />
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16 lg:h-20">
+          
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2 group">
+            <motion.div
+              whileHover={{ scale: 1.05, rotate: 5 }}
+              whileTap={{ scale: 0.95 }}
+              className="relative w-10 h-10 lg:w-12 lg:h-12"
+            >
+              <div className="absolute inset-0  rounded-lg opacity-20 group-hover:opacity-30 transition-opacity" />
+              <Image
+                src="/LOGO.svg"
+                alt="Logo"
+                fill
+                className="object-contain relative z-10"
+                priority
+              />
+            </motion.div>
+            <motion.span 
+              className="text-xl lg:text-2xl font-bold bg-gradient-to-br from-gray-50 to-gray-200 bg-clip-text text-transparent"
+              whileHover={{ scale: 1.02 }}
+            >
+              OVERLAND MOTORCYCLES
+            </motion.span>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-1 xl:space-x-2">
+            {navItems.map((item, index) => (
+              <motion.div
+                key={item.name}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 + 0.2 }}
+              >
+                <Link
+                  href={item.href}
+                  className="relative px-4 py-2 text-gray-300 hover:text-yellow-400 transition-colors duration-200 group"
+                >
+                  <span className="relative z-10 font-medium">{item.name}</span>
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-lg opacity-0 group-hover:opacity-100"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                  <motion.div
+                    className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full group-hover:left-0 transition-all duration-300"
+                  />
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* CTA Button (Desktop) */}
+          <motion.div
+            className="hidden lg:block"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <Link href="#" className="relative group">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-semibold rounded-lg shadow-lg overflow-hidden"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                />
+                <span className="relative z-10">Book Now</span>
+                <motion.div
+                  className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"
+                />
+              </motion.button>
+            </Link>
+          </motion.div>
+
+          {/* Mobile Menu Button */}
+          <motion.button
+            className="lg:hidden p-2 text-gray-300 hover:text-yellow-400 transition-colors"
+            onClick={toggleMenu}
+            whileTap={{ scale: 0.95 }}
+          >
+            <AnimatePresence mode="wait">
+              {isOpen ? (
+                <motion.div
+                  key="close"
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <X size={24} />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="menu"
+                  initial={{ rotate: 90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Menu size={24} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm lg:hidden"
+              onClick={toggleMenu}
+            />
+            
+            {/* Menu Panel */}
+            <motion.div
+              initial={{ opacity: 0, x: '100%' }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: '100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-80 bg-gray-900/95 backdrop-blur-md shadow-2xl lg:hidden z-50"
+            >
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent" />
+              
+              <div className="relative p-6 pt-20">
+                <div className="space-y-2">
+                  {navItems.map((item, index) => (
+                    <motion.div
+                      key={item.name}
+                      initial={{ opacity: 0, x: 50 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Link
+                        href={item.href}
+                        onClick={toggleMenu}
+                        className="flex items-center px-4 py-3 text-gray-300 hover:text-yellow-400 hover:bg-yellow-400/10 rounded-lg transition-all duration-200 group"
+                      >
+                        <span className="font-medium">{item.name}</span>
+                        <motion.div
+                          className="ml-auto opacity-0 group-hover:opacity-100"
+                          initial={{ x: -10 }}
+                          whileHover={{ x: 0 }}
+                        >
+                          →
+                        </motion.div>
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+                
+                {/* Mobile CTA */}
+                <motion.div
+                  className="mt-8"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                >
+                  <Link href="#" onClick={toggleMenu}>
+                    <motion.button
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="w-full px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-semibold rounded-lg shadow-lg relative overflow-hidden group"
+                    >
+                      <span className="relative z-10">Book Your Trip</span>
+                      <motion.div
+                        className="absolute inset-0 bg-white/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300"
+                      />
+                    </motion.button>
+                  </Link>
+                </motion.div>
+
+                {/* Decorative element */}
+                <div className="absolute bottom-6 left-6 right-6 h-px bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent" />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </motion.nav>
+  );
+};
+
+export default Navigation;
