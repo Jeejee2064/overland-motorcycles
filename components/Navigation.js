@@ -22,8 +22,8 @@ const Navigation = () => {
   }, []);
 
   const navItems = [
-    { name: 'The Fleet', href: '#' },
-    { name: 'Trips', href: '#' },
+    { name: 'The Fleet', href: '/Fleet' },
+    { name: 'Panama', href: '/Panama' },
     { name: 'Pricing', href: '#' },
     { name: 'About', href: '#' },
     { name: 'Contact', href: '#' }
@@ -49,20 +49,7 @@ const Navigation = () => {
           
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
-            <motion.div
-              whileHover={{ scale: 1.05, rotate: 5 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative w-10 h-10 lg:w-12 lg:h-12"
-            >
-              <div className="absolute inset-0  rounded-lg opacity-20 group-hover:opacity-30 transition-opacity" />
-              <Image
-                src="/LOGO.svg"
-                alt="Logo"
-                fill
-                className="object-contain relative z-10"
-                priority
-              />
-            </motion.div>
+           
             <motion.span 
               className="text-xl lg:text-2xl font-bold bg-gradient-to-br from-gray-50 to-gray-200 bg-clip-text text-transparent"
               whileHover={{ scale: 1.02 }}
@@ -124,7 +111,7 @@ const Navigation = () => {
 
           {/* Mobile Menu Button */}
           <motion.button
-            className="lg:hidden p-2 text-gray-300 hover:text-yellow-400 transition-colors"
+            className="lg:hidden p-2 text-gray-300 bg-background hover:text-yellow-400 transition-colors"
             onClick={toggleMenu}
             whileTap={{ scale: 0.95 }}
           >
@@ -164,7 +151,7 @@ const Navigation = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm lg:hidden"
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm  lg:hidden"
               onClick={toggleMenu}
             />
             
@@ -180,7 +167,7 @@ const Navigation = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent" />
               
               <div className="relative p-6 pt-20">
-                <div className="space-y-2">
+                <div className="space-y-2 ">
                   {navItems.map((item, index) => (
                     <motion.div
                       key={item.name}
@@ -191,7 +178,7 @@ const Navigation = () => {
                       <Link
                         href={item.href}
                         onClick={toggleMenu}
-                        className="flex items-center px-4 py-3 text-gray-300 hover:text-yellow-400 hover:bg-yellow-400/10 rounded-lg transition-all duration-200 group"
+                        className="flex items-center  px-4 py-3 text-gray-300 hover:text-yellow-400 hover:bg-yellow-400/10 rounded-lg transition-all duration-200 group"
                       >
                         <span className="font-medium">{item.name}</span>
                         <motion.div

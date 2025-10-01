@@ -1,8 +1,42 @@
 {
   "HomePage": {
-    "title": "Welcome to Overland Motorcycles",
-    "description": "Discover amazing adventure motorcycles and gear for your overland journey",
-    "hero": "Your adventure starts here"
+    "hero": "Adventure starts here!",
+    "heroSubtitle": "Explore Panama on Royal Enfield Himalayan 450cc motorcycles.",
+    "bookTrip": "Book Your Trip",
+    "viewFleet": "The Fleet",
+    "fleetTitle": "Royal Enfield Himalayan 450cc",
+    "fleetSubtitle": "Capable, Reliable and built for Adventure !",
+    "fleetDesc": "Premium motorcycles with full gear included.",
+    "fleetAccessories": "Included Accessories",
+    "feature1": "Driver & passenger helmet",
+    "feature2": "Side & Top Cases",
+    "feature3": "Phone Mount",
+    "feature4": "450cc Engine",
+    "destinationsTitle": "Discover Panama on Two Wheels",
+    "sanBlas": "Paradisiac Coastlines",
+    "sanBlasDesc": "Caribbean paradise with crystal waters.",
+    "mountains": "Mountain Adventures",
+    "mountainsDesc": "Cloud forests and scenic peaks.",
+    "waterfalls": "Hidden Waterfalls",
+    "waterfallsDesc": "Secret cascades in rainforest.",
+    "tripsTitle": "Our Trips",
+    "tripsDesc": "Choose your Panama experience.",
+    "pricingTitle": "Pricing",
+    "pricingDesc": "Transparent all-inclusive packages.",
+    "dayTrips": "Day Trips",
+    "multiDay": "Multi-Day",
+    "custom": "Custom",
+    "aboutTitle": "Why Panama?",
+    "aboutDesc": "Where vibrant biodiversity meets breathtaking landscapes, from lush rainforests to endless coastlines.",
+    "biodiversity": "Biodiversity Hotspot",
+    "adventure": "Adventure Paradise",
+    "bridge": "Safe Country",
+    "contactTitle": "Ready for Adventure?",
+    "contactDesc": "Join us for unforgettable motorcycle adventures.",
+    "bookNow": "Book Now",
+    "contact": "Contact Us",
+    "LearnMore": "Learn More"
+
   },
   "AboutPage": {
     "title": "About Overland Motorcycles",
@@ -34,5 +68,192 @@
     "title": "Page Not Found",
     "description": "Sorry, we couldn't find the page you're looking for.",
     "backHome": "Go back home"
+  },
+"PanamaPage": {
+    "heroTitle": "Discover Panama",
+    "heroSubtitle": "Where Two Oceans Meet, Adventure Begins",
+    "heroAlt": "Panama Paradise",
+    "exploreCta": "Explore Our Trips",
+    "bookCta": "Book Your Adventure",
+    
+    "whyTitle": "Why Panama?",
+    "whySubtitle": "A land of incredible biodiversity, pristine beaches, and endless adventure",
+    
+    "biodiversityTitle": "Unmatched Biodiversity",
+    "biodiversityDesc": "Home to more bird species than the US and Canada combined. Explore rainforests teeming with exotic wildlife.",
+    
+    "oceansTitle": "Two Ocean Coasts",
+    "oceansDesc": "Caribbean and Pacific oceans in one country. Experience turquoise waters, pristine islands, and world-class surfing.",
+    
+    "mountainsTitle": "Mountain Adventures",
+    "mountainsDesc": "From cloud forests to volcanic peaks, discover breathtaking landscapes and scenic mountain roads.",
+    
+    "wildlifeTitle": "Incredible Wildlife",
+    "wildlifeSubtitle": "Encounter Panama's amazing biodiversity at every turn",
+    "slothTitle": "Sloths in the Wild",
+    "crocoTitle": "Crocodiles & Caimans",
+    "hibiscusTitle": "Tropical Flora",
+    "toucanTitle": "Colorful Birds",
+    
+    "tripsTitle": "Proposed Motorcycle Tours",
+    "tripsSubtitle": "Expertly curated adventures through Panama's most spectacular landscapes",
+    "learnMore": "Learn More",
+    
+    "trip1Title": "Caribbean Paradise Tour",
+    "trip1Desc": "Ride along pristine Caribbean coastlines and visit the famous San Blas Islands",
+    "trip1Duration": "3-4 Days",
+    "trip1Difficulty": "Easy",
+    "trip1H1": "Turquoise waters of San Blas archipelago",
+    "trip1H2": "Indigenous Guna Yala culture",
+    "trip1H3": "White sand beaches and coral reefs",
+    
+    "trip2Title": "Highland Adventure",
+    "trip2Desc": "Conquer winding mountain roads through cloud forests and coffee plantations",
+    "trip2Duration": "5-7 Days",
+    "trip2Difficulty": "Moderate",
+    "trip2H1": "Cool mountain climate and misty peaks",
+    "trip2H2": "Traditional highland villages",
+    "trip2H3": "Scenic mountain passes and viewpoints",
+    
+    "trip3Title": "Waterfall Discovery",
+    "trip3Desc": "Journey through jungle trails to discover Panama's most stunning hidden waterfalls",
+    "trip3Duration": "2-3 Days",
+    "trip3Difficulty": "Moderate",
+    "trip3H1": "Pristine cascades in lush rainforest",
+    "trip3H2": "Swimming in natural pools",
+    "trip3H3": "Off-road adventure trails",
+    
+    "destinationsTitle": "Urban & Cultural Experiences",
+    "destinationsSubtitle": "From modern cities to indigenous traditions",
+    
+    "cityTitle": "Panama City",
+    "cityDesc": "Explore the vibrant capital where modern skyscrapers meet colonial history and the famous Panama Canal",
+    
+    "cultureTitle": "Indigenous Culture",
+    "cultureDesc": "Experience authentic indigenous traditions and crafts in remote communities accessible only by boat or bike",
+    
+    "busTitle": "Diablo Rojo Buses",
+    "busDesc": "Iconic colorful buses that represent Panama's vibrant street culture and artistic expression",
+    
+    "experienceTitle": "Experience Panama by Motorcycle",
+    "experienceDesc1": "Panama offers the perfect blend of adventure and natural beauty. From the moment you hit the road, you'll be captivated by diverse landscapes that change from tropical coastlines to mountain highlands.",
+    "experienceDesc2": "Ride through indigenous villages, explore hidden waterfalls, and camp under starlit skies. Every turn reveals a new wonder in this biodiverse paradise.",
+    "experienceAlt": "Panama Waterfall Adventure",
+    "startAdventure": "Start Your Adventure",
+    
+    "adventureTitle": "What Makes Panama Special",
+    
+    "guided": "Expert Guidance",
+    "guidedDesc": "Local knowledge and expertly planned routes",
+    
+    "safe": "Safety First",
+    "safeDesc": "Premium bikes with full insurance coverage",
+    
+    "memorable": "Unforgettable Moments",
+    "memorableDesc": "Capture memories that last a lifetime",
+    
+    "routes": "Diverse Routes",
+    "routesDesc": "From beaches to mountains in one trip",
+    
+    "ctaTitle": "Ready to Explore Panama?",
+    "ctaDesc": "Join us for an unforgettable motorcycle adventure through Central America's hidden gem",
+    "ctaAlt": "Panama Mountain Adventure",
+    "bookNow": "Book Your Trip",
+    "contactUs": "Contact Us"
+  },
+  
+  "FleetPage": {
+    "heroTitle": "Our Fleet",
+    "heroSubtitle": "Royal Enfield Himalayan 450 - Built for Adventure",
+    "heroAlt": "Royal Enfield Himalayan 450",
+    "viewSpecs": "View Specifications",
+    "bookNow": "Book Now",
+    
+    "bikeTitle": "Royal Enfield Himalayan 450",
+    "bikeSubtitle": "The ultimate adventure touring motorcycle for Panama's diverse terrain",
+    "bikeAlt": "Royal Enfield Himalayan 450",
+    "badge": "Adventure Ready",
+    
+    "descTitle": "Built for All Roads",
+    "descText1": "The Himalayan 450 represents a complete evolution in adventure motorcycling. With its powerful 452cc liquid-cooled engine producing 40 horsepower, this machine is designed to conquer everything from coastal highways to mountain trails.",
+    "descText2": "Featuring advanced suspension with 200mm of travel, switchable ABS, and a 6-speed gearbox, the Himalayan 450 delivers confidence and capability on any terrain Panama has to offer.",
+    
+    "specsTitle": "Technical Specifications",
+    "specsSubtitle": "Performance and capability for real-world adventure",
+    
+    "engine": "Engine",
+    "engineValue": "452cc Liquid-Cooled",
+    "power": "Power",
+    "powerValue": "40 HP @ 8000 rpm",
+    "torque": "Torque",
+    "torqueValue": "40 Nm @ 5500 rpm",
+    "weight": "Weight",
+    "weightValue": "196 kg",
+    "tank": "Fuel Tank",
+    "tankValue": "17 Liters",
+    "ground": "Ground Clearance",
+    "groundValue": "220mm",
+    
+    "featuresTitle": "Key Features",
+    
+    "feature1Title": "Advanced Suspension",
+    "feature1Desc": "USD front forks with 200mm travel and adjustable rear mono-shock absorb the toughest terrain, from potholed city streets to rocky mountain trails.",
+    
+    "feature2Title": "Ride-by-Wire Technology",
+    "feature2Desc": "Two riding modes let you optimize performance for different conditions. Choose Performance mode for spirited riding or Eco mode for fuel-efficient touring.",
+    
+    "feature3Title": "Switchable ABS",
+    "feature3Desc": "Advanced braking system keeps you safe on paved roads, with the ability to switch off rear ABS for off-road adventures and technical terrain.",
+    
+    "feature4Title": "6-Speed Gearbox",
+    "feature4Desc": "Smooth shifting with a six-speed transmission makes highway cruising comfortable while maintaining low-end power for technical riding.",
+    
+    "equipmentTitle": "Included Equipment",
+    "equipmentSubtitle": "Everything you need for your adventure, included with every rental",
+    
+    "cases": "Side & Top Cases",
+    "casesDesc": "Premium luggage system for secure storage of your gear and belongings",
+    
+    "helmets": "Two Helmets",
+    "helmetsDesc": "Quality helmets for both driver and passenger, meeting international safety standards",
+    
+    "phone": "Phone Mount",
+    "phoneDesc": "Secure smartphone mount for navigation and staying connected on the road",
+    
+    "passenger": "Passenger Ready",
+    "passengerDesc": "Comfortable seating and equipment for two riders to explore together",
+    
+    "galleryTitle": "See It In Action",
+    "galleryAlt": "Himalayan 450 Adventure",
+    "viewFull": "View Fullscreen",
+    
+    "bannerTitle": "Motorcycle Rental in Panama",
+    "bannerBgAlt": "Panama Mountain Motorcycle Adventure",
+    "seoText1": "Looking for premium motorcycle rentals in Panama? Our Royal Enfield Himalayan 450 fleet offers the perfect combination of reliability, comfort, and off-road capability for exploring Panama's diverse landscapes. From the Caribbean coast to Pacific beaches, from cloud forests to mountain passes, our bikes are built for every adventure.",
+    "seoText2": "Each rental includes comprehensive insurance, premium safety equipment, GPS navigation, and ample storage space. Whether you're planning a day trip to nearby waterfalls or a multi-day expedition through Panama's highlands, our well-maintained Himalayan 450 motorcycles deliver performance and peace of mind.",
+    "seoText3": "Rent a motorcycle in Panama City, Colón, or arrange delivery anywhere in the country. Experience the freedom of two wheels and discover why Panama is becoming Central America's premier motorcycle touring destination. Book your adventure today and ride with confidence through one of the world's most biodiverse countries.",
+    
+    "ctaTitle": "Ready to Ride?",
+    "ctaDesc": "Experience the freedom of the open road with our perfectly equipped Himalayan 450",
+    "ctaAlt": "Book Your Himalayan",
+    "rentNow": "Rent Your Bike",
+    "askQuestion": "Ask a Question"
+  },
+  "Footer": {
+    "description": "Your trusted partner for motorcycle adventures in Panama. Experience the freedom of the open road with our premium Royal Enfield Himalayan fleet.",
+    "followUs": "Follow us",
+    "openingHours": "Opening Hours",
+    "weekdays": "Monday to Friday",
+    "weekdayHours": "10:00 AM - 6:00 PM",
+    "weekend": "Weekends",
+    "weekendHours": "By appointment",
+    "getInTouch": "Get in Touch",
+    "address": "Local 1 - Edificio Antigua Domingo\nPlaza Santa Ana\nPanama City, Panama",
+    "email": "overlandmotorcycles@gmail.com",
+    "phone": "+507 6805-1100",
+    "companyName": "Overland Motorcycles",
+    "allRightsReserved": "All rights reserved",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service"
   }
 }
