@@ -168,11 +168,14 @@ const FleetPage = () => {
                   transition={{ duration: 0.4 }}
                   className="relative z-10"
                 >
-                  <img
-                    src="/royal-enfield-himalayan.png"
-                    alt={t('bikeAlt')}
-                    className="w-full h-auto"
-                  />
+<Image
+  src="/royal-enfield-himalayan.png"
+  alt={t('bikeAlt')}
+  width={700}   // or the actual image width
+  height={500}  // or the actual image height
+  className="w-full h-auto"
+/>
+
                 </motion.div>
 
                 <motion.div

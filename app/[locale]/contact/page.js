@@ -52,9 +52,7 @@ const ContactPage = () => {
                 <h2 className="text-4xl font-bold text-gray-900 mb-8">
                   {t('getInTouch')}
                 </h2>
-                <p className="text-lg text-gray-600 mb-8">
-                  We're here to help you plan your perfect Panama motorcycle adventure. Reach out with any questions!
-                </p>
+            
               </div>
 
               {/* Location */}
