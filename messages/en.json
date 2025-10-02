@@ -87,7 +87,7 @@
   },
   "NotFound": {
     "title": "Page Not Found",
-    "description": "Sorry, we couldn't find the page you're looking for.",
+    "description": "Sorry, we couldn&apos;t find the page you&apos;re looking for.",
     "backHome": "Go back home"
   },
 "PanamaPage": {
@@ -110,14 +110,14 @@
     "mountainsDesc": "From cloud forests to volcanic peaks, discover breathtaking landscapes and scenic mountain roads.",
     
     "wildlifeTitle": "Incredible Wildlife",
-    "wildlifeSubtitle": "Encounter Panama's amazing biodiversity at every turn",
+    "wildlifeSubtitle": "Encounter Panama&apos;s amazing biodiversity at every turn",
     "slothTitle": "Sloths in the Wild",
     "crocoTitle": "Crocodiles & Caimans",
     "hibiscusTitle": "Tropical Flora",
     "toucanTitle": "Colorful Birds",
     
     "tripsTitle": "Proposed Motorcycle Tours",
-    "tripsSubtitle": "Expertly curated adventures through Panama's most spectacular landscapes",
+    "tripsSubtitle": "Expertly curated adventures through Panama&apos;s most spectacular landscapes",
     "learnMore": "Learn More",
     
     "trip1Title": "Caribbean Paradise Tour",
@@ -137,7 +137,7 @@
     "trip2H3": "Scenic mountain passes and viewpoints",
     
     "trip3Title": "Waterfall Discovery",
-    "trip3Desc": "Journey through jungle trails to discover Panama's most stunning hidden waterfalls",
+    "trip3Desc": "Journey through jungle trails to discover Panama&apos;s most stunning hidden waterfalls",
     "trip3Duration": "2-3 Days",
     "trip3Difficulty": "Moderate",
     "trip3H1": "Pristine cascades in lush rainforest",
@@ -154,10 +154,10 @@
     "cultureDesc": "Experience authentic indigenous traditions and crafts in remote communities accessible only by boat or bike",
     
     "busTitle": "Diablo Rojo Buses",
-    "busDesc": "Iconic colorful buses that represent Panama's vibrant street culture and artistic expression",
+    "busDesc": "Iconic colorful buses that represent Panama&apos;s vibrant street culture and artistic expression",
     
     "experienceTitle": "Experience Panama by Motorcycle",
-    "experienceDesc1": "Panama offers the perfect blend of adventure and natural beauty. From the moment you hit the road, you'll be captivated by diverse landscapes that change from tropical coastlines to mountain highlands.",
+    "experienceDesc1": "Panama offers the perfect blend of adventure and natural beauty. From the moment you hit the road, you&apos;ll be captivated by diverse landscapes that change from tropical coastlines to mountain highlands.",
     "experienceDesc2": "Ride through indigenous villages, explore hidden waterfalls, and camp under starlit skies. Every turn reveals a new wonder in this biodiverse paradise.",
     "experienceAlt": "Panama Waterfall Adventure",
     "startAdventure": "Start Your Adventure",
@@ -177,7 +177,7 @@
     "routesDesc": "From beaches to mountains in one trip",
     
     "ctaTitle": "Ready to Explore Panama?",
-    "ctaDesc": "Join us for an unforgettable motorcycle adventure through Central America's hidden gem",
+    "ctaDesc": "Join us for an unforgettable motorcycle adventure through Central America&apos;s hidden gem",
     "ctaAlt": "Panama Mountain Adventure",
     "bookNow": "Book Your Trip",
     "contactUs": "Contact Us"
@@ -192,7 +192,7 @@
     "showMore": "Show More",
     "showLess": "Show Less",
     "bikeTitle": "Royal Enfield Himalayan 450",
-    "bikeSubtitle": "The ultimate adventure touring motorcycle for Panama's diverse terrain",
+    "bikeSubtitle": "The ultimate adventure touring motorcycle for Panama&apos;s diverse terrain",
     "bikeAlt": "Royal Enfield Himalayan 450",
     "badge": "Adventure Ready",
     
@@ -251,9 +251,9 @@
     
     "bannerTitle": "Motorcycle Rental in Panama",
     "bannerBgAlt": "Panama Mountain Motorcycle Adventure",
-    "seoText1": "Looking for premium motorcycle rentals in Panama? Our Royal Enfield Himalayan 450 fleet offers the perfect combination of reliability, comfort, and off-road capability for exploring Panama's diverse landscapes. From the Caribbean coast to Pacific beaches, from cloud forests to mountain passes, our bikes are built for every adventure.",
-    "seoText2": "Each rental includes comprehensive insurance, premium safety equipment, GPS navigation, and ample storage space. Whether you're planning a day trip to nearby waterfalls or a multi-day expedition through Panama's highlands, our well-maintained Himalayan 450 motorcycles deliver performance and peace of mind.",
-    "seoText3": "Rent a motorcycle in Panama City, Colón, or arrange delivery anywhere in the country. Experience the freedom of two wheels and discover why Panama is becoming Central America's premier motorcycle touring destination. Book your adventure today and ride with confidence through one of the world's most biodiverse countries.",
+    "seoText1": "Looking for premium motorcycle rentals in Panama? Our Royal Enfield Himalayan 450 fleet offers the perfect combination of reliability, comfort, and off-road capability for exploring Panama&apos;s diverse landscapes. From the Caribbean coast to Pacific beaches, from cloud forests to mountain passes, our bikes are built for every adventure.",
+    "seoText2": "Each rental includes comprehensive insurance, premium safety equipment, GPS navigation, and ample storage space. Whether you&apos;re planning a day trip to nearby waterfalls or a multi-day expedition through Panama&apos;s highlands, our well-maintained Himalayan 450 motorcycles deliver performance and peace of mind.",
+    "seoText3": "Rent a motorcycle in Panama City, Colón, or arrange delivery anywhere in the country. Experience the freedom of two wheels and discover why Panama is becoming Central America&apos;s premier motorcycle touring destination. Book your adventure today and ride with confidence through one of the world&apos;s most biodiverse countries.",
     
     "ctaTitle": "Ready to Ride?",
     "ctaDesc": "Experience the freedom of the open road with our perfectly equipped Himalayan 450",
@@ -265,7 +265,7 @@
     "heroTitle": "Book Your Adventure",
     "heroSubtitle": "Start planning your unforgettable Panama motorcycle journey",
     "formTitle": "Reservation Details",
-    "formSubtitle": "Fill out the form below and we'll get back to you within 24 hours",
+    "formSubtitle": "Fill out the form below and we&apos;ll get back to you within 24 hours",
     
     "personalInfo": "Personal Information",
     "firstName": "First Name",
@@ -294,15 +294,15 @@
     
     "additionalInfo": "Additional Information",
     "specialRequests": "Special Requests or Questions",
-    "specialRequestsPlaceholder": "Let us know if you have any dietary restrictions, accommodation preferences, or specific destinations you'd like to visit...",
+    "specialRequestsPlaceholder": "Let us know if you have any dietary restrictions, accommodation preferences, or specific destinations you&apos;d like to visit...",
     "hearAboutUs": "How did you hear about us?",
     "selectOption": "Select an option",
     
     "submitBooking": "Submit Booking Request",
-    "submitNote": "We'll review your request and contact you within 24 hours to confirm availability and discuss details.",
+    "submitNote": "We&apos;ll review your request and contact you within 24 hours to confirm availability and discuss details.",
     
     "infoTitle1": "Flexible Booking",
-    "infoDesc1": "Reserve your dates with a deposit. We'll work with you to create the perfect itinerary.",
+    "infoDesc1": "Reserve your dates with a deposit. We&apos;ll work with you to create the perfect itinerary.",
     
     "infoTitle2": "All Equipment Included",
     "infoDesc2": "Helmets, cases, GPS, and safety gear included with every rental.",
@@ -323,7 +323,7 @@
     "priceNote": "All prices are in USD and include all equipment, insurance, and taxes",
     "bookNow": "Book Your Adventure",
     
-    "includedTitle": "What's Included",
+    "includedTitle": "What&apos;s Included",
     "includedSubtitle": "Everything you need for a safe and memorable adventure",
     "included1": "Royal Enfield Himalayan 450cc motorcycle",
     "included2": "Driver and passenger helmets",
@@ -352,13 +352,13 @@
     "faq1A": "Yes! Extensions are subject to availability. Contact us at least 24 hours in advance to arrange an extension at the daily rate.",
     
     "faq2Q": "What happens if the motorcycle breaks down?",
-    "faq2A": "We provide 24/7 roadside assistance. Mechanical failures are covered at no extra cost. We'll either repair the bike or provide a replacement.",
+    "faq2A": "We provide 24/7 roadside assistance. Mechanical failures are covered at no extra cost. We&apos;ll either repair the bike or provide a replacement.",
     
     "faq3Q": "Can I ride to other countries?",
     "faq3A": "Our motorcycles are registered for use within Panama only. Cross-border travel requires special arrangements and additional documentation.",
     
     "faq4Q": "What if I damage the motorcycle?",
-    "faq4A": "Our comprehensive insurance covers most damages. Your security deposit may be used for deductibles. We'll provide a full damage report and cost breakdown."
+    "faq4A": "Our comprehensive insurance covers most damages. Your security deposit may be used for deductibles. We&apos;ll provide a full damage report and cost breakdown."
   },
    "TermsPage": {
     "heroTitle": "Terms and Conditions",
