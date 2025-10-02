@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Gauge, Mountain, Zap, Shield, Settings, Fuel, Weight, ChevronRight, Package, Smartphone, User } from 'lucide-react';
+import { Gauge, Mountain, Zap, Shield, Settings, Fuel, Weight, ChevronDown, Package, Smartphone, User } from 'lucide-react';
 
 import Navigation from '../../../components/Navigation'; 
 import MountainParallax from '../../../components/MountainParallax'; 
@@ -109,7 +109,22 @@ const FleetPage = () => {
             className="flex flex-col sm:flex-row gap-6 justify-center items-center"
           >
             <ButtonPrimary href="#specs" text={t('viewSpecs')} />
-            <ButtonSecondary href="#booking" text={t('bookNow')} />
+            <ButtonSecondary href="/Booking" text={t('bookNow')} />
+          </motion.div>
+        </motion.div>
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="flex flex-col items-center text-yellow-400"
+          >
+            <ChevronDown size={24} />
           </motion.div>
         </motion.div>
       </section>
@@ -457,7 +472,7 @@ const FleetPage = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <ButtonPrimary href="/booking" text={t('rentNow')} />
+              <ButtonPrimary href="/Booking" text={t('rentNow')} />
               <ButtonSecondary href="/contact" text={t('askQuestion')} />
             </div>
           </motion.div>

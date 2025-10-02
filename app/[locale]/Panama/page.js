@@ -3,11 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Mountain, Waves, TreePine, Sun, Compass, Map, Bird, Palmtree, Camera, Shield, Sparkles, MapPin, Clock, Users } from 'lucide-react';
+import { Mountain, Waves, TreePine, Sun, Compass, Map, Bird, ChevronDown, Camera, Shield, Sparkles, MapPin, Clock, Users } from 'lucide-react';
 
-import Navigation from '../../../components/Navigation'; 
-import MountainParallax from '../../../components/MountainParallax'; 
-import Footer from '../../../components/Footer'; 
+import Navigation from '../../../components/Navigation';
+import MountainParallax from '../../../components/MountainParallax';
+import Footer from '../../../components/Footer';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import ButtonSecondary from '../../../components/ButtonSecondary';
 
@@ -15,11 +15,11 @@ const PanamaPage = () => {
   const t = useTranslations('PanamaPage');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { scrollY } = useScroll();
-  
+
   const yBg = useTransform(scrollY, [0, 1000], [0, -200]);
   const yContent = useTransform(scrollY, [0, 1000], [0, -100]);
   const scale = useTransform(scrollY, [0, 500], [1, 1.1]);
-  
+
   const springConfig = { stiffness: 300, damping: 30 };
   const smoothYBg = useSpring(yBg, springConfig);
   const smoothYContent = useSpring(yContent, springConfig);
@@ -39,7 +39,7 @@ const PanamaPage = () => {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navigation />
-      
+
       {/* Hero Section */}
       <section className="relative h-screen bg-background flex items-center justify-center overflow-hidden">
         <motion.div
@@ -96,6 +96,21 @@ const PanamaPage = () => {
             <ButtonSecondary href="#book" text={t('bookCta')} />
           </motion.div>
         </motion.div>
+        {/* Scroll indicator */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2 }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+            className="flex flex-col items-center text-yellow-400"
+          >
+            <ChevronDown size={24} />
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Why Panama Section - WHITE BACKGROUND */}
@@ -116,18 +131,18 @@ const PanamaPage = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { 
-                icon: Bird, 
+              {
+                icon: Bird,
                 title: t('biodiversityTitle'),
                 desc: t('biodiversityDesc')
               },
-              { 
-                icon: Waves, 
+              {
+                icon: Waves,
                 title: t('oceansTitle'),
                 desc: t('oceansDesc')
               },
-              { 
-                icon: Mountain, 
+              {
+                icon: Mountain,
                 title: t('mountainsTitle'),
                 desc: t('mountainsDesc')
               }
@@ -258,11 +273,11 @@ const PanamaPage = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
-                
+
                 <div className="p-6">
                   <h3 className="text-2xl font-bold text-gray-900 mb-3">{trip.title}</h3>
                   <p className="text-gray-600 mb-4">{trip.desc}</p>
-                  
+
                   <div className="flex items-center gap-4 mb-4 text-sm text-gray-500">
                     <div className="flex items-center gap-1">
                       <Clock size={16} />
@@ -343,7 +358,7 @@ const PanamaPage = () => {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            
+
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -376,7 +391,7 @@ const PanamaPage = () => {
                 {t('experienceDesc2')}
               </p>
               <div className="pt-4">
-                <ButtonPrimary href="#book" text={t('startAdventure')} />
+                <ButtonPrimary href="/Booking" text={t('startAdventure')} />
               </div>
             </motion.div>
           </div>
@@ -449,7 +464,7 @@ const PanamaPage = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <ButtonPrimary href="/booking" text={t('bookNow')} />
+              <ButtonPrimary href="/Booking" text={t('bookNow')} />
               <ButtonSecondary href="/contact" text={t('contactUs')} />
             </div>
           </motion.div>

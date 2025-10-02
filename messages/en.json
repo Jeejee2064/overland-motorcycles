@@ -43,15 +43,36 @@
     "description": "Learn more about our passion for adventure motorcycles and overland travel",
     "content": "We are dedicated to providing the best motorcycles and gear for your adventures"
   },
-  "ContactPage": {
-    "title": "Contact Us",
-    "description": "Get in touch with our adventure motorcycle experts",
-    "content": "We'd love to help you plan your next overland adventure"
+"ContactPage": {
+    "heroTitle": "Get in Touch",
+    "heroSubtitle": "Ready for your next adventure? Get in touch with us",
+    "getInTouch": "Contact Us",
+    "location": "Location",
+    "hours": "Hours",
+    "weekdays": "Monday to Friday",
+    "weekdayHours": "10:00 AM - 6:00 PM",
+    "weekend": "Weekends",
+    "weekendHours": "By appointment",
+    "sendMessage": "Send Message",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "message": "Message",
+    "submit": "Send Message",
+    "followUs": "Follow Us"
   },
   "Navigation": {
-    "home": "Home",
-    "about": "About",
-    "contact": "Contact"
+    "logoText": "OVERLAND MOTORCYCLES",
+    "logoAlt": "Overland Motorcycles Logo",
+    "navFleet": "The Fleet",
+    "navPanama": "Panama",
+    "navPricing": "Pricing",
+    "navAbout": "About",
+    "navContact": "Contact",
+    "bookNowBtn": "Book Now",
+    "bookYourTripBtn": "Book Your Trip",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "LocaleSwitcher": {
     "label": "Change language",
@@ -168,7 +189,8 @@
     "heroAlt": "Royal Enfield Himalayan 450",
     "viewSpecs": "View Specifications",
     "bookNow": "Book Now",
-    
+    "showMore": "Show More",
+    "showLess": "Show Less",
     "bikeTitle": "Royal Enfield Himalayan 450",
     "bikeSubtitle": "The ultimate adventure touring motorcycle for Panama's diverse terrain",
     "bikeAlt": "Royal Enfield Himalayan 450",
@@ -239,6 +261,141 @@
     "rentNow": "Rent Your Bike",
     "askQuestion": "Ask a Question"
   },
+  "BookingPage": {
+    "heroTitle": "Book Your Adventure",
+    "heroSubtitle": "Start planning your unforgettable Panama motorcycle journey",
+    "formTitle": "Reservation Details",
+    "formSubtitle": "Fill out the form below and we'll get back to you within 24 hours",
+    
+    "personalInfo": "Personal Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "country": "Country",
+    
+    "tripDetails": "Trip Details",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "duration": "Trip Duration",
+    "day": "day",
+    "days": "days",
+    "riders": "Number of Riders",
+    "bikeQuantity": "Number of Motorcycles",
+    "tripType": "Trip Type",
+    "selectTripType": "Select a trip type",
+    
+    "experience": "Riding Experience",
+    "ridingExperience": "Your Riding Experience Level",
+    "selectExperience": "Select your experience level",
+    "beginner": "Beginner (0-2 years)",
+    "intermediate": "Intermediate (2-5 years)",
+    "advanced": "Advanced (5+ years)",
+    
+    "additionalInfo": "Additional Information",
+    "specialRequests": "Special Requests or Questions",
+    "specialRequestsPlaceholder": "Let us know if you have any dietary restrictions, accommodation preferences, or specific destinations you'd like to visit...",
+    "hearAboutUs": "How did you hear about us?",
+    "selectOption": "Select an option",
+    
+    "submitBooking": "Submit Booking Request",
+    "submitNote": "We'll review your request and contact you within 24 hours to confirm availability and discuss details.",
+    
+    "infoTitle1": "Flexible Booking",
+    "infoDesc1": "Reserve your dates with a deposit. We'll work with you to create the perfect itinerary.",
+    
+    "infoTitle2": "All Equipment Included",
+    "infoDesc2": "Helmets, cases, GPS, and safety gear included with every rental.",
+    
+    "infoTitle3": "Expert Guidance",
+    "infoDesc3": "Get route recommendations and local tips from our experienced team."
+  },
+  "PricingPage": {
+    "heroTitle": "Rental Pricing",
+    "heroSubtitle": "Transparent, all-inclusive rates for your adventure",
+    
+    "tableTitle": "Rental Prices",
+    "tableSubtitle": "Royal Enfield Himalayan 450 - Per Motorcycle",
+    "days": "Days",
+    "price": "Price (USD)",
+    "day": "Day",
+    "daysPlural": "Days",
+    "priceNote": "All prices are in USD and include all equipment, insurance, and taxes",
+    "bookNow": "Book Your Adventure",
+    
+    "includedTitle": "What's Included",
+    "includedSubtitle": "Everything you need for a safe and memorable adventure",
+    "included1": "Royal Enfield Himalayan 450cc motorcycle",
+    "included2": "Driver and passenger helmets",
+    "included3": "Side and top cases for luggage",
+    "included4": "Phone mount for GPS navigation",
+    "included5": "Comprehensive insurance coverage",
+    "included6": "24/7 roadside assistance",
+    
+    "importantTitle": "Important Information",
+    "depositTitle": "Security Deposit",
+    "depositDesc": "A refundable security deposit of $1000 USD is required at pickup. The deposit will be fully refunded upon safe return of the motorcycle.",
+    
+    "requirementsTitle": "Requirements",
+    "requirementsDesc": "Valid motorcycle license and minimum age of 21 years required. International drivers must present both their home country license and International Driving Permit (IDP).",
+    
+    "cancellationTitle": "Cancellation Policy",
+    "cancellationDesc": "Free cancellation up to 7 days before your rental start date. Cancellations within 7 days are subject to a 50% fee. No refunds for cancellations within 48 hours.",
+    
+    "legalNote": "By booking with us, you agree to our rental terms and privacy policy:",
+    "termsLink": "Terms & Conditions",
+    "privacyLink": "Privacy Policy",
+    
+    "faqTitle": "Frequently Asked Questions",
+    
+    "faq1Q": "Can I extend my rental period?",
+    "faq1A": "Yes! Extensions are subject to availability. Contact us at least 24 hours in advance to arrange an extension at the daily rate.",
+    
+    "faq2Q": "What happens if the motorcycle breaks down?",
+    "faq2A": "We provide 24/7 roadside assistance. Mechanical failures are covered at no extra cost. We'll either repair the bike or provide a replacement.",
+    
+    "faq3Q": "Can I ride to other countries?",
+    "faq3A": "Our motorcycles are registered for use within Panama only. Cross-border travel requires special arrangements and additional documentation.",
+    
+    "faq4Q": "What if I damage the motorcycle?",
+    "faq4A": "Our comprehensive insurance covers most damages. Your security deposit may be used for deductibles. We'll provide a full damage report and cost breakdown."
+  },
+   "TermsPage": {
+    "heroTitle": "Terms and Conditions",
+    "heroSubtitle": "Clear rules for a safe adventure. Read our rental agreement.",
+    "sectionTitle": "Motorcycle Rental Agreement",
+    "sectionSubtitle": "Key points of our legal agreement with the customer.",
+    "term1Title": "1. Purpose of the Agreement",
+    "term1Content": "The Agency rents to the Customer the motorcycle detailed in the agreement, for personal use and exclusively during the agreed period.",
+    "term2Title": "2. Rental Duration",
+    "term2Content": "The rental period shall be as established in the agreement, with clearly specified start and end dates and times.",
+    "term3Title": "3. Price and Payment Method",
+    "term3Content": "The rental price shall be as agreed in the contract for each day of use. Full payment, along with a security deposit of 1000 USD per motorcycle, must be made in full at the time of signing the agreement.",
+    "term4Title": "4. Security Deposit",
+    "term4Content": "The deposit will be returned to the Customer upon delivery of the motorcycle, provided it is in the same condition as delivered, minus any charges for repairs or excessive cleaning if applicable.",
+    "term5Title": "5. Insurance",
+    "term5Content": "The motorcycle is insured for third-party damage. The Customer must have personal health insurance covering accidents or injuries. The Agency is not responsible for personal damages suffered by the Customer during the rental.",
+    "term6Title": "6. Customer Obligations",
+    "term6Content": "• Use the motorcycle responsibly and in accordance with Panama traffic laws. • Do not transfer, sublease, or allow third-party use without written authorization from the Agency.",
+    "privacyLink": "Privacy Policy"
+  },
+  "PrivacyPage": {
+    "heroTitle": "Privacy Policy",
+    "heroSubtitle": "Your information matters. Understand how we collect and protect it.",
+    "lastUpdated": "Last Updated: October 1, 2025",
+    "section1Title": "1. Information We Collect",
+    "section1Content": "We collect personal information necessary for the rental process, including your name, address, phone number, email, copy of your driver’s license, and payment details. This information is essential to process the reservation and comply with legal requirements.",
+    "section2Title": "2. Use of Information",
+    "section2Content": "We use your information to: (a) Process and confirm your motorcycle reservation. (b) Manage the deposit and return process. (c) Comply with legal and insurance obligations. (d) Communicate with you about your rental or future promotions (if you have given consent).",
+    "section3Title": "3. Security and Storage",
+    "section3Content": "We take reasonable technical and organizational security measures to protect your personal information against unauthorized access, disclosure, alteration, or destruction. Your information is stored securely.",
+    "section4Title": "4. Contact",
+    "section4Content": "If you have any questions about this privacy policy, please contact us at our official email address.",
+    "termsLink": "Terms and Conditions"
+  },
+  
+
+
   "Footer": {
     "description": "Your trusted partner for motorcycle adventures in Panama. Experience the freedom of the open road with our premium Royal Enfield Himalayan fleet.",
     "followUs": "Follow us",

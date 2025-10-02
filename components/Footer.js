@@ -10,13 +10,13 @@ const Footer = () => {
     {
       name: 'Facebook',
       icon: Facebook,
-      href: '#',
+      href: 'https://www.facebook.com/profile.php?id=61573828461831',
       color: 'hover:text-blue-400'
     },
     {
       name: 'Instagram', 
       icon: Instagram,
-      href: '#',
+      href: 'https://www.instagram.com/overlandmotorcycles/',
       color: 'hover:text-pink-400'
     }
   ];

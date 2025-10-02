@@ -117,8 +117,8 @@ const HomePage = () => {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-6 justify-center items-center"
           >
-            <ButtonPrimary href="#trips" text={t('bookTrip')} />
-            <ButtonSecondary href="#fleet" text={t('viewFleet')} />
+            <ButtonPrimary href="/Booking" text={t('bookTrip')} />
+            <ButtonSecondary href="/Fleet" text={t('viewFleet')} />
           </motion.div>
         </motion.div>
 
@@ -159,6 +159,7 @@ const HomePage = () => {
               { title: t('mountains'), desc: t('mountainsDesc'), image: 'montagne.webp' },
               { title: t('waterfalls'), desc: t('waterfallsDesc'), image: 'cascade.webp' }
             ].map((dest, index) => (
+              <Link href="/Panama" key={index} passHref>
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 50 }}
@@ -181,6 +182,7 @@ const HomePage = () => {
                   </div>
                 </div>
               </motion.div>
+              </Link>
             ))}
           </div>
         </div>
@@ -219,7 +221,9 @@ const HomePage = () => {
               </motion.div>
             ))}
           </div>
+
         </div>
+
       </section>
      <section className="relative py-20 bg-white overflow-hidden">
 
@@ -318,7 +322,7 @@ const HomePage = () => {
               transition={{ delay: 0.4 }}
               className="pt-4"
             >
-              <ButtonSecondary href="#fleet" text={t('LearnMore')} theme='light' />
+              <ButtonSecondary href="/Fleet" text={t('LearnMore')} theme='light' />
             </motion.div>
 
           </div>
@@ -362,7 +366,7 @@ const HomePage = () => {
             <p className="text-xl text-gray-300 mb-10">{t("contactDesc")}</p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <ButtonPrimary href="#trips" text={t('bookTrip')} />
+              <ButtonPrimary href="/Booking" text={t('bookTrip')} />
               <ButtonSecondary href="/contact" text={t('contact')} />
             </div>
           </motion.div>
