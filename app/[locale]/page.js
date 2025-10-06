@@ -59,8 +59,7 @@ const HomePage = () => {
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-transparent" />
+      
           </div>
         </motion.div>
 

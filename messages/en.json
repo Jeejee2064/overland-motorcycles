@@ -261,11 +261,11 @@
     "rentNow": "Rent Your Bike",
     "askQuestion": "Ask a Question"
   },
-  "BookingPage": {
+     "BookingPage": {
     "heroTitle": "Book Your Adventure",
     "heroSubtitle": "Start planning your unforgettable Panama motorcycle journey",
     "formTitle": "Reservation Details",
-    "formSubtitle": "Fill out the form below and we&apos;ll get back to you within 24 hours",
+    "formSubtitle": "Fill out the form below and we'll get back to you within 24 hours",
     
     "personalInfo": "Personal Information",
     "firstName": "First Name",
@@ -282,27 +282,56 @@
     "days": "days",
     "riders": "Number of Riders",
     "bikeQuantity": "Number of Motorcycles",
-    "tripType": "Trip Type",
-    "selectTripType": "Select a trip type",
     
-    "experience": "Riding Experience",
-    "ridingExperience": "Your Riding Experience Level",
-    "selectExperience": "Select your experience level",
-    "beginner": "Beginner (0-2 years)",
-    "intermediate": "Intermediate (2-5 years)",
-    "advanced": "Advanced (5+ years)",
+    "ridersOption1": "1 Rider",
+    "ridersOption2": "2 Riders",
+    
+    "bikesOption1": "1 Motorcycle",
+    "bikesOption2": "2 Motorcycles",
+    "bikesOption3": "3 Motorcycles",
+    "bikesOption4": "4+ Motorcycles",
+    
+    "hearAboutOption1": "Google Search",
+    "hearAboutOption2": "Social Media",
+    "hearAboutOption3": "Friend/Family",
+    "hearAboutOption4": "Travel Blog",
+    "hearAboutOption5": "Other",
     
     "additionalInfo": "Additional Information",
     "specialRequests": "Special Requests or Questions",
-    "specialRequestsPlaceholder": "Let us know if you have any dietary restrictions, accommodation preferences, or specific destinations you&apos;d like to visit...",
+    "specialRequestsPlaceholder": "Let us know if you have any dietary restrictions, accommodation preferences, or specific destinations you'd like to visit...",
     "hearAboutUs": "How did you hear about us?",
     "selectOption": "Select an option",
     
+    "quoteTitle": "Your Rental Quote",
+    "rentalLabel": "Rental Price",
+    "downPaymentLabel": "Down Payment (50%)",
+    "downPaymentNote": "Pay now to secure your booking",
+    "atPickupLabel": "At Pickup",
+    "remainingRentalLabel": "Remaining rental",
+    "refundableDepositLabel": "Refundable deposit",
+    "totalRentalCost": "Total Rental Cost",
+    "refundableDepositNote": "refundable deposit",
+    "includesNote": "Included:",
+    "bike": "bike",
+    "bikes": "bikes",
+    "selectDatesPrompt": "Select Your Dates",
+    "selectDatesDescription": "Choose your rental dates to see pricing",
+    
+    "includedItem1": "Helmets & safety gear",
+    "includedItem2": "Luggage cases & phone mount",
+    "includedItem3": "Full insurance coverage",
+    "includedItem4": "24/7 roadside assistance",
+    
+    "validationMinimum48h": "Bookings must be made at least 48 hours in advance",
+    "validationMinimum2Days": "Minimum rental period is 2 days",
+    "validationSelectDates": "Please select both start and end dates",
+    
     "submitBooking": "Submit Booking Request",
-    "submitNote": "We&apos;ll review your request and contact you within 24 hours to confirm availability and discuss details.",
+    "submitNote": "We'll review your request and contact you within 24 hours to confirm availability and discuss details.",
     
     "infoTitle1": "Flexible Booking",
-    "infoDesc1": "Reserve your dates with a deposit. We&apos;ll work with you to create the perfect itinerary.",
+    "infoDesc1": "Reserve your dates with a deposit. We'll work with you to create the perfect itinerary.",
     
     "infoTitle2": "All Equipment Included",
     "infoDesc2": "Helmets, cases, GPS, and safety gear included with every rental.",

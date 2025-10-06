@@ -5,9 +5,9 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Gauge, Mountain, Zap, Shield, Settings, Fuel, Weight, ChevronDown, Package, Smartphone, User } from 'lucide-react';
 
-import Navigation from '../../../components/Navigation'; 
-import MountainParallax from '../../../components/MountainParallax'; 
-import Footer from '../../../components/Footer'; 
+import Navigation from '../../../components/Navigation';
+import MountainParallax from '../../../components/MountainParallax';
+import Footer from '../../../components/Footer';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import ButtonSecondary from '../../../components/ButtonSecondary';
 
@@ -16,16 +16,16 @@ const FleetPage = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [selectedImage, setSelectedImage] = useState(null);
   const { scrollY } = useScroll();
-  
+
   const yBg = useTransform(scrollY, [0, 1000], [0, -200]);
   const yContent = useTransform(scrollY, [0, 1000], [0, -100]);
   const scale = useTransform(scrollY, [0, 500], [1, 1.1]);
-  
+
   // Parallax text transforms
   const xText1 = useTransform(scrollY, [0, 2000], [0, -300]);
   const xText2 = useTransform(scrollY, [0, 2000], [0, 300]);
   const yParallaxBg = useTransform(scrollY, [0, 2000], [0, -600]);
-  
+
   const springConfig = { stiffness: 300, damping: 30 };
   const smoothYBg = useSpring(yBg, springConfig);
   const smoothYContent = useSpring(yContent, springConfig);
@@ -53,7 +53,7 @@ const FleetPage = () => {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navigation />
-      
+
       {/* Hero Section */}
       <section className="relative h-screen bg-background flex items-center justify-center overflow-hidden">
         <motion.div
@@ -133,7 +133,7 @@ const FleetPage = () => {
       <section className="relative py-20 bg-white overflow-hidden">
         <div className="absolute top-0 left-0 w-96 h-96 bg-yellow-400/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-gray-900/5 rounded-full blur-3xl" />
-        
+
         <div className="container mx-auto px-6 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -162,19 +162,19 @@ const FleetPage = () => {
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-[500px] h-[500px] bg-gradient-to-br from-yellow-400/20 via-gray-900/10 to-yellow-400/20 rounded-full blur-3xl" />
                 </div>
-                
+
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.4 }}
                   className="relative z-10"
                 >
-<Image
-  src="/royal-enfield-himalayan.png"
-  alt={t('bikeAlt')}
-  width={700}   // or the actual image width
-  height={500}  // or the actual image height
-  className="w-full h-auto"
-/>
+                  <Image
+                    src="/royal-enfield-himalayan.png"
+                    alt={t('bikeAlt')}
+                    width={700}   // or the actual image width
+                    height={500}  // or the actual image height
+                    className="w-full h-auto"
+                  />
 
                 </motion.div>
 
@@ -255,7 +255,7 @@ const FleetPage = () => {
         </div>
       </section>
 
-     
+
 
 
       {/* Features Grid */}
@@ -418,7 +418,7 @@ const FleetPage = () => {
 
       <section className="relative h-screen overflow-hidden">
         {/* Fast parallax background */}
-     
+
 
         {/* SEO Content */}
         <div className="absolute inset-0 flex items-center justify-center">
