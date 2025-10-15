@@ -54,8 +54,6 @@ const PanamaPage = () => {
               className="object-cover"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-black/70" />
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-transparent" />
           </div>
         </motion.div>
 
@@ -81,7 +79,7 @@ const PanamaPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl md:text-2xl lg:text-3xl text-gray-200 mb-12 max-w-4xl mx-auto"
+            className="text-xl md:text-2xl lg:text-3xl text-background mb-12 max-w-4xl   mx-auto"
           >
             {t('heroSubtitle')}
           </motion.p>
@@ -92,8 +90,9 @@ const PanamaPage = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="flex flex-col sm:flex-row gap-6 justify-center items-center"
           >
-            <ButtonPrimary href="#trips" text={t('exploreCta')} />
-            <ButtonSecondary href="#book" text={t('bookCta')} />
+            <ButtonPrimary href="/Booking" text={t('bookCta')} />
+            <ButtonSecondary href="#trips" text={t('exploreCta')} />
+
           </motion.div>
         </motion.div>
         {/* Scroll indicator */}
@@ -271,7 +270,6 @@ const PanamaPage = () => {
                     fill
                     className="object-cover"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
 
                 <div className="p-6">
@@ -342,7 +340,7 @@ const PanamaPage = () => {
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
                   <div className="absolute bottom-6 left-6 right-6">
                     <h3 className="text-2xl font-bold text-white mb-3">{dest.title}</h3>
                     <p className="text-gray-200">{dest.desc}</p>
@@ -367,7 +365,7 @@ const PanamaPage = () => {
             >
               <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
                 <Image
-                  src="/cascade.webp"
+                  src="/Moto8.jpg"
                   alt={t('experienceAlt')}
                   fill
                   className="object-cover"

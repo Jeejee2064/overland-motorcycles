@@ -7,12 +7,16 @@ import { Calendar, User, MessageSquare, Bike, MapPin, Check, AlertCircle } from 
 
 import Navigation from '../../../components/Navigation';
 import Footer from '../../../components/Footer';
+import BookingCalendar from '../../../components/BookingCalendar';
+
+import { createBooking, checkBikesAvailable } from '@/lib/supabase/bookings';
 
 const BookingPage = () => {
   const t = useTranslations('BookingPage');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [validationError, setValidationError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -85,24 +89,74 @@ const BookingPage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateDates(startDate, endDate)) {
       alert(validationError);
       return;
     }
 
-    const bookingData = {
-      ...formData,
-      startDate,
-      endDate,
-      totalPrice: totalRentalPrice,
-      downPayment,
-      deposit: totalDeposit
-    };
-    console.log('Booking submitted:', bookingData);
-    alert(t('submitNote'));
+    // Prevent double submission
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      // Check availability
+      const available = await checkBikesAvailable(startDate, endDate);
+      const needed = parseInt(formData.bikeQuantity);
+
+      if (available < needed) {
+        alert(`Sorry, only ${available} motorcycle(s) available for the selected dates. Please choose different dates or contact us.`);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Create booking in database
+      const bookingData = {
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        country: formData.country,
+        start_date: startDate,
+        end_date: endDate,
+        bike_quantity: parseInt(formData.bikeQuantity),
+        total_price: totalRentalPrice,
+        down_payment: downPayment,
+        deposit: totalDeposit,
+        special_requests: formData.specialRequests,
+        hear_about_us: formData.hearAboutUs
+      };
+
+      const newBooking = await createBooking(bookingData);
+
+      console.log('Booking created successfully:', newBooking);
+
+      // Success message
+      alert('✅ Booking request submitted successfully! We will contact you soon to confirm your reservation and send payment instructions.');
+
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        country: '',
+        riders: '1',
+        bikeQuantity: '1',
+        specialRequests: '',
+        hearAboutUs: ''
+      });
+      setStartDate('');
+      setEndDate('');
+
+    } catch (error) {
+      console.error('Booking error:', error);
+      alert(error.message || 'There was an error submitting your booking. Please try again or contact us directly at overlandmotorcycles@gmail.com');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -128,23 +182,23 @@ const BookingPage = () => {
   const calculatePrice = () => {
     const days = calculateDays();
     if (days === 0) return 0;
-    
+
     const pricing = pricingData.find(p => p.days === days);
     if (pricing) return pricing.price;
-    
+
     const sortedPricing = [...pricingData].sort((a, b) => a.days - b.days);
     for (let i = 0; i < sortedPricing.length - 1; i++) {
       if (days > sortedPricing[i].days && days < sortedPricing[i + 1].days) {
         return sortedPricing[i + 1].price;
       }
     }
-    
+
     if (days > 21) {
       const basePrice = 1800;
       const baseDays = 21;
       return Math.round((basePrice / baseDays) * days);
     }
-    
+
     return 0;
   };
 
@@ -168,12 +222,12 @@ const BookingPage = () => {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navigation />
-    
+
 
       {/* Main Content */}
       <section className="py-16 bg-gray-50 mt-16">
         <div className="max-w-7xl mx-auto px-4">
-          
+
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -189,7 +243,7 @@ const BookingPage = () => {
           </motion.div>
 
           <div className="grid lg:grid-cols-3 gap-8">
-            
+
             {/* Left Column - Date Selection */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
@@ -198,7 +252,7 @@ const BookingPage = () => {
               className="lg:col-span-2"
             >
               <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
-                
+
                 {/* Step 1: Trip Dates */}
                 <div className="mb-8">
                   <div className="flex items-center gap-3 mb-6">
@@ -207,35 +261,21 @@ const BookingPage = () => {
                       {t('tripDetails')}
                     </h3>
                   </div>
-                  
-                  <div className="grid md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        {t('startDate')} *
-                      </label>
-                      <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => handleStartDateChange(e.target.value)}
-                        min={getMinDate()}
-                        required
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all"
-                      />
-                    </div>
 
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 mb-2">
-                        {t('endDate')} *
-                      </label>
-                      <input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => handleEndDateChange(e.target.value)}
-                        min={startDate || getMinDate()}
-                        required
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all"
-                      />
-                    </div>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <BookingCalendar
+                      selectedRange={{
+                        startDate: startDate ? new Date(startDate) : new Date(),
+                        endDate: endDate ? new Date(endDate) : new Date(),
+                        key: 'selection'
+                      }}
+                      onChange={(range) => {
+                        setStartDate(range.startDate.toISOString().split('T')[0]);
+                        setEndDate(range.endDate.toISOString().split('T')[0]);
+                        validateDates(range.startDate, range.endDate);
+                      }}
+                    />
+
 
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -283,7 +323,7 @@ const BookingPage = () => {
                         {t('personalInfo')}
                       </h3>
                     </div>
-                    
+
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -370,7 +410,7 @@ const BookingPage = () => {
                         {t('additionalInfo')}
                       </h3>
                     </div>
-                    
+
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -423,7 +463,7 @@ const BookingPage = () => {
                     <h4 className="text-2xl font-bold text-yellow-400 mb-6 text-center">
                       {t('quoteTitle')}
                     </h4>
-                    
+
                     <div className="space-y-4">
                       {/* Trip Summary */}
                       <div className="bg-gray-700/50 rounded-xl p-4">
@@ -491,9 +531,11 @@ const BookingPage = () => {
                     {/* Submit Button */}
                     <button
                       onClick={handleSubmit}
-                      className="w-full mt-6 px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold text-lg rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
+                      disabled={isSubmitting}
+                      className={`w-full mt-6 px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold text-lg rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
                     >
-                      {t('submitBooking')}
+                      {isSubmitting ? 'Submitting...' : t('submitBooking')}
                     </button>
                     <p className="text-xs text-gray-400 text-center mt-3">
                       {t('submitNote')}

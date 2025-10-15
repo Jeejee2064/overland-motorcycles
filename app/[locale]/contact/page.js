@@ -8,9 +8,11 @@ import { MapPin, Clock, Mail, Phone, Send, Instagram, Facebook } from 'lucide-re
 import Navigation from '../../../components/Navigation';
 import Footer from '../../../components/Footer';
 import ButtonPrimary from '../../../components/ButtonPrimary';
+import { createMessage } from '@/lib/supabase/messages';
 
 const ContactPage = () => {
   const t = useTranslations('ContactPage');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -18,10 +20,55 @@ const ContactPage = () => {
     message: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    try {
+      // Save to Supabase database
+      await createMessage({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message
+      });
+
+      console.log('Message saved to database successfully');
+      
+      // Show success message
+      alert('✅ Message sent successfully! We will get back to you soon.');
+      
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        message: ''
+      });
+
+      // Also submit to Formspree as backup
+      const formspreeData = new FormData();
+      formspreeData.append('name', formData.name);
+      formspreeData.append('email', formData.email);
+      formspreeData.append('phone', formData.phone);
+      formspreeData.append('message', formData.message);
+
+      fetch('https://formspree.io/f/xblzydjy', {
+        method: 'POST',
+        body: formspreeData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).catch(err => console.log('Formspree backup failed:', err));
+
+    } catch (error) {
+      console.error('Message error:', error);
+      alert('There was an error sending your message. Please try again or contact us directly at overlandmotorcycles@gmail.com');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
@@ -151,11 +198,7 @@ const ContactPage = () => {
                   {t('sendMessage')}
                 </h3>
 
-                <form
-                  action="https://formspree.io/f/xblzydjy"
-                  method="POST"
-                  className="space-y-6"
-                >
+                <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Name */}
                   <div>
                     <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
@@ -165,6 +208,8 @@ const ContactPage = () => {
                       type="text"
                       id="name"
                       name="name"
+                      value={formData.name}
+                      onChange={handleChange}
                       required
                       className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all"
                       placeholder="John Doe"
@@ -180,6 +225,8 @@ const ContactPage = () => {
                       type="email"
                       id="email"
                       name="email"
+                      value={formData.email}
+                      onChange={handleChange}
                       required
                       className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all"
                       placeholder="john@example.com"
@@ -195,6 +242,8 @@ const ContactPage = () => {
                       type="tel"
                       id="phone"
                       name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
                       className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all"
                       placeholder="+507 6805-1100"
                     />
@@ -208,6 +257,8 @@ const ContactPage = () => {
                     <textarea
                       id="message"
                       name="message"
+                      value={formData.message}
+                      onChange={handleChange}
                       required
                       rows={6}
                       className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all resize-none"
@@ -218,10 +269,13 @@ const ContactPage = () => {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="w-full px-8 py-4 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    disabled={isSubmitting}
+                    className={`w-full px-8 py-4 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
+                      isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
                   >
                     <Send size={20} />
-                    {t('submit')}
+                    {isSubmitting ? 'Sending...' : t('submit')}
                   </button>
                 </form>
 
