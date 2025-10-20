@@ -301,6 +301,14 @@
   "infoTitle3": "Asesoramiento experto",
   "infoDesc3": "Obtén recomendaciones de rutas y consejos locales de nuestro equipo experimentado."
 },
+"calendar": {
+    "loading": "Cargando disponibilidad...",
+    "allAvailable": "Todo disponible",
+    "twoThreeLeft": "Quedan 2–3",
+    "oneLeft": "Queda 1",
+    "fullyBooked": "Completo",
+    "selectedPeriod": "Período seleccionado"
+  },
   "PricingPage": {
     "heroTitle": "Precios de Alquiler",
     "heroSubtitle": "Tarifas transparentes y todo incluido para tu aventura",

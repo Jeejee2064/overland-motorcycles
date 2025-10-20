@@ -339,6 +339,14 @@
     "infoTitle3": "Expert Guidance",
     "infoDesc3": "Get route recommendations and local tips from our experienced team."
   },
+  "calendar": {
+    "loading": "Loading availability...",
+    "allAvailable": "All Available",
+    "twoThreeLeft": "2–3 Left",
+    "oneLeft": "1 Left",
+    "fullyBooked": "Fully Booked",
+    "selectedPeriod": "Selected Period"
+  },
   "PricingPage": {
     "heroTitle": "Rental Pricing",
     "heroSubtitle": "Transparent, all-inclusive rates for your adventure",

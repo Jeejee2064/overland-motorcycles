@@ -35,7 +35,6 @@ const Navigation = () => {
     { name: t('navFleet'), href: '/Fleet' },
     { name: t('navPanama'), href: '/Panama' },
     { name: t('navPricing'), href: 'Pricing' },
-    { name: t('navAbout'), href: '#' },
     { name: t('navContact'), href: '/contact' }
   ];
 

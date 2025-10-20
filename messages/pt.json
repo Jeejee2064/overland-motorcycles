@@ -301,6 +301,14 @@
   "infoTitle3": "Orientação especializada",
   "infoDesc3": "Receba recomendações de rotas e dicas locais da nossa equipe experiente."
 },
+"calendar": {
+    "loading": "Carregando disponibilidade...",
+    "allAvailable": "4",
+    "twoThreeLeft": "2-3",
+    "oneLeft": "1",
+    "fullyBooked": "Lotado",
+    "selectedPeriod": "Período selecionado"
+  },
   "PricingPage": {
     "heroTitle": "Preços de Aluguel",
     "heroSubtitle": "Tarifas transparentes e tudo incluído para sua aventura",

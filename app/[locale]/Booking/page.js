@@ -47,25 +47,72 @@ const BookingPage = () => {
     { days: 21, price: 1800 }
   ];
 
+
+  const isFormValid = () => {
+  return (
+    formData.firstName.trim() !== '' &&
+    formData.lastName.trim() !== '' &&
+    formData.email.trim() !== '' &&
+    formData.phone.trim() !== '' &&
+    formData.country.trim() !== '' &&
+    startDate !== '' &&
+    endDate !== ''
+  );
+};
+
+  // Helper function to format date as YYYY-MM-DD in local timezone
+  const formatLocalDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Helper function to parse date string as local date
+  const parseLocalDate = (dateStr) => {
+    if (!dateStr) return new Date();
+    const parts = dateStr.split('-');
+    return new Date(
+      parseInt(parts[0]), 
+      parseInt(parts[1]) - 1, 
+      parseInt(parts[2]),
+      12, 0, 0 // Use noon to avoid DST issues
+    );
+  };
+
+  // Format date for display (e.g., "Jan 21, 2025")
+  const formatDisplayDate = (dateStr) => {
+    if (!dateStr) return '';
+    const date = parseLocalDate(dateStr);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric', 
+      year: 'numeric' 
+    });
+  };
+
   const validateDates = (start, end) => {
     if (!start || !end) {
       setValidationError(t('validationSelectDates'));
       return false;
     }
 
-    const startDateTime = new Date(start).getTime();
-    const endDateTime = new Date(end).getTime();
-    const now = new Date().getTime();
-    const minAdvanceTime = now + (48 * 60 * 60 * 1000); // 48 hours from now
+    const startDate = parseLocalDate(start);
+    const endDate = parseLocalDate(end);
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    
+    const minAdvanceDate = new Date(now);
+    minAdvanceDate.setDate(minAdvanceDate.getDate() + 2); // 48 hours = 2 days
 
     // Check if booking is at least 48 hours in advance
-    if (startDateTime < minAdvanceTime) {
+    if (startDate < minAdvanceDate) {
       setValidationError(t('validationMinimum48h'));
       return false;
     }
 
     // Check minimum 2 days rental
-    const days = Math.ceil((endDateTime - startDateTime) / (1000 * 60 * 60 * 24));
+    const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
     if (days < 2) {
       setValidationError(t('validationMinimum2Days'));
       return false;
@@ -75,23 +122,26 @@ const BookingPage = () => {
     return true;
   };
 
-  const handleStartDateChange = (date) => {
-    setStartDate(date);
-    if (endDate) {
-      validateDates(date, endDate);
-    }
-  };
-
-  const handleEndDateChange = (date) => {
-    setEndDate(date);
-    if (startDate) {
-      validateDates(startDate, date);
+  const handleDateRangeChange = (range) => {
+    const start = formatLocalDate(range.startDate);
+    const end = formatLocalDate(range.endDate);
+    
+    console.log('Date range selected:', { start, end });
+    
+    setStartDate(start);
+    setEndDate(end);
+    
+    if (start && end) {
+      validateDates(start, end);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+if (!isFormValid()) {
+  alert('Please fill all required fields and select a valid date range.');
+  return;
+}
     if (!validateDates(startDate, endDate)) {
       alert(validationError);
       return;
@@ -169,8 +219,8 @@ const BookingPage = () => {
   // Calculate number of days
   const calculateDays = () => {
     if (startDate && endDate) {
-      const start = new Date(startDate);
-      const end = new Date(endDate);
+      const start = parseLocalDate(startDate);
+      const end = parseLocalDate(endDate);
       const diffTime = Math.abs(end - start);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       return diffDays;
@@ -212,17 +262,9 @@ const BookingPage = () => {
 
   const showQuote = totalRentalPrice > 0 && !validationError;
 
-  // Calculate minimum date (48 hours from now)
-  const getMinDate = () => {
-    const minDate = new Date();
-    minDate.setDate(minDate.getDate() + 2);
-    return minDate.toISOString().split('T')[0];
-  };
-
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navigation />
-
 
       {/* Main Content */}
       <section className="py-16 bg-gray-50 mt-16">
@@ -265,17 +307,12 @@ const BookingPage = () => {
                   <div className="grid md:grid-cols-2 gap-4">
                     <BookingCalendar
                       selectedRange={{
-                        startDate: startDate ? new Date(startDate) : new Date(),
-                        endDate: endDate ? new Date(endDate) : new Date(),
+                        startDate: startDate ? parseLocalDate(startDate) : new Date(),
+                        endDate: endDate ? parseLocalDate(endDate) : new Date(),
                         key: 'selection'
                       }}
-                      onChange={(range) => {
-                        setStartDate(range.startDate.toISOString().split('T')[0]);
-                        setEndDate(range.endDate.toISOString().split('T')[0]);
-                        validateDates(range.startDate, range.endDate);
-                      }}
+                      onChange={handleDateRangeChange}
                     />
-
 
                     <div>
                       <label className="block text-sm font-semibold text-gray-900 mb-2">
@@ -465,13 +502,24 @@ const BookingPage = () => {
                     </h4>
 
                     <div className="space-y-4">
+                      {/* Date Range Display */}
+                      <div className="bg-yellow-400/10 border border-yellow-400/30 rounded-xl p-4">
+                        <div className="text-center">
+                          <p className="text-xs text-yellow-400 font-semibold mb-2">RENTAL PERIOD</p>
+                          <div className="flex items-center justify-center gap-2 text-white">
+                            <span className="font-bold">{formatDisplayDate(startDate)}</span>
+                            <span className="text-yellow-400">→</span>
+                            <span className="font-bold">{formatDisplayDate(endDate)}</span>
+                          </div>
+                          <p className="text-xs text-gray-400 mt-2">
+                            {calculateDays()} {calculateDays() === 1 ? 'day' : 'days'} • {numBikes} {numBikes === 1 ? 'motorcycle' : 'motorcycles'}
+                          </p>
+                        </div>
+                      </div>
+
                       {/* Trip Summary */}
                       <div className="bg-gray-700/50 rounded-xl p-4">
-                        <div className="flex justify-between text-sm text-gray-300 mb-1">
-                          <span>{calculateDays()} {calculateDays() === 1 ? t('day') : t('days')}</span>
-                          <span>{numBikes} {numBikes === 1 ? t('bike') : t('bikes')}</span>
-                        </div>
-                        <div className="flex justify-between items-center pt-2 border-t border-gray-600">
+                        <div className="flex justify-between items-center">
                           <span className="text-white font-semibold">{t('rentalLabel')}</span>
                           <span className="text-xl font-bold text-white">${totalRentalPrice}</span>
                         </div>
@@ -531,7 +579,7 @@ const BookingPage = () => {
                     {/* Submit Button */}
                     <button
                       onClick={handleSubmit}
-                      disabled={isSubmitting}
+  disabled={isSubmitting || !isFormValid()}
                       className={`w-full mt-6 px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold text-lg rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                     >

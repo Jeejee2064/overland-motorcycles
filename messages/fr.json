@@ -301,6 +301,14 @@
   "infoTitle3": "Conseils d’experts",
   "infoDesc3": "Profitez de recommandations d’itinéraires et de conseils locaux de notre équipe expérimentée."
 },
+  "calendar": {
+    "loading": "Chargement des disponibilités...",
+    "allAvailable": "Tout disponible",
+    "twoThreeLeft": "2-3 restants",
+    "oneLeft": "1 restant",
+    "fullyBooked": "Complet",
+    "selectedPeriod": "Période sélectionnée"
+  },
   "PricingPage": {
     "heroTitle": "Tarifs de location",
     "heroSubtitle": "Tarifs clairs et tout compris pour votre aventure",
