@@ -83,6 +83,8 @@ export default function BookingCalendar({ onChange, selectedRange }) {
       {loading ? (
         <div className="p-6 text-center text-gray-500">{t('loading')}</div>
       ) : (
+        <div className="overflow-x-auto -mx-4 px-4">
+
         <DateRange
           ranges={[selectedRange]}
           onChange={(item) => onChange(item.selection)}
@@ -95,7 +97,7 @@ export default function BookingCalendar({ onChange, selectedRange }) {
           direction="horizontal"
           showDateDisplay={false}
         />
-      )}
+        </ div>     )}
 
       {/* Legend */}
       <div className="flex justify-around text-xs p-2 bg-gray-50 border-t">

@@ -293,7 +293,7 @@ if (!isFormValid()) {
               transition={{ duration: 0.6 }}
               className="lg:col-span-2"
             >
-              <div className="bg-white p-6 md:p-8 rounded-2xl shadow-lg border border-gray-200">
+              <div className="bg-white p-0 md:p-8 rounded-2xl md:shadow-lg md:border md:border-gray-200">
 
                 {/* Step 1: Trip Dates */}
                 <div className="mb-8">
