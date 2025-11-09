@@ -216,15 +216,13 @@ const BookingPage = () => {
         throw new Error(error);
       }
 
-      // 4. Rediriger vers Stripe Checkout
-      const stripe = await stripePromise;
-      const { error: stripeError } = await stripe.redirectToCheckout({
-        sessionId: sessionId,
-      });
 
-      if (stripeError) {
-        throw new Error(stripeError.message);
-      }
+  // 4. Redirect user to the Checkout URL directly
+if (url) {
+  window.location.href = url;
+} else {
+  throw new Error('Missing Checkout URL from server.');
+}
 
     } catch (error) {
       console.error('Booking error:', error);
