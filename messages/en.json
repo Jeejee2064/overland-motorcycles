@@ -61,6 +61,16 @@
     "submit": "Send Message",
     "followUs": "Follow Us"
   },
+    "ContactMetadata": {
+    "title": "Contact Us | Royal Enfield Motorcycle Rental Panama City",
+    "description": "Contact Overland Motorcycles in Panama City. Rent Royal Enfield Himalayan 450. Located at Santa Ana, Panama City. Open Mon-Fri 10AM-6PM. Call +507 6805-1100 or email overlandmotorcycles@gmail.com",
+    "keywords": "contact motorcycle rental Panama, Panama City motorcycle rental, Royal Enfield rental contact, Santa Ana Panama motorcycles, motorcycle rental hours Panama, book motorcycle Panama, overland motorcycles contact",
+    "ogTitle": "Contact Us | Royal Enfield Motorcycle Rental Panama City",
+    "ogDescription": "Get in touch with Overland Motorcycles. Royal Enfield Himalayan 450 rentals in Santa Ana, Panama City. Open Mon-Fri 10AM-6PM.",
+    "twitterTitle": "Contact Overland Motorcycles | Panama City",
+    "twitterDescription": "Rent Royal Enfield Himalayan 450 in Panama City. Located in Santa Ana. Contact us today!",
+    "siteName": "Overland Motorcycles Panama"
+  },
   "Navigation": {
     "logoText": "OVERLAND MOTORCYCLES",
     "logoAlt": "Overland Motorcycles Logo",
@@ -87,7 +97,7 @@
   },
   "NotFound": {
     "title": "Page Not Found",
-    "description": "Sorry, we couldn&apos;t find the page you&apos;re looking for.",
+    "description": "Sorry, we couldn't find the page you're looking for.",
     "backHome": "Go back home"
   },
 "PanamaPage": {
@@ -110,14 +120,14 @@
     "mountainsDesc": "From cloud forests to volcanic peaks, discover breathtaking landscapes and scenic mountain roads.",
     
     "wildlifeTitle": "Incredible Wildlife",
-    "wildlifeSubtitle": "Encounter Panama&apos;s amazing biodiversity at every turn",
+    "wildlifeSubtitle": "Encounter Panama's amazing biodiversity at every turn",
     "slothTitle": "Sloths in the Wild",
     "crocoTitle": "Crocodiles & Caimans",
     "hibiscusTitle": "Tropical Flora",
     "toucanTitle": "Colorful Birds",
     
     "tripsTitle": "Proposed Motorcycle Tours",
-    "tripsSubtitle": "Expertly curated adventures through Panama&apos;s most spectacular landscapes",
+    "tripsSubtitle": "Expertly curated adventures through Panama's most spectacular landscapes",
     "learnMore": "Learn More",
     
     "trip1Title": "Caribbean Paradise Tour",
@@ -137,7 +147,7 @@
     "trip2H3": "Scenic mountain passes and viewpoints",
     
     "trip3Title": "Waterfall Discovery",
-    "trip3Desc": "Journey through jungle trails to discover Panama&apos;s most stunning hidden waterfalls",
+    "trip3Desc": "Journey through jungle trails to discover Panama's most stunning hidden waterfalls",
     "trip3Duration": "2-3 Days",
     "trip3Difficulty": "Moderate",
     "trip3H1": "Pristine cascades in lush rainforest",
@@ -154,10 +164,10 @@
     "cultureDesc": "Experience authentic indigenous traditions and crafts in remote communities accessible only by boat or bike",
     
     "busTitle": "Diablo Rojo Buses",
-    "busDesc": "Iconic colorful buses that represent Panama&apos;s vibrant street culture and artistic expression",
+    "busDesc": "Iconic colorful buses that represent Panama's vibrant street culture and artistic expression",
     
     "experienceTitle": "Experience Panama by Motorcycle",
-    "experienceDesc1": "Panama offers the perfect blend of adventure and natural beauty. From the moment you hit the road, you&apos;ll be captivated by diverse landscapes that change from tropical coastlines to mountain highlands.",
+    "experienceDesc1": "Panama offers the perfect blend of adventure and natural beauty. From the moment you hit the road, you'll be captivated by diverse landscapes that change from tropical coastlines to mountain highlands.",
     "experienceDesc2": "Ride through indigenous villages, explore hidden waterfalls, and camp under starlit skies. Every turn reveals a new wonder in this biodiverse paradise.",
     "experienceAlt": "Panama Waterfall Adventure",
     "startAdventure": "Start Your Adventure",
@@ -177,12 +187,22 @@
     "routesDesc": "From beaches to mountains in one trip",
     
     "ctaTitle": "Ready to Explore Panama?",
-    "ctaDesc": "Join us for an unforgettable motorcycle adventure through Central America&apos;s hidden gem",
+    "ctaDesc": "Join us for an unforgettable motorcycle adventure through Central America's hidden gem",
     "ctaAlt": "Panama Mountain Adventure",
     "bookNow": "Book Your Trip",
     "contactUs": "Contact Us"
   },
-  
+    "PanamaMetadata": {
+    "title": "Explore Panama by Motorcycle | Ultimate Riding Destination Guide",
+    "description": "Discover why Panama is the perfect motorcycle destination. Explore incredible biodiversity, pristine beaches, cloud forests, Caribbean and Pacific coasts, and mountain roads on your Royal Enfield Himalayan 450.",
+    "keywords": "Panama motorcycle riding, Panama by bike, motorcycle destination Panama, Panama road trip, San Blas motorcycle, Panama mountain roads, Caribbean Pacific motorcycle route, Panama adventure riding, Central America motorcycle, Panama biodiversity, Boquete riding, Panama riding routes",
+    "ogTitle": "Explore Panama by Motorcycle | Where Two Oceans Meet",
+    "ogDescription": "Discover Panama's unique biodiversity, two ocean coasts, cloud forests, and indigenous culture. The ultimate motorcycle riding destination in Central America.",
+    "ogImageAlt": "Motorcycle riding through Panama's mountains and tropical landscapes",
+    "twitterTitle": "Explore Panama by Motorcycle | Ride Where Adventure Begins",
+    "twitterDescription": "Experience Panama's Caribbean and Pacific coasts, cloud forests, and endless riding routes on two wheels.",
+    "siteName": "Panama Motorcycle Rentals"
+  },
   "FleetPage": {
     "heroTitle": "Our Fleet",
     "heroSubtitle": "Royal Enfield Himalayan 450 - Built for Adventure",
@@ -192,7 +212,7 @@
     "showMore": "Show More",
     "showLess": "Show Less",
     "bikeTitle": "Royal Enfield Himalayan 450",
-    "bikeSubtitle": "The ultimate adventure touring motorcycle for Panama&apos;s diverse terrain",
+    "bikeSubtitle": "The ultimate adventure touring motorcycle for Panama's diverse terrain",
     "bikeAlt": "Royal Enfield Himalayan 450",
     "badge": "Adventure Ready",
     
@@ -251,15 +271,26 @@
     
     "bannerTitle": "Motorcycle Rental in Panama",
     "bannerBgAlt": "Panama Mountain Motorcycle Adventure",
-    "seoText1": "Looking for premium motorcycle rentals in Panama? Our Royal Enfield Himalayan 450 fleet offers the perfect combination of reliability, comfort, and off-road capability for exploring Panama&apos;s diverse landscapes. From the Caribbean coast to Pacific beaches, from cloud forests to mountain passes, our bikes are built for every adventure.",
-    "seoText2": "Each rental includes comprehensive insurance, premium safety equipment, GPS navigation, and ample storage space. Whether you&apos;re planning a day trip to nearby waterfalls or a multi-day expedition through Panama&apos;s highlands, our well-maintained Himalayan 450 motorcycles deliver performance and peace of mind.",
-    "seoText3": "Rent a motorcycle in Panama City, Colón, or arrange delivery anywhere in the country. Experience the freedom of two wheels and discover why Panama is becoming Central America&apos;s premier motorcycle touring destination. Book your adventure today and ride with confidence through one of the world&apos;s most biodiverse countries.",
+    "seoText1": "Looking for premium motorcycle rentals in Panama? Our Royal Enfield Himalayan 450 fleet offers the perfect combination of reliability, comfort, and off-road capability for exploring Panama's diverse landscapes. From the Caribbean coast to Pacific beaches, from cloud forests to mountain passes, our bikes are built for every adventure.",
+    "seoText2": "Each rental includes comprehensive insurance, premium safety equipment, GPS navigation, and ample storage space. Whether you're planning a day trip to nearby waterfalls or a multi-day expedition through Panama's highlands, our well-maintained Himalayan 450 motorcycles deliver performance and peace of mind.",
+    "seoText3": "Rent a motorcycle in Panama City, Colón, or arrange delivery anywhere in the country. Experience the freedom of two wheels and discover why Panama is becoming Central America's premier motorcycle touring destination. Book your adventure today and ride with confidence through one of the world's most biodiverse countries.",
     
     "ctaTitle": "Ready to Ride?",
     "ctaDesc": "Experience the freedom of the open road with our perfectly equipped Himalayan 450",
     "ctaAlt": "Book Your Himalayan",
     "rentNow": "Rent Your Bike",
     "askQuestion": "Ask a Question"
+  },
+    "FleetMetadata": {
+    "title": "Royal Enfield Himalayan 450 Fleet | Premium Motorcycle Rental Panama",
+    "description": "Rent the Royal Enfield Himalayan 450 in Panama. 452cc liquid-cooled engine, 40HP, advanced suspension, dual-sport capability. Includes cases, helmets, GPS. Perfect for Panama's diverse terrain from Caribbean to Pacific.",
+    "keywords": "Royal Enfield Himalayan 450 rental, adventure motorcycle Panama, dual-sport bike rental, 450cc motorcycle Panama, Royal Enfield Panama, off-road motorcycle rental, motorcycle specs Himalayan, adventure bike fleet Panama, premium motorcycle rental",
+    "ogTitle": "Royal Enfield Himalayan 450 Fleet | Adventure Motorcycle Rental Panama",
+    "ogDescription": "Experience Panama on our premium Royal Enfield Himalayan 450. 40HP, 452cc, advanced suspension, fully equipped with cases and safety gear. Built for adventure.",
+    "ogImageAlt": "Royal Enfield Himalayan 450 motorcycle fleet available for rent in Panama",
+    "twitterTitle": "Royal Enfield Himalayan 450 Fleet | Rent in Panama",
+    "twitterDescription": "Premium adventure motorcycles. 40HP, dual-sport capability, fully equipped. Perfect for exploring Panama.",
+    "siteName": "Panama Motorcycle Rentals"
   },
      "BookingPage": {
     "heroTitle": "Book Your Adventure",
@@ -339,6 +370,17 @@
     "infoTitle3": "Expert Guidance",
     "infoDesc3": "Get route recommendations and local tips from our experienced team."
   },
+   "BookingMetadata": {
+    "title": "Book Royal Enfield Himalayan 450 | Motorcycle Rental Panama City",
+    "description": "Rent a Royal Enfield Himalayan 450cc in Panama City, Panama. Premium adventure motorcycle rentals with flexible booking, full insurance, and 24/7 support. Book your Panama motorcycle adventure today.",
+    "keywords": "Royal Enfield Himalayan rental Panama, motorcycle rental Panama City, adventure bike rental Panama, Royal Enfield 450cc rent, Panama motorcycle tours, bike rental Panama, dual-sport motorcycle Panama",
+    "ogTitle": "Book Royal Enfield Himalayan 450 Rental in Panama City",
+    "ogDescription": "Reserve your Royal Enfield Himalayan 450cc adventure motorcycle in Panama City. Explore Panama on the ultimate dual-sport bike with premium rental service.",
+    "ogImageAlt": "Royal Enfield Himalayan 450 motorcycle available for rent in Panama City",
+    "twitterTitle": "Book Royal Enfield Himalayan 450 | Panama City Motorcycle Rental",
+    "twitterDescription": "Rent the legendary Royal Enfield Himalayan 450cc in Panama City. Adventure awaits!",
+    "siteName": "Panama Motorcycle Rentals"
+  },
   "calendar": {
     "loading": "Loading availability...",
     "allAvailable": "All Available",
@@ -360,7 +402,7 @@
     "priceNote": "All prices are in USD and include all equipment, insurance, and taxes",
     "bookNow": "Book Your Adventure",
     
-    "includedTitle": "What&apos;s Included",
+    "includedTitle": "What's Included",
     "includedSubtitle": "Everything you need for a safe and memorable adventure",
     "included1": "Royal Enfield Himalayan 450cc motorcycle",
     "included2": "Driver and passenger helmets",
@@ -389,13 +431,23 @@
     "faq1A": "Yes! Extensions are subject to availability. Contact us at least 24 hours in advance to arrange an extension at the daily rate.",
     
     "faq2Q": "What happens if the motorcycle breaks down?",
-    "faq2A": "We provide 24/7 roadside assistance. Mechanical failures are covered at no extra cost. We&apos;ll either repair the bike or provide a replacement.",
+    "faq2A": "We provide 24/7 roadside assistance. Mechanical failures are covered at no extra cost. We'll either repair the bike or provide a replacement.",
     
     "faq3Q": "Can I ride to other countries?",
     "faq3A": "Our motorcycles are registered for use within Panama only. Cross-border travel requires special arrangements and additional documentation.",
     
     "faq4Q": "What if I damage the motorcycle?",
-    "faq4A": "Our comprehensive insurance covers most damages. Your security deposit may be used for deductibles. We&apos;ll provide a full damage report and cost breakdown."
+    "faq4A": "Our comprehensive insurance covers most damages. Your security deposit may be used for deductibles. We'll provide a full damage report and cost breakdown."
+  },
+    "PricingMetadata": {
+    "title": "Pricing & Rates | Royal Enfield Himalayan 450 Rental Panama",
+    "description": "Transparent Royal Enfield Himalayan 450 rental rates in Panama. All-inclusive pricing with helmets, cases, GPS, insurance, and 24/7 support. Daily and weekly rates available. $1000 security deposit.",
+    "keywords": "Royal Enfield rental prices Panama, motorcycle rental rates Panama City, Himalayan 450 rental cost, motorcycle rental pricing Panama, daily motorcycle rental Panama, weekly motorcycle rental Panama, adventure bike rental rates, motorcycle insurance Panama",
+    "ogTitle": "Royal Enfield Himalayan 450 Rental Pricing | Panama City",
+    "ogDescription": "All-inclusive Royal Enfield Himalayan 450 rental rates. Includes helmets, cases, GPS, insurance, and roadside assistance. Transparent pricing with no hidden fees.",
+    "twitterTitle": "Rental Pricing | Royal Enfield Himalayan 450 Panama",
+    "twitterDescription": "Transparent all-inclusive rates for Royal Enfield Himalayan 450 rentals in Panama. Daily and weekly options available.",
+    "siteName": "Overland Motorcycles Panama"
   },
    "TermsPage": {
     "heroTitle": "Terms and Conditions",

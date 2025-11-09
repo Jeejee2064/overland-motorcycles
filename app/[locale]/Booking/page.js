@@ -8,8 +8,11 @@ import { Calendar, User, MessageSquare, Bike, MapPin, Check, AlertCircle } from 
 import Navigation from '../../../components/Navigation';
 import Footer from '../../../components/Footer';
 import BookingCalendar from '../../../components/BookingCalendar';
+import { loadStripe } from '@stripe/stripe-js';
 
 import { createBooking, checkBikesAvailable } from '@/lib/supabase/bookings';
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 const BookingPage = () => {
   const t = useTranslations('BookingPage');
@@ -49,16 +52,16 @@ const BookingPage = () => {
 
 
   const isFormValid = () => {
-  return (
-    formData.firstName.trim() !== '' &&
-    formData.lastName.trim() !== '' &&
-    formData.email.trim() !== '' &&
-    formData.phone.trim() !== '' &&
-    formData.country.trim() !== '' &&
-    startDate !== '' &&
-    endDate !== ''
-  );
-};
+    return (
+      formData.firstName.trim() !== '' &&
+      formData.lastName.trim() !== '' &&
+      formData.email.trim() !== '' &&
+      formData.phone.trim() !== '' &&
+      formData.country.trim() !== '' &&
+      startDate !== '' &&
+      endDate !== ''
+    );
+  };
 
   // Helper function to format date as YYYY-MM-DD in local timezone
   const formatLocalDate = (date) => {
@@ -73,8 +76,8 @@ const BookingPage = () => {
     if (!dateStr) return new Date();
     const parts = dateStr.split('-');
     return new Date(
-      parseInt(parts[0]), 
-      parseInt(parts[1]) - 1, 
+      parseInt(parts[0]),
+      parseInt(parts[1]) - 1,
       parseInt(parts[2]),
       12, 0, 0 // Use noon to avoid DST issues
     );
@@ -84,10 +87,10 @@ const BookingPage = () => {
   const formatDisplayDate = (dateStr) => {
     if (!dateStr) return '';
     const date = parseLocalDate(dateStr);
-    return date.toLocaleDateString('en-US', { 
-      month: 'short', 
-      day: 'numeric', 
-      year: 'numeric' 
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
     });
   };
 
@@ -101,7 +104,7 @@ const BookingPage = () => {
     const endDate = parseLocalDate(end);
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-    
+
     const minAdvanceDate = new Date(now);
     minAdvanceDate.setDate(minAdvanceDate.getDate() + 2); // 48 hours = 2 days
 
@@ -125,12 +128,12 @@ const BookingPage = () => {
   const handleDateRangeChange = (range) => {
     const start = formatLocalDate(range.startDate);
     const end = formatLocalDate(range.endDate);
-    
+
     console.log('Date range selected:', { start, end });
-    
+
     setStartDate(start);
     setEndDate(end);
-    
+
     if (start && end) {
       validateDates(start, end);
     }
@@ -138,10 +141,12 @@ const BookingPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-if (!isFormValid()) {
-  alert('Please fill all required fields and select a valid date range.');
-  return;
-}
+
+    if (!isFormValid()) {
+      alert('Please fill all required fields and select a valid date range.');
+      return;
+    }
+
     if (!validateDates(startDate, endDate)) {
       alert(validationError);
       return;
@@ -152,7 +157,7 @@ if (!isFormValid()) {
     setIsSubmitting(true);
 
     try {
-      // Check availability
+      // 1. Vérifier la disponibilité
       const available = await checkBikesAvailable(startDate, endDate);
       const needed = parseInt(formData.bikeQuantity);
 
@@ -162,7 +167,7 @@ if (!isFormValid()) {
         return;
       }
 
-      // Create booking in database
+      // 2. Créer la réservation dans Supabase
       const bookingData = {
         first_name: formData.firstName,
         last_name: formData.lastName,
@@ -176,35 +181,54 @@ if (!isFormValid()) {
         down_payment: downPayment,
         deposit: totalDeposit,
         special_requests: formData.specialRequests,
-        hear_about_us: formData.hearAboutUs
+        hear_about_us: formData.hearAboutUs,
+        status: 'pending',
+        payment_status: 'pending'
       };
 
       const newBooking = await createBooking(bookingData);
+      console.log('Booking created:', newBooking);
 
-      console.log('Booking created successfully:', newBooking);
-
-      // Success message
-      alert('✅ Booking request submitted successfully! We will contact you soon to confirm your reservation and send payment instructions.');
-
-      // Reset form
-      setFormData({
-        firstName: '',
-        lastName: '',
-        email: '',
-        phone: '',
-        country: '',
-        riders: '1',
-        bikeQuantity: '1',
-        specialRequests: '',
-        hearAboutUs: ''
+      // 3. Créer la session Stripe Checkout
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          bookingId: newBooking.id,
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          downPayment: downPayment,
+          totalRentalPrice: totalRentalPrice,
+          totalDeposit: totalDeposit,
+          startDate: startDate,
+          endDate: endDate,
+          bikeQuantity: parseInt(formData.bikeQuantity),
+          calculatedDays: calculateDays()
+        }),
       });
-      setStartDate('');
-      setEndDate('');
+
+      const { sessionId, url, error } = await response.json();
+
+      if (error) {
+        throw new Error(error);
+      }
+
+      // 4. Rediriger vers Stripe Checkout
+      const stripe = await stripePromise;
+      const { error: stripeError } = await stripe.redirectToCheckout({
+        sessionId: sessionId,
+      });
+
+      if (stripeError) {
+        throw new Error(stripeError.message);
+      }
 
     } catch (error) {
       console.error('Booking error:', error);
-      alert(error.message || 'There was an error submitting your booking. Please try again or contact us directly at overlandmotorcycles@gmail.com');
-    } finally {
+      alert(error.message || 'There was an error processing your booking. Please try again or contact us directly.');
       setIsSubmitting(false);
     }
   };
@@ -579,11 +603,21 @@ if (!isFormValid()) {
                     {/* Submit Button */}
                     <button
                       onClick={handleSubmit}
-  disabled={isSubmitting || !isFormValid()}
-                      className={`w-full mt-6 px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold text-lg rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                      disabled={isSubmitting || !isFormValid()}
+                      className={`w-full mt-6 px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold text-lg rounded-xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 ${isSubmitting || !isFormValid() ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                     >
-                      {isSubmitting ? 'Submitting...' : t('submitBooking')}
+                      {isSubmitting ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                          </svg>
+                          Processing...
+                        </span>
+                      ) : (
+                        `Pay Down Payment ($${downPayment})`
+                      )}
                     </button>
                     <p className="text-xs text-gray-400 text-center mt-3">
                       {t('submitNote')}
