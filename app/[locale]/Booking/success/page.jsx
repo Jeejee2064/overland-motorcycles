@@ -5,8 +5,8 @@ import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { CheckCircle, Calendar, Mail, Download } from 'lucide-react';
 import Link from 'next/link';
-import Navigation from '../../../components/Navigation';
-import Footer from '../../../components/Footer';
+import Navigation from '../../../../components/Navigation';
+import Footer from '../../../../components/Footer';
 
 export default function BookingSuccessPage() {
   const searchParams = useSearchParams();
