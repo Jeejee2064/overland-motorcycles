@@ -1,11 +1,22 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
 export async function POST(request) {
   try {
-    const body = await request.json();
+    if (!process.env.STRIPE_SECRET_KEY) {
+      console.error('Missing STRIPE_SECRET_KEY in environment variables');
+      return NextResponse.json(
+        { error: 'Stripe key not configured' },
+        { status: 500 }
+      );
+    }
+
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+    const body = await request.json().catch(() => {
+      throw new Error('Invalid JSON in request body');
+    });
+
     const {
       bookingId,
       firstName,
@@ -17,10 +28,11 @@ export async function POST(request) {
       startDate,
       endDate,
       bikeQuantity,
-      calculatedDays
+      calculatedDays,
     } = body;
 
-    // Créer la session Stripe Checkout
+    console.log('Creating Stripe session for', email);
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -28,11 +40,10 @@ export async function POST(request) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `Motorcycle Rental - Down Payment`,
+              name: 'Motorcycle Rental - Down Payment',
               description: `${bikeQuantity} motorcycle(s) for ${calculatedDays} days (${startDate} to ${endDate})`,
-              images: ['https://your-domain.com/motorcycle-image.jpg'], // Optionnel
             },
-            unit_amount: Math.round(downPayment * 100), // Stripe utilise les centimes
+            unit_amount: Math.round(downPayment * 100),
           },
           quantity: 1,
         },
@@ -45,28 +56,25 @@ export async function POST(request) {
         bookingId,
         firstName,
         lastName,
-        downPayment: downPayment.toString(),
-        totalRentalPrice: totalRentalPrice.toString(),
-        totalDeposit: totalDeposit.toString(),
-        startDate,
-        endDate,
-        bikeQuantity: bikeQuantity.toString(),
-        paymentType: 'down_payment'
+        paymentType: 'down_payment',
       },
       payment_intent_data: {
         metadata: {
           bookingId,
-          paymentType: 'down_payment'
-        }
-      }
+          paymentType: 'down_payment',
+        },
+      },
     });
+
+    console.log('Stripe session created successfully:', session.id);
 
     return NextResponse.json({ sessionId: session.id, url: session.url });
   } catch (error) {
     console.error('Stripe checkout error:', error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
+
+    return new Response(
+      JSON.stringify({ error: error.message || 'Unknown error' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }
