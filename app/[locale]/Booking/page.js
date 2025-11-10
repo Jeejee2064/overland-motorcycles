@@ -157,6 +157,8 @@ const BookingPage = () => {
 
     try {
       const available = await checkBikesAvailable(startDate, endDate);
+ 
+
       const needed = parseInt(formData.bikeQuantity);
 
       if (available < needed) {
