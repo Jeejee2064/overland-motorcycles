@@ -152,84 +152,53 @@ const BookingPage = () => {
       return;
     }
 
-    // Prevent double submission
     if (isSubmitting) return;
     setIsSubmitting(true);
 
     try {
-      // 1. Vérifier la disponibilité
       const available = await checkBikesAvailable(startDate, endDate);
       const needed = parseInt(formData.bikeQuantity);
 
       if (available < needed) {
-        alert(`Sorry, only ${available} motorcycle(s) available for the selected dates. Please choose different dates or contact us.`);
+        alert(`Sorry, only ${available} motorcycle(s) available for the selected dates.`);
         setIsSubmitting(false);
         return;
       }
 
-      // 2. Créer la réservation dans Supabase
-      const bookingData = {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        country: formData.country,
-        start_date: startDate,
-        end_date: endDate,
-        bike_quantity: parseInt(formData.bikeQuantity),
-        total_price: totalRentalPrice,
-        down_payment: downPayment,
-        deposit: totalDeposit,
-        special_requests: formData.specialRequests,
-        hear_about_us: formData.hearAboutUs,
-        status: 'pending',
-        payment_status: 'pending'
-      };
-
-      const newBooking = await createBooking(bookingData);
-      console.log('Booking created:', newBooking);
-
-      // 3. Créer la session Stripe Checkout
+      // --- Create Stripe session only ---
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          bookingId: newBooking.id,
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
-          downPayment: downPayment,
-          totalRentalPrice: totalRentalPrice,
-          totalDeposit: totalDeposit,
-          startDate: startDate,
-          endDate: endDate,
+          phone: formData.phone,
+          country: formData.country,
+          downPayment,
+          totalRentalPrice,
+          totalDeposit,
+          startDate,
+          endDate,
           bikeQuantity: parseInt(formData.bikeQuantity),
-          calculatedDays: calculateDays()
+          calculatedDays: calculateDays(),
         }),
       });
 
-      const { sessionId, url, error } = await response.json();
+      const { url, error } = await response.json();
 
-      if (error) {
-        throw new Error(error);
-      }
+      if (error) throw new Error(error);
+      if (!url) throw new Error('Missing Checkout URL from server.');
 
-
-  // 4. Redirect user to the Checkout URL directly
-if (url) {
-  window.location.href = url;
-} else {
-  throw new Error('Missing Checkout URL from server.');
-}
-
+      // Redirect to Stripe checkout
+      window.location.href = url;
     } catch (error) {
       console.error('Booking error:', error);
-      alert(error.message || 'There was an error processing your booking. Please try again or contact us directly.');
+      alert(error.message || 'There was an error processing your booking.');
       setIsSubmitting(false);
     }
   };
+
 
   const handleChange = (e) => {
     setFormData({

@@ -3,25 +3,15 @@ import Stripe from 'stripe';
 
 export async function POST(request) {
   try {
-    if (!process.env.STRIPE_SECRET_KEY) {
-      console.error('Missing STRIPE_SECRET_KEY in environment variables');
-      return NextResponse.json(
-        { error: 'Stripe key not configured' },
-        { status: 500 }
-      );
-    }
-
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-    const body = await request.json().catch(() => {
-      throw new Error('Invalid JSON in request body');
-    });
+    const body = await request.json();
 
     const {
-      bookingId,
       firstName,
       lastName,
       email,
+      phone,
+      country,
       downPayment,
       totalRentalPrice,
       totalDeposit,
@@ -30,8 +20,6 @@ export async function POST(request) {
       bikeQuantity,
       calculatedDays,
     } = body;
-
-    console.log('Creating Stripe session for', email);
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -53,28 +41,24 @@ export async function POST(request) {
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/Booking?canceled=true`,
       customer_email: email,
       metadata: {
-        bookingId,
         firstName,
         lastName,
-        paymentType: 'down_payment',
-      },
-      payment_intent_data: {
-        metadata: {
-          bookingId,
-          paymentType: 'down_payment',
-        },
+        email,
+        phone,
+        country,
+        startDate,
+        endDate,
+        bikeQuantity,
+        downPayment,
+        totalRentalPrice,
+        totalDeposit,
+        calculatedDays,
       },
     });
 
-    console.log('Stripe session created successfully:', session.id);
-
-    return NextResponse.json({ sessionId: session.id, url: session.url });
+    return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error('Stripe checkout error:', error);
-
-    return new Response(
-      JSON.stringify({ error: error.message || 'Unknown error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    );
+    console.error('❌ Stripe error:', error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

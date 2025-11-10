@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { CheckCircle, Calendar, Mail, Download } from 'lucide-react';
+import { CheckCircle, Calendar, Mail, Download, AlertCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
 import Navigation from '../../../../components/Navigation';
 import Footer from '../../../../components/Footer';
@@ -12,22 +12,100 @@ export default function BookingSuccessPage() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [bookingDetails, setBookingDetails] = useState(null);
 
   useEffect(() => {
-    if (sessionId) {
-      // Ici, vous pouvez récupérer les détails de la réservation
-      // depuis votre API ou Supabase
-      setTimeout(() => {
-        setLoading(false);
-      }, 1000);
+    if (!sessionId) {
+      setError('No session ID provided');
+      setLoading(false);
+      return;
     }
+
+    const verifyPayment = async () => {
+      try {
+        console.log('Verifying payment for session:', sessionId);
+
+        const response = await fetch('/api/verify-payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ sessionId }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to verify payment');
+        }
+
+        console.log('Payment verified:', data);
+        setBookingDetails(data);
+        setLoading(false);
+      } catch (err) {
+        console.error('Error verifying payment:', err);
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    verifyPayment();
   }, [sessionId]);
 
+  // Loading state
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-yellow-400"></div>
+        <div className="text-center">
+          <Loader2 size={48} className="animate-spin text-yellow-400 mx-auto mb-4" />
+          <p className="text-gray-600 font-semibold">Confirming your booking...</p>
+          <p className="text-sm text-gray-500 mt-2">Please wait a moment</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <section className="py-16 mt-16">
+          <div className="max-w-3xl mx-auto px-4">
+            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+              <div className="text-center mb-8">
+                <AlertCircle size={56} className="text-red-500 mx-auto mb-4" />
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                  Oops! Something went wrong
+                </h1>
+                <p className="text-gray-600 mb-4">{error}</p>
+                <p className="text-sm text-gray-500">
+                  Don't worry, your payment was successful. Please contact us at{' '}
+                  <a href="mailto:overlandmotorcycles@gmail.com" className="text-yellow-600 underline">
+                    overlandmotorcycles@gmail.com
+                  </a>
+                  {' '}with your session ID: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{sessionId}</code>
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link 
+                  href="/"
+                  className="flex-1 px-6 py-3 bg-yellow-400 text-gray-900 font-bold text-center rounded-xl hover:shadow-lg transition-all"
+                >
+                  Back to Home
+                </Link>
+                <Link 
+                  href="/contact"
+                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-900 font-semibold text-center rounded-xl hover:bg-gray-300 transition-all"
+                >
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+        <Footer />
       </div>
     );
   }
@@ -71,6 +149,43 @@ export default function BookingSuccessPage() {
             </div>
 
             {/* Booking Details */}
+            {bookingDetails?.booking && (
+              <div className="bg-gray-50 rounded-xl p-6 mb-8">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">
+                  Booking Details
+                </h2>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Booking ID:</span>
+                    <span className="font-mono text-gray-900 text-xs">{bookingDetails.booking.id}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Name:</span>
+                    <span className="text-gray-900">{bookingDetails.booking.first_name} {bookingDetails.booking.last_name}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Email:</span>
+                    <span className="text-gray-900">{bookingDetails.booking.email}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Rental Period:</span>
+                    <span className="text-gray-900">
+                      {bookingDetails.booking.start_date} to {bookingDetails.booking.end_date}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Motorcycles:</span>
+                    <span className="text-gray-900">{bookingDetails.booking.bike_quantity} bike(s)</span>
+                  </div>
+                  <div className="flex justify-between pt-2 border-t border-gray-200">
+                    <span className="text-gray-600">Down Payment:</span>
+                    <span className="text-green-600 font-bold">${bookingDetails.booking.down_payment} (Paid ✓)</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* What's Next */}
             <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 mb-8">
               <h2 className="text-xl font-bold text-gray-900 mb-4">
                 What's Next?
@@ -101,7 +216,7 @@ export default function BookingSuccessPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900">Booking Reference</h3>
                     <p className="text-sm text-gray-600">
-                      Session ID: <span className="font-mono text-xs">{sessionId}</span>
+                      Session ID: <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">{sessionId}</span>
                     </p>
                   </div>
                 </div>
@@ -115,7 +230,7 @@ export default function BookingSuccessPage() {
               </h2>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Down Payment (Paid)</span>
+                  <span className="text-gray-600">Down Payment</span>
                   <span className="font-semibold text-green-600">✓ Paid</span>
                 </div>
                 <div className="flex justify-between text-sm">
