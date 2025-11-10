@@ -44,7 +44,7 @@ const BookingPage = () => {
     { days: 9, price: 1175 },
     { days: 10, price: 1230 },
     { days: 11, price: 1290 },
-    { days: 12, price: 5 },
+    { days: 12, price: 1350 },
     { days: 13, price: 1380 },
     { days: 14, price: 1420 },
     { days: 21, price: 1800 }
