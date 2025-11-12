@@ -333,8 +333,16 @@
   "infoDesc2": "Casques, valises, GPS et équipement de sécurité inclus dans chaque location.",
 
   "infoTitle3": "Conseils d’experts",
-  "infoDesc3": "Profitez de recommandations d’itinéraires et de conseils locaux de notre équipe expérimentée."
+  "infoDesc3": "Profitez de recommandations d’itinéraires et de conseils locaux de notre équipe expérimentée.",
+  "agreement": {
+      "prefix": "J'ai lu et j'accepte les",
+      "terms": "Conditions Générales d’Utilisation",
+      "and": "et",
+      "privacy": "Politique de Confidentialité",
+      "suffix": "*"
+    }
 },
+
   "BookingMetadata": {
     "title": "Louer une Royal Enfield Himalayan 450 | Location Motos Panama City",
     "description": "Louez une Royal Enfield Himalayan 450cc à Panama City, Panama. Location de motos d'aventure premium avec réservation flexible, assurance complète et support 24/7. Réservez votre aventure moto au Panama aujourd'hui.",
@@ -435,6 +443,68 @@
     "section4Title": "4. Contact",
     "section4Content": "Pour toute question concernant cette politique, contactez-nous à notre email officiel.",
     "termsLink": "Conditions générales"
+  },
+  "SuccessPage": {
+    "loading": {
+      "confirming": "Confirmation de votre réservation...",
+      "wait": "Veuillez patienter un instant"
+    },
+    "error": {
+      "title": "Oups ! Une erreur s'est produite",
+      "message": "Ne vous inquiétez pas, votre paiement a été effectué avec succès. Veuillez nous contacter à",
+      "sessionId": "avec votre identifiant de session"
+    },
+    "success": {
+      "title": "Paiement Réussi !",
+      "subtitle": "Votre réservation de moto a été confirmée"
+    },
+    "details": {
+      "title": "Détails de la Réservation",
+      "bookingId": "ID de Réservation",
+      "name": "Nom",
+      "email": "Email",
+      "rentalPeriod": "Période de Location",
+      "to": "au",
+      "motorcycles": "Motos",
+      "bikes": "moto(s)",
+      "downPayment": "Acompte",
+      "paid": "Payé"
+    },
+    "next": {
+      "title": "Prochaines Étapes",
+      "email": {
+        "title": "Vérifiez Votre Email",
+        "description": "Nous vous avons envoyé un email de confirmation avec tous les détails de votre réservation."
+      },
+      "prepare": {
+        "title": "Préparez Votre Voyage",
+        "description": "N'oubliez pas d'apporter votre permis de conduire valide et le paiement restant lors du retrait."
+      },
+      "reference": {
+        "title": "Référence de Réservation",
+        "sessionId": "ID de Session"
+      }
+    },
+    "payment": {
+      "title": "Résumé du Paiement",
+      "downPayment": "Acompte",
+      "paid": "Payé",
+      "remaining": "Paiement Restant",
+      "duePickup": "Dû au retrait",
+      "deposit": "Caution",
+      "depositNote": "Dû au retrait (remboursable)"
+    },
+    "reminders": {
+      "title": "Rappels Importants",
+      "license": "Apportez un permis de conduire moto valide",
+      "arrive": "Arrivez au moins 30 minutes avant l'heure prévue du retrait",
+      "payment": "Préparez le paiement restant et la caution en espèces ou par carte",
+      "contact": "Contactez-nous à overlandmotorcycles@gmail.com si vous avez des questions"
+    },
+    "actions": {
+      "backHome": "Retour à l'Accueil",
+      "contactUs": "Nous Contacter"
+    }
   },
   "Footer": {
     "description": "Votre partenaire de confiance pour des aventures moto au Panama. Vivez la liberté de la route avec notre flotte premium Royal Enfield Himalayan.",

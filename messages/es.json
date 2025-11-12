@@ -332,7 +332,14 @@
   "infoDesc2": "Cascos, maletas, GPS y equipo de seguridad incluidos en cada alquiler.",
 
   "infoTitle3": "Asesoramiento experto",
-  "infoDesc3": "Obtén recomendaciones de rutas y consejos locales de nuestro equipo experimentado."
+  "infoDesc3": "Obtén recomendaciones de rutas y consejos locales de nuestro equipo experimentado.",
+      "agreement": {
+      "prefix": "He leído y acepto los",
+      "terms": "Términos y Condiciones",
+      "and": "y",
+      "privacy": "Política de Privacidad",
+      "suffix": "*"
+    }
 },
  "BookingMetadata": {
     "title": "Reservar Royal Enfield Himalayan 450 | Alquiler Motos Ciudad de Panamá",
@@ -416,7 +423,9 @@
     "term4Title": "4. Responsabilidad",
     "term4Content": "El Cliente asume responsabilidad por daños, accidentes o multas durante el período de alquiler.",
     "term5Title": "5. Cancelaciones",
-    "term5Content": "Se aplican cargos según la política de cancelación descrita en la página de precios."
+    "term5Content": "Se aplican cargos según la política de cancelación descrita en la página de precios.",
+        "privacyLink": "Política de Privacidad"
+
   },
   "PrivacyPage": {
     "heroTitle": "Política de Privacidad",
@@ -428,6 +437,68 @@
     "dataSharing": "No compartimos tu información con terceros sin tu consentimiento, salvo proveedores de servicios necesarios para completar tu reserva.",
     "dataSecurity": "Implementamos medidas de seguridad para proteger tus datos contra acceso no autorizado.",
     "rights": "Tienes derecho a acceder, rectificar y eliminar tus datos, así como a retirar el consentimiento en cualquier momento."
+  },
+   "SuccessPage": {
+    "loading": {
+      "confirming": "Confirmando su reserva...",
+      "wait": "Por favor espere un momento"
+    },
+    "error": {
+      "title": "¡Ups! Algo salió mal",
+      "message": "No se preocupe, su pago fue exitoso. Por favor contáctenos en",
+      "sessionId": "con su ID de sesión"
+    },
+    "success": {
+      "title": "¡Pago Exitoso!",
+      "subtitle": "Su reserva de motocicleta ha sido confirmada"
+    },
+    "details": {
+      "title": "Detalles de la Reserva",
+      "bookingId": "ID de Reserva",
+      "name": "Nombre",
+      "email": "Correo",
+      "rentalPeriod": "Período de Alquiler",
+      "to": "hasta",
+      "motorcycles": "Motocicletas",
+      "bikes": "moto(s)",
+      "downPayment": "Anticipo",
+      "paid": "Pagado"
+    },
+    "next": {
+      "title": "¿Qué Sigue?",
+      "email": {
+        "title": "Revise Su Correo",
+        "description": "Le hemos enviado un correo de confirmación con todos los detalles de su reserva."
+      },
+      "prepare": {
+        "title": "Prepare Su Viaje",
+        "description": "Asegúrese de traer su licencia de conducir válida y el pago restante al recoger."
+      },
+      "reference": {
+        "title": "Referencia de Reserva",
+        "sessionId": "ID de Sesión"
+      }
+    },
+    "payment": {
+      "title": "Resumen de Pago",
+      "downPayment": "Anticipo",
+      "paid": "Pagado",
+      "remaining": "Pago Restante",
+      "duePickup": "A pagar al recoger",
+      "deposit": "Depósito de Seguridad",
+      "depositNote": "A pagar al recoger (reembolsable)"
+    },
+    "reminders": {
+      "title": "Recordatorios Importantes",
+      "license": "Traiga una licencia de conducir de motocicleta válida",
+      "arrive": "Llegue al menos 30 minutos antes de la hora programada de recogida",
+      "payment": "Prepare el pago restante y el depósito de seguridad en efectivo o tarjeta",
+      "contact": "Contáctenos en overlandmotorcycles@gmail.com si tiene alguna pregunta"
+    },
+    "actions": {
+      "backHome": "Volver al Inicio",
+      "contactUs": "Contáctenos"
+    }
   },
   "Footer": {
     "description": "Su socio de confianza para aventuras en moto en Panamá. Experimente la libertad de la carretera con nuestra flota premium Royal Enfield Himalayan.",

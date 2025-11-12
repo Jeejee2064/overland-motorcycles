@@ -368,7 +368,15 @@
     "infoDesc2": "Helmets, cases, GPS, and safety gear included with every rental.",
     
     "infoTitle3": "Expert Guidance",
-    "infoDesc3": "Get route recommendations and local tips from our experienced team."
+    "infoDesc3": "Get route recommendations and local tips from our experienced team.",
+
+    "agreement": {
+      "prefix": "I have read and agree to the",
+      "terms": "Terms & Conditions",
+      "and": "and",
+      "privacy": "Privacy Policy",
+      "suffix": "*"
+    }
   },
    "BookingMetadata": {
     "title": "Book Royal Enfield Himalayan 450 | Motorcycle Rental Panama City",
@@ -483,7 +491,68 @@
     "termsLink": "Terms and Conditions"
   },
   
-
+ "SuccessPage": {
+    "loading": {
+      "confirming": "Confirming your booking...",
+      "wait": "Please wait a moment"
+    },
+    "error": {
+      "title": "Oops! Something went wrong",
+      "message": "Don't worry, your payment was successful. Please contact us at",
+      "sessionId": "with your session ID"
+    },
+    "success": {
+      "title": "Payment Successful!",
+      "subtitle": "Your motorcycle rental booking has been confirmed"
+    },
+    "details": {
+      "title": "Booking Details",
+      "bookingId": "Booking ID",
+      "name": "Name",
+      "email": "Email",
+      "rentalPeriod": "Rental Period",
+      "to": "to",
+      "motorcycles": "Motorcycles",
+      "bikes": "bike(s)",
+      "downPayment": "Down Payment",
+      "paid": "Paid"
+    },
+    "next": {
+      "title": "What's Next?",
+      "email": {
+        "title": "Check Your Email",
+        "description": "We've sent a confirmation email with all the details of your booking."
+      },
+      "prepare": {
+        "title": "Prepare for Your Trip",
+        "description": "Make sure to bring your valid driver's license and the remaining payment at pickup."
+      },
+      "reference": {
+        "title": "Booking Reference",
+        "sessionId": "Session ID"
+      }
+    },
+    "payment": {
+      "title": "Payment Summary",
+      "downPayment": "Down Payment",
+      "paid": "Paid",
+      "remaining": "Remaining Payment",
+      "duePickup": "Due at pickup",
+      "deposit": "Security Deposit",
+      "depositNote": "Due at pickup (refundable)"
+    },
+    "reminders": {
+      "title": "Important Reminders",
+      "license": "Bring a valid motorcycle driver's license",
+      "arrive": "Arrive at least 30 minutes before your scheduled pickup time",
+      "payment": "Prepare the remaining payment and security deposit in cash or card",
+      "contact": "Contact us at overlandmotorcycles@gmail.com if you have any questions"
+    },
+    "actions": {
+      "backHome": "Back to Home",
+      "contactUs": "Contact Us"
+    }
+  },
 
   "Footer": {
     "description": "Your trusted partner for motorcycle adventures in Panama. Experience the freedom of the open road with our premium Royal Enfield Himalayan fleet.",

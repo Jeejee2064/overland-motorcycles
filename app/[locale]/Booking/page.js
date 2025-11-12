@@ -20,6 +20,7 @@ const BookingPage = () => {
   const [endDate, setEndDate] = useState('');
   const [validationError, setValidationError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -59,7 +60,8 @@ const BookingPage = () => {
       formData.phone.trim() !== '' &&
       formData.country.trim() !== '' &&
       startDate !== '' &&
-      endDate !== ''
+      endDate !== '' &&
+      acceptedTerms
     );
   };
 
@@ -143,7 +145,7 @@ const BookingPage = () => {
     e.preventDefault();
 
     if (!isFormValid()) {
-      alert('Please fill all required fields and select a valid date range.');
+      alert('Please fill all required fields, accept the terms, and select a valid date range.');
       return;
     }
 
@@ -157,7 +159,7 @@ const BookingPage = () => {
 
     try {
       const available = await checkBikesAvailable(startDate, endDate);
- 
+
 
       const needed = parseInt(formData.bikeQuantity);
 
@@ -474,6 +476,9 @@ const BookingPage = () => {
                           <option value="other">{t('hearAboutOption5')}</option>
                         </select>
                       </div>
+
+                      {/* Terms and Conditions Checkbox */}
+
                     </div>
                   </div>
                 </div>
@@ -568,7 +573,37 @@ const BookingPage = () => {
                         </div>
                       </div>
                     </div>
-
+                    <div className="pt-4">
+                      <label className="flex items-start gap-3 cursor-pointer group">
+                        <input
+                          type="checkbox"
+                          checked={acceptedTerms}
+                          onChange={(e) => setAcceptedTerms(e.target.checked)}
+                          className="mt-1 w-5 h-5 rounded border-2 border-gray-300 text-yellow-400 focus:ring-2 focus:ring-yellow-400/20 cursor-pointer"
+                        />
+                        <span className="text-sm text-gray-100">
+                          {t('agreement.prefix')}{' '}
+                          <a
+                            href="/terms"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-yellow-600 hover:text-yellow-700 underline font-semibold"
+                          >
+                            {t('agreement.terms')}
+                          </a>{' '}
+                          {t('agreement.and')}{' '}
+                          <a
+                            href="/privacy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-yellow-600 hover:text-yellow-700 underline font-semibold"
+                          >
+                            {t('agreement.privacy')}
+                          </a>{' '}
+                          {t('agreement.suffix')}
+                        </span>
+                      </label>
+                    </div>
                     {/* Submit Button */}
                     <button
                       onClick={handleSubmit}
