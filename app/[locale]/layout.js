@@ -2,6 +2,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import './globals.css';
+import { Analytics } from "@vercel/analytics/next"
 
 const locales = ['en', 'es', 'pt', 'fr'];
 
@@ -105,6 +106,7 @@ export default async function RootLayout({ children, params }) {
       <body>
         <NextIntlClientProvider messages={messages}>
           {children}
+          <Analytics/>
         </NextIntlClientProvider>
       </body>
     </html>
