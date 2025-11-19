@@ -139,6 +139,15 @@ const Footer = () => {
               <Link href="/terms" className="text-gris hover:text-accent transition-colors duration-300">
                 {t('terms')}
               </Link>
+                <span className="text-gray-500">|</span>
+              <Link 
+                href="https://bocasdigital.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-white transition-colors flex items-center gap-1"
+              >
+                Website made by <span className="font-semibold">Bocas Digital</span>
+              </Link>
             </div>
           </div>
         </div>
