@@ -8,9 +8,9 @@ import { useTranslations } from 'next-intl';
 import { ChevronDown, MapPin, Bike, Shield, ArrowRight, Briefcase, Smartphone, Bird, Sparkles } from 'lucide-react';
 
 import { HeliconiaBackground, WaveBackground, TopWaveBackground, BambooBackground, GridPattern, PalmBackground } from '../../components/backgrounds';
-import Navigation from '../../components/Navigation'; 
-import MountainParallax from '../../components/MountainParallax'; 
-import Footer from '../../components/Footer'; 
+import Navigation from '../../components/Navigation';
+import MountainParallax from '../../components/MountainParallax';
+import Footer from '../../components/Footer';
 
 
 import ButtonPrimary from '../../components/ButtonPrimary';
@@ -20,11 +20,11 @@ const HomePage = () => {
   const t = useTranslations('HomePage');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { scrollY } = useScroll();
-  
+
   const yBg = useTransform(scrollY, [0, 1000], [0, -200]);
   const yContent = useTransform(scrollY, [0, 1000], [0, -100]);
   const scale = useTransform(scrollY, [0, 500], [1, 1.1]);
-  
+
   const springConfig = { stiffness: 300, damping: 30 };
   const smoothYBg = useSpring(yBg, springConfig);
   const smoothYContent = useSpring(yContent, springConfig);
@@ -44,8 +44,8 @@ const HomePage = () => {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navigation />
-      
-        {/* Hero Section */}
+
+      {/* Hero Section */}
       <section className="relative h-screen bg-background flex items-center justify-center overflow-hidden">
         <motion.div
           style={{ y: smoothYBg, scale }}
@@ -59,7 +59,7 @@ const HomePage = () => {
               className="object-cover"
               priority
             />
-      
+
           </div>
         </motion.div>
 
@@ -92,23 +92,29 @@ const HomePage = () => {
             </div>
           </motion.div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-br from-yellow-500  to-yellow-400 bg-clip-text text-transparent"
-          >
-            {t('hero')}
-          </motion.h2>
+          <div className="relative px-6 py-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.35)_40%,rgba(0,0,0,0)_100%)] pointer-events-none" />
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="text-lg md:text-xl lg:text-2xl text-gray-200 mb-12 max-w-4xl mx-auto"
-          >
-            {t('heroSubtitle')}
-          </motion.h1>
+            <motion.h2
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="relative text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent"
+            >
+              {t('hero')}
+            </motion.h2>
+
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="relative text-lg md:text-xl lg:text-2xl text-gray-200 drop-shadow-md mb-12 max-w-4xl mx-auto"
+            >
+              {t('heroSubtitle')}
+            </motion.h1>
+          </div>
+
+
 
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -148,7 +154,7 @@ const HomePage = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500  to-yellow-400 bg-clip-text text-transparent">
               {t('destinationsTitle')}
             </h2>
-                        <p className="text-xl text-gray-300 max-w-3xl mx-auto">{t('aboutDesc')}</p>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">{t('aboutDesc')}</p>
 
           </motion.div>
 
@@ -159,36 +165,36 @@ const HomePage = () => {
               { title: t('waterfalls'), desc: t('waterfallsDesc'), image: 'cascade.webp' }
             ].map((dest, index) => (
               <Link href="/Panama" key={index} passHref>
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.2 }}
-                whileHover={{ scale: 1.02 }}
-                className="group cursor-pointer"
-              >
-                <div className="relative aspect-[4/5] rounded-2xl overflow-hidden mb-6">
-                  <Image
-                    src={`/${dest.image}`}
-                    alt={dest.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 h" />
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <h3 className="text-2xl font-bold text-white mb-3">{dest.title}</h3>
-                    {/* <p className="text-gray-200">{dest.desc}</p> */}
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 50 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.2 }}
+                  whileHover={{ scale: 1.02 }}
+                  className="group cursor-pointer"
+                >
+                  <div className="relative aspect-[4/5] rounded-2xl overflow-hidden mb-6">
+                    <Image
+                      src={`/${dest.image}`}
+                      alt={dest.title}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 h" />
+                    <div className="absolute bottom-6 left-6 right-6">
+                      <h3 className="text-2xl font-bold text-white mb-3">{dest.title}</h3>
+                      {/* <p className="text-gray-200">{dest.desc}</p> */}
+                    </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
               </Link>
             ))}
           </div>
         </div>
       </section>
- {/*Panama Section */}
+      {/*Panama Section */}
       <section id="about" className="py-20 bg-background">
-               
+
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -224,122 +230,122 @@ const HomePage = () => {
         </div>
 
       </section>
-     <section className="relative py-20 bg-white overflow-hidden">
+      <section className="relative py-20 bg-white overflow-hidden">
 
-      <div className="container mx-auto px-6 relative z-10">
-        {/* Section Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
+        <div className="container mx-auto px-6 relative z-10">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
               {t('fleetTitle')}
-          </h2>
-          <h3 className="text-2xl md:text-3xl  text-gray-900 mb-4">               {t('fleetSubtitle')}</h3>
-          <div className="h-1 w-24 bg-yellow-400 mx-auto rounded-full" />
-        </motion.div>
+            </h2>
+            <h3 className="text-2xl md:text-3xl  text-gray-900 mb-4">               {t('fleetSubtitle')}</h3>
+            <div className="h-1 w-24 bg-yellow-400 mx-auto rounded-full" />
+          </motion.div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          
-          {/* Motorcycle Image Section */}
-          <div className="relative">
-            <motion.div
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              className="relative"
-            >
-              {/* Circular background accent */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-[500px] h-[500px] bg-gradient-to-br from-yellow-400/20 via-gray-900/10 to-yellow-400/20 rounded-full blur-3xl" />
-              </div>
-              
-              {/* Motorcycle image */}
+          {/* Main Content Grid */}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* Motorcycle Image Section */}
+            <div className="relative">
               <motion.div
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.4 }}
-                className="relative z-10"
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+                className="relative"
               >
-                <img
-                  src="/royal-enfield-himalayan.png"
-                  alt="Royal Enfield Himalayan"
-                  className="w-full h-auto "
-                />
-              </motion.div>
+                {/* Circular background accent */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-[500px] h-[500px] bg-gradient-to-br from-yellow-400/20 via-gray-900/10 to-yellow-400/20 rounded-full blur-3xl" />
+                </div>
 
-    
-
-              
-            </motion.div>
-          </div>
-
-          {/* Content Section */}
-          <div className="space-y-8">
-            
-            {/* Description */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="mb-8"
-            >
-              <p className="text-xl text-gray-600 leading-relaxed">
-                {t('fleetAccessories')}
-              </p>
-            </motion.div>
-
-            {/* Features List */}
-            <div className="space-y-4">
-              {[
-                { title: t('feature1'), icon: Shield },
-                { title: t('feature2'), icon: Briefcase },
-                { title: t('feature3'), icon: Smartphone },
-              ].map((feature, index) => (
+                {/* Motorcycle image */}
                 <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: 30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  whileHover={{ x: 10 }}
-                  className="flex items-center space-x-4 p-5 rounded-xl bg-gray-50 border border-gray-200 group hover:border-yellow-400 hover:shadow-lg transition-all duration-300"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.4 }}
+                  className="relative z-10"
                 >
-                  <div className="w-14 h-14 bg-yellow-400/20 rounded-full flex items-center justify-center group-hover:bg-yellow-400/30 transition-colors duration-300">
-                    <feature.icon size={26} className="text-gray-900" />
-                  </div>
-                  <h5 className="text-lg font-semibold text-gray-900">{feature.title}</h5>
+                  <img
+                    src="/royal-enfield-himalayan.png"
+                    alt="Royal Enfield Himalayan"
+                    className="w-full h-auto "
+                  />
                 </motion.div>
-              ))}
+
+
+
+
+              </motion.div>
             </div>
 
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="pt-4"
-            >
-              <ButtonSecondary href="/Fleet" text={t('LearnMore')} theme='light' />
-            </motion.div>
+            {/* Content Section */}
+            <div className="space-y-8">
 
+              {/* Description */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="mb-8"
+              >
+                <p className="text-xl text-gray-600 leading-relaxed">
+                  {t('fleetAccessories')}
+                </p>
+              </motion.div>
+
+              {/* Features List */}
+              <div className="space-y-4">
+                {[
+                  { title: t('feature1'), icon: Shield },
+                  { title: t('feature2'), icon: Briefcase },
+                  { title: t('feature3'), icon: Smartphone },
+                ].map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1, duration: 0.5 }}
+                    whileHover={{ x: 10 }}
+                    className="flex items-center space-x-4 p-5 rounded-xl bg-gray-50 border border-gray-200 group hover:border-yellow-400 hover:shadow-lg transition-all duration-300"
+                  >
+                    <div className="w-14 h-14 bg-yellow-400/20 rounded-full flex items-center justify-center group-hover:bg-yellow-400/30 transition-colors duration-300">
+                      <feature.icon size={26} className="text-gray-900" />
+                    </div>
+                    <h5 className="text-lg font-semibold text-gray-900">{feature.title}</h5>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* CTA Button */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="pt-4"
+              >
+                <ButtonSecondary href="/Fleet" text={t('LearnMore')} theme='light' />
+              </motion.div>
+
+            </div>
           </div>
         </div>
-      </div>
-    </section>
-      
+      </section>
+
       <MountainParallax />
-   
-
-
-      
 
 
 
-     
 
-       {/* Contact Section */}
+
+
+
+
+
+      {/* Contact Section */}
       <section id="contact" className="relative min-h-screen py-32 overflow-hidden bg-background">
         <motion.div style={{ y: yBg }} className="absolute inset-0 z-0">
           <Image
@@ -371,7 +377,7 @@ const HomePage = () => {
           </motion.div>
         </div>
       </section>
-    <Footer />
+      <Footer />
     </div>
   );
 };
