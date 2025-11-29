@@ -1,9 +1,9 @@
 'use client'
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Calendar, User, MessageSquare, Bike, MapPin, Check, AlertCircle } from 'lucide-react';
+import { Calendar, User, MessageSquare, Bike, MapPin, Check, AlertCircle, X, MessageCircle } from 'lucide-react';
 
 import Navigation from '../../../components/Navigation';
 import Footer from '../../../components/Footer';
@@ -14,6 +14,118 @@ import { createBooking, checkBikesAvailable } from '@/lib/supabase/bookings';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
+// Modal Component
+const Modal = ({ isOpen, onClose, type, message, onConfirm }) => {
+  if (!isOpen) return null;
+
+  const modalTypes = {
+    error: {
+      icon: AlertCircle,
+      iconColor: 'text-red-500',
+      bgColor: 'bg-red-50',
+      borderColor: 'border-red-200',
+      buttonColor: 'bg-red-500 hover:bg-red-600'
+    },
+    warning: {
+      icon: AlertCircle,
+      iconColor: 'text-yellow-500',
+      bgColor: 'bg-yellow-50',
+      borderColor: 'border-yellow-200',
+      buttonColor: 'bg-yellow-500 hover:bg-yellow-600'
+    },
+    info: {
+      icon: MessageCircle,
+      iconColor: 'text-blue-500',
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-200',
+      buttonColor: 'bg-blue-500 hover:bg-blue-600'
+    },
+    contact: {
+      icon: MessageCircle,
+      iconColor: 'text-green-500',
+      bgColor: 'bg-green-50',
+      borderColor: 'border-green-200',
+      buttonColor: 'bg-green-500 hover:bg-green-600'
+    }
+  };
+
+  const config = modalTypes[type] || modalTypes.info;
+  const Icon = config.icon;
+
+  return (
+    <AnimatePresence>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        />
+
+        {/* Modal */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          exit={{ opacity: 0, scale: 0.95, y: 20 }}
+          className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden"
+        >
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 transition-colors z-10"
+          >
+            <X size={20} className="text-gray-500" />
+          </button>
+
+          {/* Content */}
+          <div className="p-6">
+            <div className={`w-16 h-16 mx-auto mb-4 ${config.bgColor} border-2 ${config.borderColor} rounded-full flex items-center justify-center`}>
+              <Icon size={32} className={config.iconColor} />
+            </div>
+
+            <div className="text-center mb-6">
+              <p className="text-gray-800 text-lg leading-relaxed">{message}</p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="space-y-3">
+              {type === 'contact' && (
+                <a
+                  href="https://wa.me/50768051100?text=Hello,%20I%20would%20like%20to%20make%20a%20booking%20within%2048%20hours"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+                >
+                  <MessageCircle size={20} />
+                  Contact Us on WhatsApp
+                </a>
+              )}
+
+              {onConfirm && (
+                <button
+                  onClick={onConfirm}
+                  className={`w-full px-6 py-3 ${config.buttonColor} text-white font-semibold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl`}
+                >
+                  Confirm
+                </button>
+              )}
+
+              <button
+                onClick={onClose}
+                className="w-full px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-xl transition-all duration-300"
+              >
+                {type === 'contact' ? 'Go Back' : 'Close'}
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </AnimatePresence>
+  );
+};
+
 const BookingPage = () => {
   const t = useTranslations('BookingPage');
   const [startDate, setStartDate] = useState('');
@@ -21,6 +133,15 @@ const BookingPage = () => {
   const [validationError, setValidationError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  
+  // Modal state
+  const [modal, setModal] = useState({
+    isOpen: false,
+    type: 'info',
+    message: '',
+    onConfirm: null
+  });
+
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -51,6 +172,13 @@ const BookingPage = () => {
     { days: 21, price: 1800 }
   ];
 
+  const showModal = (type, message, onConfirm = null) => {
+    setModal({ isOpen: true, type, message, onConfirm });
+  };
+
+  const closeModal = () => {
+    setModal({ isOpen: false, type: 'info', message: '', onConfirm: null });
+  };
 
   const isFormValid = () => {
     return (
@@ -65,7 +193,6 @@ const BookingPage = () => {
     );
   };
 
-  // Helper function to format date as YYYY-MM-DD in local timezone
   const formatLocalDate = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -73,7 +200,6 @@ const BookingPage = () => {
     return `${year}-${month}-${day}`;
   };
 
-  // Helper function to parse date string as local date
   const parseLocalDate = (dateStr) => {
     if (!dateStr) return new Date();
     const parts = dateStr.split('-');
@@ -81,11 +207,10 @@ const BookingPage = () => {
       parseInt(parts[0]),
       parseInt(parts[1]) - 1,
       parseInt(parts[2]),
-      12, 0, 0 // Use noon to avoid DST issues
+      12, 0, 0
     );
   };
 
-  // Format date for display (e.g., "Jan 21, 2025")
   const formatDisplayDate = (dateStr) => {
     if (!dateStr) return '';
     const date = parseLocalDate(dateStr);
@@ -108,11 +233,15 @@ const BookingPage = () => {
     now.setHours(0, 0, 0, 0);
 
     const minAdvanceDate = new Date(now);
-    minAdvanceDate.setDate(minAdvanceDate.getDate() + 2); // 48 hours = 2 days
+    minAdvanceDate.setDate(minAdvanceDate.getDate() + 2);
 
-    // Check if booking is at least 48 hours in advance
+    // Check if booking is less than 48 hours in advance
     if (startDate < minAdvanceDate) {
-      setValidationError(t('validationMinimum48h'));
+      setValidationError('');
+      showModal(
+        'contact',
+        'For bookings less than 48 hours in advance, please contact us directly via WhatsApp for immediate assistance.'
+      );
       return false;
     }
 
@@ -131,8 +260,6 @@ const BookingPage = () => {
     const start = formatLocalDate(range.startDate);
     const end = formatLocalDate(range.endDate);
 
-    console.log('Date range selected:', { start, end });
-
     setStartDate(start);
     setEndDate(end);
 
@@ -145,12 +272,14 @@ const BookingPage = () => {
     e.preventDefault();
 
     if (!isFormValid()) {
-      alert('Please fill all required fields, accept the terms, and select a valid date range.');
+      showModal('warning', 'Please fill all required fields, accept the terms, and select a valid date range.');
       return;
     }
 
     if (!validateDates(startDate, endDate)) {
-      alert(validationError);
+      if (validationError) {
+        showModal('error', validationError);
+      }
       return;
     }
 
@@ -159,17 +288,14 @@ const BookingPage = () => {
 
     try {
       const available = await checkBikesAvailable(startDate, endDate);
-
-
       const needed = parseInt(formData.bikeQuantity);
 
       if (available < needed) {
-        alert(`Sorry, only ${available} motorcycle(s) available for the selected dates.`);
+        showModal('error', `Sorry, only ${available} motorcycle(s) available for the selected dates. Please adjust your selection or choose different dates.`);
         setIsSubmitting(false);
         return;
       }
 
-      // --- Create Stripe session only ---
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -194,15 +320,13 @@ const BookingPage = () => {
       if (error) throw new Error(error);
       if (!url) throw new Error('Missing Checkout URL from server.');
 
-      // Redirect to Stripe checkout
       window.location.href = url;
     } catch (error) {
       console.error('Booking error:', error);
-      alert(error.message || 'There was an error processing your booking.');
+      showModal('error', error.message || 'There was an error processing your booking. Please try again or contact us for assistance.');
       setIsSubmitting(false);
     }
   };
-
 
   const handleChange = (e) => {
     setFormData({
@@ -211,7 +335,6 @@ const BookingPage = () => {
     });
   };
 
-  // Calculate number of days
   const calculateDays = () => {
     if (startDate && endDate) {
       const start = parseLocalDate(startDate);
@@ -223,7 +346,6 @@ const BookingPage = () => {
     return 0;
   };
 
-  // Calculate price based on days
   const calculatePrice = () => {
     const days = calculateDays();
     if (days === 0) return 0;
@@ -260,6 +382,15 @@ const BookingPage = () => {
   return (
     <div className="min-h-screen overflow-x-hidden">
       <Navigation />
+
+      {/* Modal */}
+      <Modal
+        isOpen={modal.isOpen}
+        onClose={closeModal}
+        type={modal.type}
+        message={modal.message}
+        onConfirm={modal.onConfirm}
+      />
 
       {/* Main Content */}
       <section className="py-16 bg-gray-50 mt-16">
@@ -476,9 +607,6 @@ const BookingPage = () => {
                           <option value="other">{t('hearAboutOption5')}</option>
                         </select>
                       </div>
-
-                      {/* Terms and Conditions Checkbox */}
-
                     </div>
                   </div>
                 </div>
@@ -620,7 +748,7 @@ const BookingPage = () => {
                           Processing...
                         </span>
                       ) : (
-                        `Pay Down Payment ($${downPayment})`
+                        `Pay Down Payment (${downPayment})`
                       )}
                     </button>
                     <p className="text-xs text-gray-400 text-center mt-3">

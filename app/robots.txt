@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Note: Update this with your actual domain when you deploy
-Sitemap: http://localhost:3000/sitemap.xml
+Sitemap: http://overland-motorcycles.con/sitemap.xml
