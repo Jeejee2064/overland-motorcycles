@@ -98,7 +98,6 @@ export default function BookingCalendar({ onChange, selectedRange }) {
   showDateDisplay={false}
   fixedHeight={true} 
     preventSnapRefocus={true}
-      // keeps both months aligned
 />
 
         </ div>     )}
