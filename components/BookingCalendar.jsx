@@ -85,18 +85,22 @@ export default function BookingCalendar({ onChange, selectedRange }) {
       ) : (
         <div className="overflow-x-auto -mx-4 px-4">
 
-        <DateRange
-          ranges={[selectedRange]}
-          onChange={(item) => onChange(item.selection)}
-          moveRangeOnFirstSelection={false}
-          minDate={new Date(Date.now() + 48 * 60 * 60 * 1000)}
-          rangeColors={['#FACC15']}
-          locale={enUS}
-          dayContentRenderer={customDayContent}
-          months={1}
-          direction="horizontal"
-          showDateDisplay={false}
-        />
+<DateRange
+  ranges={[selectedRange]}
+  onChange={(item) => onChange(item.selection)}
+  moveRangeOnFirstSelection={false}
+  minDate={new Date(Date.now() + 48 * 60 * 60 * 1000)}
+  rangeColors={['#FACC15']}
+  locale={enUS}
+  dayContentRenderer={customDayContent}
+  months={2}               // <<< SHOW CURRENT + NEXT MONTH
+  direction="horizontal"   // <<< SIDE BY SIDE
+  showDateDisplay={false}
+  fixedHeight={true} 
+    preventSnapRefocus={true}
+      // keeps both months aligned
+/>
+
         </ div>     )}
 
       {/* Legend */}

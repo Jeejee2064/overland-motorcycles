@@ -1,9 +1,10 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Calendar, User, MessageSquare, Bike, MapPin, Check, AlertCircle, X, MessageCircle } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
 
 import Navigation from '../../../components/Navigation';
 import Footer from '../../../components/Footer';
@@ -141,6 +142,25 @@ const BookingPage = () => {
     message: '',
     onConfirm: null
   });
+  const searchParams = useSearchParams();
+
+useEffect(() => {
+  const start = searchParams.get("start");
+  const end = searchParams.get("end");
+  const bikes = searchParams.get("bikes");
+
+  if (start) setStartDate(start);
+  if (end) setEndDate(end);
+  if (bikes) {
+    setFormData(prev => ({ ...prev, bikeQuantity: bikes }));
+  }
+
+  // Auto-validate when both dates come from URL
+  if (start && end) {
+    validateDates(start, end);
+  }
+}, [searchParams]);
+
 
   const [formData, setFormData] = useState({
     firstName: '',
@@ -430,7 +450,7 @@ const BookingPage = () => {
                     </h3>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid items-center justify-center gap-4">
                     <BookingCalendar
                       selectedRange={{
                         startDate: startDate ? parseLocalDate(startDate) : new Date(),
