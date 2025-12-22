@@ -1,6 +1,5 @@
-
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,6 +18,9 @@ import ButtonSecondary from '../../components/ButtonSecondary';
 const HomePage = () => {
   const t = useTranslations('HomePage');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef(null);
   const { scrollY } = useScroll();
 
   const yBg = useTransform(scrollY, [0, 1000], [0, -200]);
@@ -38,6 +40,12 @@ const HomePage = () => {
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    
+    // Force video to load
+    if (videoRef.current) {
+      videoRef.current.load();
+    }
+    
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
@@ -52,14 +60,46 @@ const HomePage = () => {
           className="absolute inset-0 z-0"
         >
           <div className="relative w-full h-full">
-            <Image
-              src="/hero2.jpg"
-              alt="Panama Adventure"
-              fill
-              className="object-cover"
-              priority
-            />
+            {/* Poster image - shows immediately */}
+            {!videoLoaded && (
+              <Image
+                src="/hero2.jpg"
+                alt="Panama Adventure"
+                fill
+                className="object-cover"
+                priority
+              />
+            )}
 
+            {/* Video - loads in background and fades in */}
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              onLoadedData={() => {
+                console.log('Video loaded successfully');
+                setVideoLoaded(true);
+              }}
+              onError={(e) => {
+                console.error('Video failed to load:', e);
+                setVideoError(true);
+              }}
+              onCanPlay={() => {
+                if (videoRef.current) {
+                  videoRef.current.play().catch(err => {
+                    console.error('Autoplay failed:', err);
+                  });
+                }
+              }}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+                videoLoaded && !videoError ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <source src="/output2.mp4" type="video/mp4" />
+            </video>
           </div>
         </motion.div>
 
