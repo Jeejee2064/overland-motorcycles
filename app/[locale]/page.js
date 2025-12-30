@@ -40,6 +40,7 @@ const HomePage = () => {
 
     window.addEventListener('mousemove', handleMouseMove);
     
+    // Force video to load
     if (videoRef.current) {
       videoRef.current.load();
     }
@@ -58,6 +59,7 @@ const HomePage = () => {
           className="absolute inset-0 z-0"
         >
           <div className="relative w-full h-full">
+            {/* Poster image - shows immediately */}
             {!videoLoaded && (
               <Image
                 src="/hero2.jpg"
@@ -68,6 +70,7 @@ const HomePage = () => {
               />
             )}
 
+            {/* Video - loads in background and fades in */}
             <video
               ref={videoRef}
               autoPlay
@@ -99,11 +102,13 @@ const HomePage = () => {
           </div>
         </motion.div>
 
+        {/* Floating accent circle */}
         <motion.div
           style={{ x: mousePosition.x, y: mousePosition.y }}
           className="absolute top-20 left-20 w-4 h-4 bg-yellow-400/30 rounded-full blur-sm"
         />
 
+        {/* Hero content */}
         <motion.div
           style={{ y: smoothYContent }}
           className="relative z-10 text-center px-4 max-w-6xl mx-auto"
@@ -120,7 +125,7 @@ const HomePage = () => {
                 src="/LOGOBL.svg"
                 alt="Logo Overland Motorcycles"
                 fill
-                className="object-contain relative z-10"
+                className="object-contain relative mt-8  z-10"
                 priority
               />
             </div>
@@ -159,6 +164,7 @@ const HomePage = () => {
           </motion.div>
         </motion.div>
 
+        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -197,7 +203,6 @@ const HomePage = () => {
             ].map((dest, index) => (
               <Link href="/Panama" key={index} passHref>
                 <motion.div
-                  key={index}
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.2 }}
@@ -437,7 +442,7 @@ const HomePage = () => {
           </motion.div>
         </div>
       </section>
-      
+
       <Footer />
     </div>
   );
