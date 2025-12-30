@@ -4,13 +4,12 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { ChevronDown, MapPin, Bike, Shield, ArrowRight, Briefcase, Smartphone, Bird, Sparkles } from 'lucide-react';
+import { ChevronDown, MapPin, Bike, Shield, ArrowRight, Briefcase, Smartphone, Bird, Sparkles, Clock } from 'lucide-react';
 
 import { HeliconiaBackground, WaveBackground, TopWaveBackground, BambooBackground, GridPattern, PalmBackground } from '../../components/backgrounds';
 import Navigation from '../../components/Navigation';
 import MountainParallax from '../../components/MountainParallax';
 import Footer from '../../components/Footer';
-
 
 import ButtonPrimary from '../../components/ButtonPrimary';
 import ButtonSecondary from '../../components/ButtonSecondary';
@@ -41,7 +40,6 @@ const HomePage = () => {
 
     window.addEventListener('mousemove', handleMouseMove);
     
-    // Force video to load
     if (videoRef.current) {
       videoRef.current.load();
     }
@@ -60,7 +58,6 @@ const HomePage = () => {
           className="absolute inset-0 z-0"
         >
           <div className="relative w-full h-full">
-            {/* Poster image - shows immediately */}
             {!videoLoaded && (
               <Image
                 src="/hero2.jpg"
@@ -71,7 +68,6 @@ const HomePage = () => {
               />
             )}
 
-            {/* Video - loads in background and fades in */}
             <video
               ref={videoRef}
               autoPlay
@@ -103,13 +99,11 @@ const HomePage = () => {
           </div>
         </motion.div>
 
-        {/* Floating accent circle */}
         <motion.div
           style={{ x: mousePosition.x, y: mousePosition.y }}
           className="absolute top-20 left-20 w-4 h-4 bg-yellow-400/30 rounded-full blur-sm"
         />
 
-        {/* Hero content */}
         <motion.div
           style={{ y: smoothYContent }}
           className="relative z-10 text-center px-4 max-w-6xl mx-auto"
@@ -154,8 +148,6 @@ const HomePage = () => {
             </motion.h1>
           </div>
 
-
-
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -167,7 +159,6 @@ const HomePage = () => {
           </motion.div>
         </motion.div>
 
-        {/* Scroll indicator */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -183,19 +174,19 @@ const HomePage = () => {
           </motion.div>
         </motion.div>
       </section>
+
       {/* Destinations Section */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
+            className="text-center mb-8"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500  to-yellow-400 bg-clip-text text-transparent">
               {t('destinationsTitle')}
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">{t('aboutDesc')}</p>
-
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-16">{t('destinationsIntro')}</p>
           </motion.div>
 
           <div className="grid lg:grid-cols-3 gap-8">
@@ -223,7 +214,6 @@ const HomePage = () => {
                     <div className="absolute inset-0 h" />
                     <div className="absolute bottom-6 left-6 right-6">
                       <h3 className="text-2xl font-bold text-white mb-3">{dest.title}</h3>
-                      {/* <p className="text-gray-200">{dest.desc}</p> */}
                     </div>
                   </div>
                 </motion.div>
@@ -232,9 +222,9 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      {/*Panama Section */}
-      <section id="about" className="py-20 bg-background">
 
+      {/* Panama Section */}
+      <section id="about" className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -244,36 +234,36 @@ const HomePage = () => {
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">
               {t('aboutTitle')}
             </h2>
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto">{t('aboutDesc')}</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { icon: Bird, title: t('biodiversity') },
-              { icon: Sparkles, title: t('adventure') },
-              { icon: Shield, title: t('bridge') }
+              { icon: Bird, title: t('biodiversity'), desc: t('biodiversityDesc') },
+              { icon: Sparkles, title: t('adventure'), desc: t('adventureDesc') },
+              { icon: Shield, title: t('bridge'), desc: t('bridgeDesc') }
             ].map((item, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
-                className="text-center p-6 rounded-2xl  "
+                className="text-center p-6 rounded-2xl"
               >
-                <div className="w-16 h-16 mx-auto mb-4  rounded-full flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center">
                   <item.icon size={32} className="text-yellow-400" />
                 </div>
-                <h2 className="text-xl font-bold text-white">{item.title}</h2>
+                <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
+                <p className="text-gray-400">{item.desc}</p>
               </motion.div>
             ))}
           </div>
-
         </div>
-
       </section>
-      <section className="relative py-20 bg-white overflow-hidden">
 
+      {/* Fleet Section */}
+      <section className="relative py-20 bg-white overflow-hidden">
         <div className="container mx-auto px-6 relative z-10">
-          {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -283,14 +273,11 @@ const HomePage = () => {
             <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
               {t('fleetTitle')}
             </h2>
-            <h3 className="text-2xl md:text-3xl  text-gray-900 mb-4">               {t('fleetSubtitle')}</h3>
+            <h3 className="text-2xl md:text-3xl text-gray-900 mb-4">{t('fleetSubtitle')}</h3>
             <div className="h-1 w-24 bg-yellow-400 mx-auto rounded-full" />
           </motion.div>
 
-          {/* Main Content Grid */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-
-            {/* Motorcycle Image Section */}
             <div className="relative">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -298,12 +285,10 @@ const HomePage = () => {
                 transition={{ duration: 0.8 }}
                 className="relative"
               >
-                {/* Circular background accent */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="w-[500px] h-[500px] bg-gradient-to-br from-yellow-400/20 via-gray-900/10 to-yellow-400/20 rounded-full blur-3xl" />
                 </div>
 
-                {/* Motorcycle image */}
                 <motion.div
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.4 }}
@@ -312,20 +297,13 @@ const HomePage = () => {
                   <img
                     src="/royal-enfield-himalayan.png"
                     alt="Royal Enfield Himalayan"
-                    className="w-full h-auto "
+                    className="w-full h-auto"
                   />
                 </motion.div>
-
-
-
-
               </motion.div>
             </div>
 
-            {/* Content Section */}
             <div className="space-y-8">
-
-              {/* Description */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -337,7 +315,6 @@ const HomePage = () => {
                 </p>
               </motion.div>
 
-              {/* Features List */}
               <div className="space-y-4">
                 {[
                   { title: t('feature1'), icon: Shield },
@@ -360,7 +337,6 @@ const HomePage = () => {
                 ))}
               </div>
 
-              {/* CTA Button */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -369,21 +345,65 @@ const HomePage = () => {
               >
                 <ButtonSecondary href="/Fleet" text={t('LearnMore')} theme='light' />
               </motion.div>
-
             </div>
           </div>
         </div>
       </section>
 
+      {/* NEW: Rental Info Section for SEO */}
+      <section className="py-20 bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">
+              {t('rentalInfoTitle')}
+            </h2>
+            <p className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              {t('rentalInfoDesc')}
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+            {[
+              { icon: Clock, title: t('rentalFeature1') },
+              { icon: Shield, title: t('rentalFeature2') },
+              { icon: Briefcase, title: t('rentalFeature3') },
+              { icon: Smartphone, title: t('rentalFeature4') }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className="text-center p-6 rounded-2xl bg-gray-800/50 border border-gray-700"
+              >
+                <div className="w-16 h-16 mx-auto mb-4 bg-yellow-400/10 rounded-full flex items-center justify-center">
+                  <item.icon size={28} className="text-yellow-400" />
+                </div>
+                <p className="text-white font-medium">{item.title}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="bg-gray-800/50 border border-gray-700 rounded-2xl p-8 md:p-12"
+          >
+            <h3 className="text-3xl font-bold text-white mb-6 text-center">
+              {t('whyChooseUs')}
+            </h3>
+            <p className="text-lg text-gray-300 leading-relaxed text-center max-w-4xl mx-auto">
+              {t('whyChooseUsDesc')}
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       <MountainParallax />
-
-
-
-
-
-
-
-
 
       {/* Contact Section */}
       <section id="contact" className="relative min-h-screen py-32 overflow-hidden bg-background">
@@ -405,7 +425,7 @@ const HomePage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500  to-yellow-400 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">
               {t("contactTitle")}
             </h2>
             <p className="text-xl text-gray-300 mb-10">{t("contactDesc")}</p>
@@ -417,6 +437,7 @@ const HomePage = () => {
           </motion.div>
         </div>
       </section>
+      
       <Footer />
     </div>
   );
