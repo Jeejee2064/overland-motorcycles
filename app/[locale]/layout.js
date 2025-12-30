@@ -215,14 +215,7 @@ export default async function RootLayout({ children, params }) {
       '@id': `${baseUrl}#organization`
     },
     inLanguage: ['en', 'es', 'pt', 'fr'],
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${baseUrl}/search?q={search_term_string}`
-      },
-      'query-input': 'required name=search_term_string'
-    }
+    
   };
 
   // Service schema
