@@ -125,7 +125,7 @@ const HomePage = () => {
                 src="/LOGOBL.svg"
                 alt="Logo Overland Motorcycles"
                 fill
-                className="object-contain relative mt-8  z-10"
+                className="object-contain relative mt-8 z-10"
                 priority
               />
             </div>
