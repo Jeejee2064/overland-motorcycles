@@ -157,7 +157,7 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Phone</h3>
-                  <a href="tel:+50768051100" className="text-gray-600 hover:text-yellow-400 transition-colors">
+                  <a href="https://wa.me/50768051100" className="text-gray-600 hover:text-yellow-400 transition-colors">
                     +507 6805-1100
                   </a>
                 </div>
@@ -294,16 +294,16 @@ const ContactPage = () => {
             transition={{ duration: 0.8 }}
             className="rounded-3xl overflow-hidden shadow-2xl"
           >
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3956.0928199152077!2d-79.54171968483294!3d8.95402210000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8faca9953cf48bb7%3A0xde2fc73619b47d94!2sFORMATNULL%E2%84%A2%20ventures%20S.A.!5e0!3m2!1sen!2s!4v1700000000000"
-              width="100%"
-              height="500"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Overland Motorcycles Location"
-            />
+   <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3587.1038012143595!2d-79.541778524982!3d8.954117091104239!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8faca9378280e6e9%3A0xf3d067acdd739d29!2sOverland%20motorcycles!5e1!3m2!1sfr!2spa!4v1768163740485!5m2!1sfr!2spa"
+      width="100%"
+      height="500"
+      style={{ border: 0 }}
+      allowFullScreen
+      loading="lazy"
+      referrerPolicy="no-referrer-when-downgrade"
+      title="Overland Motorcycles Location"
+    />
           </motion.div>
         </div>
       </section>

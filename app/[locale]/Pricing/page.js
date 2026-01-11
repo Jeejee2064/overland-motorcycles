@@ -14,7 +14,6 @@ const PricingPage = () => {
   const t = useTranslations('PricingPage');
 
   const pricingData = [
-    { days: 1, price: 280 },
     { days: 2, price: 280 },
     { days: 3, price: 400 },
     { days: 4, price: 530 },

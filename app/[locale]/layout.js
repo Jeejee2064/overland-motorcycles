@@ -3,7 +3,7 @@ import { getMessages, getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import './globals.css';
 import { Analytics } from "@vercel/analytics/next"
-
+import WhatsApp from '@/components/Whatsapp';
 const locales = ['en', 'es', 'pt', 'fr'];
 
 export async function generateStaticParams() {
@@ -284,7 +284,6 @@ export default async function RootLayout({ children, params }) {
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/manifest.json" />
         
         {/* Preconnect for performance */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -320,6 +319,7 @@ export default async function RootLayout({ children, params }) {
       <body>
         <NextIntlClientProvider messages={messages}>
           {children}
+          <WhatsApp />
           <Analytics/>
         </NextIntlClientProvider>
       </body>
