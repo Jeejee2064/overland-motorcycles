@@ -373,13 +373,19 @@
     "siteName": "Aluguel de Motos Panamá"
   },
 "calendar": {
-    "loading": "Carregando disponibilidade...",
-    "allAvailable": "4",
-    "twoThreeLeft": "2-3",
-    "oneLeft": "1",
-    "fullyBooked": "Lotado",
-    "selectedPeriod": "Período selecionado"
-  },
+      "loading": "Carregando disponibilidade...",
+      "selectedPeriod": "Selecionado",
+      "allAvailable": "Tudo Disponível",
+      "twoThreeLeft": "2-3 Restantes",
+      "oneLeft": "1 Restante",
+      "fullyBooked": "Totalmente Reservado",
+      "pickupTime": "Hora de Retirada",
+      "dropoffTime": "Hora de Devolução",
+      "rentalDuration": "Duração do Aluguel",
+      "day": "dia",
+      "days": "dias",
+      "minimumRental": "O aluguel mínimo é de 2 dias"
+    },
   "PricingPage": {
     "heroTitle": "Preços de Aluguel",
     "heroSubtitle": "Tarifas transparentes e tudo incluído para sua aventura",

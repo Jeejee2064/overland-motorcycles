@@ -374,14 +374,20 @@
     "twitterDescription": "Louez la légendaire Royal Enfield Himalayan 450cc à Panama City. L'aventure vous attend!",
     "siteName": "Location de Motos Panama"
   },
-  "calendar": {
-    "loading": "Chargement des disponibilités...",
-    "allAvailable": "Tout disponible",
-    "twoThreeLeft": "2-3 restants",
-    "oneLeft": "1 restant",
-    "fullyBooked": "Complet",
-    "selectedPeriod": "Période sélectionnée"
-  },
+ "calendar": {
+      "loading": "Chargement de la disponibilité...",
+      "selectedPeriod": "Sélectionné",
+      "allAvailable": "Tout Disponible",
+      "twoThreeLeft": "2-3 Restants",
+      "oneLeft": "1 Restant",
+      "fullyBooked": "Complet",
+      "pickupTime": "Heure de Prise en Charge",
+      "dropoffTime": "Heure de Retour",
+      "rentalDuration": "Durée de Location",
+      "day": "jour",
+      "days": "jours",
+      "minimumRental": "La location minimale est de 2 jours"
+    },
   "PricingPage": {
     "heroTitle": "Tarifs de location",
     "heroSubtitle": "Tarifs clairs et tout compris pour votre aventure",

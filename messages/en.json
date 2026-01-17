@@ -408,14 +408,20 @@
     "twitterDescription": "Rent the legendary Royal Enfield Himalayan 450cc in Panama City. Adventure awaits!",
     "siteName": "Panama Motorcycle Rentals"
   },
-  "calendar": {
-    "loading": "Loading availability...",
-    "allAvailable": "All Available",
-    "twoThreeLeft": "2–3 Left",
-    "oneLeft": "1 Left",
-    "fullyBooked": "Fully Booked",
-    "selectedPeriod": "Selected Period"
-  },
+ "calendar": {
+      "loading": "Loading availability...",
+      "selectedPeriod": "Selected",
+      "allAvailable": "All Available",
+      "twoThreeLeft": "2-3 Left",
+      "oneLeft": "1 Left",
+      "fullyBooked": "Fully Booked",
+      "pickupTime": "Pickup Time",
+      "dropoffTime": "Drop-off Time",
+      "rentalDuration": "Rental Duration",
+      "day": "day",
+      "days": "days",
+      "minimumRental": "Minimum rental is 2 days"
+    },
   "PricingPage": {
     "heroTitle": "Rental Pricing",
     "heroSubtitle": "Transparent, all-inclusive rates for your adventure",
