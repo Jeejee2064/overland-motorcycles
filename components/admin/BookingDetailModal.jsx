@@ -2,8 +2,10 @@
 import React from 'react';
 import { XCircle } from 'lucide-react';
 
-const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete }) => {
+const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaymentToggle }) => {
   if (!booking) return null;
+
+  const remainingAmount = (parseFloat(booking.total_price) + parseFloat(booking.deposit) - parseFloat(booking.down_payment)).toFixed(2);
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
@@ -80,12 +82,28 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete }) => {
                 <span className="text-gray-600">Deposit</span>
                 <span className="font-semibold">${booking.deposit}</span>
               </div>
+              {!booking.paid && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Amount Still to be Paid</span>
+                  <span className="font-semibold text-red-600">${remainingAmount}</span>
+                </div>
+              )}
               <div className="flex justify-between pt-2 border-t border-gray-200">
                 <span className="text-gray-900 font-bold">Payment Status</span>
                 <span className={`font-bold ${booking.paid ? 'text-green-600' : 'text-red-600'}`}>
                   {booking.paid ? 'PAID' : 'UNPAID'}
                 </span>
               </div>
+              {!booking.paid && (
+                <div className="pt-2">
+                  <button
+                    onClick={() => onPaymentToggle(booking.id, true)}
+                    className="w-full px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors"
+                  >
+                    Mark as Fully Paid
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
@@ -106,6 +124,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete }) => {
             >
               <option value="pending">Pending</option>
               <option value="confirmed">Confirmed</option>
+              <option value="fully paid">Fully Paid</option>
               <option value="cancelled">Cancelled</option>
               <option value="completed">Completed</option>
             </select>

@@ -77,6 +77,7 @@ const BookingsTab = ({
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
             <option value="confirmed">Confirmed</option>
+            <option value="fully paid">Fully Paid</option>
             <option value="cancelled">Cancelled</option>
             <option value="completed">Completed</option>
           </select>
@@ -110,6 +111,7 @@ const BookingsTab = ({
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Dates</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Bikes</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payment</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Actions</th>
                 </tr>
@@ -141,12 +143,26 @@ const BookingsTab = ({
                     <td className="px-6 py-4">
                       <span
                         className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                          booking.paid
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'
+                        }`}
+                      >
+                        {booking.paid ? 'PAID' : 'UNPAID'}
+                      </span>
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <span
+                        className={`px-3 py-1 rounded-full text-xs font-semibold ${
                           booking.status === 'confirmed'
                             ? 'bg-green-100 text-green-700'
                             : booking.status === 'pending'
                             ? 'bg-yellow-100 text-yellow-700'
                             : booking.status === 'cancelled'
                             ? 'bg-red-100 text-red-700'
+                            : booking.status === 'fully paid'
+                            ? 'bg-blue-100 text-blue-700'
                             : 'bg-blue-100 text-blue-700'
                         }`}
                       >

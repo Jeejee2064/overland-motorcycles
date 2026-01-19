@@ -42,7 +42,7 @@ export async function POST(req) {
           deposit: parseFloat(meta.totalDeposit),
           status: 'confirmed',
           payment_status: 'paid',
-          paid: true,
+          paid: false,
           stripe_session_id: session.id,
           stripe_payment_intent_id: session.payment_intent
         },

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { createBooking, getAllBookings, updateBookingStatus, deleteBooking } from '@/lib/supabase/bookings';
+import { createBooking,updateBookingPayment, getAllBookings, updateBookingStatus, deleteBooking } from '@/lib/supabase/bookings';
 import { getAllMessages, markMessageAsRead, markMessageAsReplied, deleteMessage } from '@/lib/supabase/messages';
 
 // Import all the new components
@@ -49,21 +49,52 @@ const AdminDashboard = () => {
   }, []);
 
   const loadData = async () => {
-    setLoading(true);
-    try {
-      const [bookingsData, messagesData] = await Promise.all([
-        getAllBookings(),
-        getAllMessages()
-      ]);
-      setBookings(bookingsData || []);
-      setMessages(messagesData || []);
-    } catch (error) {
-      console.error('Error loading data:', error);
-      alert('Error loading data. Make sure you are using the service_role key for admin access.');
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    const [bookingsData, messagesData] = await Promise.all([
+      getAllBookings(),
+      getAllMessages()
+    ]);
+    setBookings(bookingsData || []);
+    setMessages(messagesData || []);
+    return { bookings: bookingsData, messages: messagesData }; // Return the data
+  } catch (error) {
+    console.error('Error loading data:', error);
+    alert('Error loading data. Make sure you are using the service_role key for admin access.');
+  } finally {
+    setLoading(false);
+  }
+};
+const refreshSelectedBooking = async (bookingId) => {
+  try {
+    const freshBookings = await getAllBookings();
+    const updatedBooking = freshBookings.find(b => b.id === bookingId);
+    if (updatedBooking) {
+      setSelectedBooking(updatedBooking);
     }
-  };
+  } catch (error) {
+    console.error('Error refreshing booking:', error);
+  }
+};
+const handlePaymentToggle = async (bookingId, newPaidStatus) => {
+  try {
+    await updateBookingPayment(bookingId, newPaidStatus);
+    if (newPaidStatus) {
+      await updateBookingStatus(bookingId, 'fully paid');
+    }
+    
+    // Refresh the modal data
+    await refreshSelectedBooking(bookingId);
+    
+    // Also reload the main list
+    await loadData();
+    
+    alert('Payment marked as fully paid!');
+  } catch (error) {
+    alert('Error updating payment status: ' + error.message);
+  }
+};
+
 
   // Calculate stats
   const stats = {
@@ -75,15 +106,21 @@ const AdminDashboard = () => {
     avgBookingValue: bookings.length > 0 ? bookings.reduce((sum, b) => sum + parseFloat(b.total_price), 0) / bookings.length : 0
   };
 
-  const handleStatusUpdate = async (bookingId, newStatus) => {
-    try {
-      await updateBookingStatus(bookingId, newStatus);
-      await loadData();
-      alert('Booking status updated successfully!');
-    } catch (error) {
-      alert('Error updating status: ' + error.message);
-    }
-  };
+const handleStatusUpdate = async (bookingId, newStatus) => {
+  try {
+    await updateBookingStatus(bookingId, newStatus);
+    
+    // Refresh the modal data
+    await refreshSelectedBooking(bookingId);
+    
+    // Also reload the main list
+    await loadData();
+    
+    alert('Booking status updated successfully!');
+  } catch (error) {
+    alert('Error updating status: ' + error.message);
+  }
+};
 
   const handleDeleteBooking = async (bookingId) => {
     if (confirm('Are you sure you want to delete this booking?')) {
@@ -301,12 +338,13 @@ const AdminDashboard = () => {
       </main>
 
       {/* Modals */}
-      <BookingDetailModal
-        booking={selectedBooking}
-        onClose={() => setSelectedBooking(null)}
-        onStatusUpdate={handleStatusUpdate}
-        onDelete={handleDeleteBooking}
-      />
+     <BookingDetailModal
+  booking={selectedBooking}
+  onClose={() => setSelectedBooking(null)}
+  onStatusUpdate={handleStatusUpdate}
+  onDelete={handleDeleteBooking}
+  onPaymentToggle={handlePaymentToggle}
+/>
 
       <AddBookingModal
         show={showAddBooking}
