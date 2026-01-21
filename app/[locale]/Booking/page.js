@@ -134,6 +134,7 @@ const BookingPage = () => {
   const [validationError, setValidationError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [availabilityError, setAvailabilityError] = useState('');
   
   // Modal state
   const [modal, setModal] = useState({
@@ -276,7 +277,7 @@ useEffect(() => {
     return true;
   };
 
-  const handleDateRangeChange = (range) => {
+  const handleDateRangeChange = async (range) => {
     const start = formatLocalDate(range.startDate);
     const end = formatLocalDate(range.endDate);
 
@@ -285,6 +286,21 @@ useEffect(() => {
 
     if (start && end) {
       validateDates(start, end);
+      
+      // Check availability when dates change
+      try {
+        const available = await checkBikesAvailable(start, end);
+        const needed = parseInt(formData.bikeQuantity);
+
+        if (available < needed) {
+          setAvailabilityError(`Sorry, only ${available} motorcycle(s) available for the selected dates.`);
+        } else {
+          setAvailabilityError('');
+        }
+      } catch (error) {
+        console.error('Availability check error:', error);
+        setAvailabilityError('Unable to check availability. Please try again.');
+      }
     }
   };
 
@@ -348,11 +364,30 @@ useEffect(() => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+
+    // Check availability when bike quantity changes
+    if (name === 'bikeQuantity' && startDate && endDate) {
+      try {
+        const available = await checkBikesAvailable(startDate, endDate);
+        const needed = parseInt(value);
+
+        if (available < needed) {
+          setAvailabilityError(`Sorry, only ${available} motorcycle(s) available for the selected dates.`);
+        } else {
+          setAvailabilityError('');
+        }
+      } catch (error) {
+        console.error('Availability check error:', error);
+        setAvailabilityError('Unable to check availability. Please try again.');
+      }
+    }
   };
 
 const calculateDays = () => {
@@ -477,6 +512,14 @@ const calculateDays = () => {
                         <option value="3">{t('bikesOption3')}</option>
                         <option value="4">{t('bikesOption4')}</option>
                       </select>
+
+                      {/* Availability Error */}
+                      {availabilityError && (
+                        <div className="mt-2 p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2">
+                          <AlertCircle size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
+                          <p className="text-sm text-red-700 font-semibold">{availabilityError}</p>
+                        </div>
+                      )}
                     </div>
                   </div>
 
