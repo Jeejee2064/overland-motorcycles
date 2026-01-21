@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { createBooking,updateBookingPayment, getAllBookings, updateBookingStatus, deleteBooking } from '@/lib/supabase/bookings';
+import { createBooking, updateBookingPayment, getAllBookings, updateBookingStatus, deleteBooking } from '@/lib/supabase/bookings';
 import { getAllMessages, markMessageAsRead, markMessageAsReplied, deleteMessage } from '@/lib/supabase/messages';
 
 // Import all the new components
@@ -14,9 +14,11 @@ import MotorcyclesTab from '@/components/admin/MotorcyclesTab';
 import BookingDetailModal from '@/components/admin/BookingDetailModal';
 import AddBookingModal from '@/components/admin/AddBookingModal';
 import BookingLinkGeneratorTab from '@/components/admin/BookingLinkGeneratorTab';
-
+import { supabase } from '@/lib/supabase/client';
 
 const AdminDashboard = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('overview');
   const [bookings, setBookings] = useState([]);
   const [messages, setMessages] = useState([]);
@@ -45,56 +47,81 @@ const AdminDashboard = () => {
   });
 
   useEffect(() => {
-    loadData();
+    // Check if already authenticated (stays logged in permanently)
+    const authenticated = localStorage.getItem('admin_authenticated');
+    if (authenticated === 'true') {
+      setIsAuthenticated(true);
+      loadData();
+    } else {
+      setLoading(false);
+    }
   }, []);
 
-  const loadData = async () => {
-  setLoading(true);
-  try {
-    const [bookingsData, messagesData] = await Promise.all([
-      getAllBookings(),
-      getAllMessages()
-    ]);
-    setBookings(bookingsData || []);
-    setMessages(messagesData || []);
-    return { bookings: bookingsData, messages: messagesData }; // Return the data
-  } catch (error) {
-    console.error('Error loading data:', error);
-    alert('Error loading data. Make sure you are using the service_role key for admin access.');
-  } finally {
-    setLoading(false);
-  }
-};
-const refreshSelectedBooking = async (bookingId) => {
-  try {
-    const freshBookings = await getAllBookings();
-    const updatedBooking = freshBookings.find(b => b.id === bookingId);
-    if (updatedBooking) {
-      setSelectedBooking(updatedBooking);
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // ⚠️ CHANGE THIS PASSWORD TO YOUR OWN SECURE PASSWORD
+    const ADMIN_PASSWORD = 'RoyaleMotoPanama!';
+    
+    if (password === ADMIN_PASSWORD) {
+      setIsAuthenticated(true);
+      localStorage.setItem('admin_authenticated', 'true');
+      loadData();
+    } else {
+      alert('Incorrect password');
+      setPassword('');
     }
-  } catch (error) {
-    console.error('Error refreshing booking:', error);
-  }
-};
-const handlePaymentToggle = async (bookingId, newPaidStatus) => {
-  try {
-    await updateBookingPayment(bookingId, newPaidStatus);
-    if (newPaidStatus) {
-      await updateBookingStatus(bookingId, 'fully paid');
-    }
-    
-    // Refresh the modal data
-    await refreshSelectedBooking(bookingId);
-    
-    // Also reload the main list
-    await loadData();
-    
-    alert('Payment marked as fully paid!');
-  } catch (error) {
-    alert('Error updating payment status: ' + error.message);
-  }
-};
+  };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('admin_authenticated');
+  };
+
+  const loadData = async () => {
+    setLoading(true);
+    try {
+      const [bookingsData, messagesData] = await Promise.all([
+        getAllBookings(),
+        getAllMessages()
+      ]);
+      setBookings(bookingsData || []);
+      setMessages(messagesData || []);
+      return { bookings: bookingsData, messages: messagesData };
+    } catch (error) {
+      console.error('Error loading data:', error);
+      alert('Error loading data. Make sure you are using the service_role key for admin access.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshSelectedBooking = async (bookingId) => {
+    try {
+      const freshBookings = await getAllBookings();
+      const updatedBooking = freshBookings.find(b => b.id === bookingId);
+      if (updatedBooking) {
+        setSelectedBooking(updatedBooking);
+      }
+    } catch (error) {
+      console.error('Error refreshing booking:', error);
+    }
+  };
+
+  const handlePaymentToggle = async (bookingId, newPaidStatus) => {
+    try {
+      await updateBookingPayment(bookingId, newPaidStatus);
+      if (newPaidStatus) {
+        await updateBookingStatus(bookingId, 'fully paid');
+      }
+      
+      await refreshSelectedBooking(bookingId);
+      await loadData();
+      
+      alert('Payment marked as fully paid!');
+    } catch (error) {
+      alert('Error updating payment status: ' + error.message);
+    }
+  };
 
   // Calculate stats
   const stats = {
@@ -106,21 +133,16 @@ const handlePaymentToggle = async (bookingId, newPaidStatus) => {
     avgBookingValue: bookings.length > 0 ? bookings.reduce((sum, b) => sum + parseFloat(b.total_price), 0) / bookings.length : 0
   };
 
-const handleStatusUpdate = async (bookingId, newStatus) => {
-  try {
-    await updateBookingStatus(bookingId, newStatus);
-    
-    // Refresh the modal data
-    await refreshSelectedBooking(bookingId);
-    
-    // Also reload the main list
-    await loadData();
-    
-    alert('Booking status updated successfully!');
-  } catch (error) {
-    alert('Error updating status: ' + error.message);
-  }
-};
+  const handleStatusUpdate = async (bookingId, newStatus) => {
+    try {
+      await updateBookingStatus(bookingId, newStatus);
+      await refreshSelectedBooking(bookingId);
+      await loadData();
+      alert('Booking status updated successfully!');
+    } catch (error) {
+      alert('Error updating status: ' + error.message);
+    }
+  };
 
   const handleDeleteBooking = async (bookingId) => {
     if (confirm('Are you sure you want to delete this booking?')) {
@@ -171,7 +193,81 @@ const handleStatusUpdate = async (bookingId, newStatus) => {
   const handleAddBooking = async (e) => {
     e.preventDefault();
     try {
-      await createBooking(newBooking);
+      // Create the booking first
+      const booking = await createBooking(newBooking);
+      
+      // If the booking is confirmed (manual booking), assign motorcycles immediately
+      if (booking && newBooking.status === 'confirmed') {
+        const startDate = new Date(newBooking.start_date);
+        const endDate = new Date(newBooking.end_date);
+
+        // Get all confirmed bookings that overlap the requested period
+        const { data: overlappingBookings, error: overlapError } = await supabase
+          .from('bookings')
+          .select(`
+            id,
+            start_date,
+            end_date,
+            booking_motorcycles (
+              motorcycle_id
+            )
+          `)
+          .in('status', ['confirmed', 'paid', 'pending']);
+
+        if (overlapError) throw overlapError;
+
+        // Extract IDs of motorcycles already booked during this period
+        const bookedMotorcycleIds = new Set();
+
+        for (const b of overlappingBookings) {
+          const bStart = new Date(b.start_date);
+          const bEnd = new Date(b.end_date);
+
+          const overlaps = startDate <= bEnd && endDate >= bStart;
+
+          if (overlaps && b.booking_motorcycles?.length) {
+            for (const bm of b.booking_motorcycles) {
+              bookedMotorcycleIds.add(bm.motorcycle_id);
+            }
+          }
+        }
+
+        // Fetch motorcycles that are NOT booked in this range
+        const { data: allMotorcycles, error: motoError } = await supabase
+          .from('motorcycles')
+          .select('*')
+          .order('id', { ascending: true });
+
+        if (motoError) throw motoError;
+
+        const availableMotorcycles = allMotorcycles.filter(
+          (m) => !bookedMotorcycleIds.has(m.id)
+        );
+
+        if (availableMotorcycles.length < booking.bike_quantity) {
+          alert(`Warning: Not enough motorcycles available. Only ${availableMotorcycles.length} available.`);
+        }
+
+        // Assign motorcycles to booking
+        const assigned = availableMotorcycles.slice(0, booking.bike_quantity);
+
+        for (let moto of assigned) {
+          const { error: assignError } = await supabase
+            .from('booking_motorcycles')
+            .insert({
+              booking_id: booking.id,
+              motorcycle_id: moto.id
+            });
+
+          if (assignError) {
+            console.error('Error inserting booking_motorcycles:', assignError);
+            throw new Error('Failed to assign motorcycles');
+          }
+        }
+        
+        console.log(`Motorcycles assigned to manual booking ${booking.id}:`, assigned.map(m => m.name));
+      }
+      
       await loadData();
       setShowAddBooking(false);
       setNewBooking({
@@ -191,8 +287,9 @@ const handleStatusUpdate = async (bookingId, newStatus) => {
         status: 'confirmed',
         paid: false
       });
-      alert('Booking added successfully!');
+      alert('Booking added successfully with motorcycles assigned!');
     } catch (error) {
+      console.error('Error adding booking:', error);
       alert('Error adding booking: ' + error.message);
     }
   };
@@ -202,7 +299,7 @@ const handleStatusUpdate = async (bookingId, newStatus) => {
       const start = new Date(newBooking.start_date);
       const end = new Date(newBooking.end_date);
       const diffTime = Math.abs(end - start);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
       return diffDays;
     }
     return 0;
@@ -286,9 +383,46 @@ const handleStatusUpdate = async (bookingId, newStatus) => {
     );
   }
 
+  // Login screen
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h1>
+            <p className="text-gray-600">Enter password to access dashboard</p>
+          </div>
+          
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                placeholder="Enter admin password"
+                autoFocus
+              />
+            </div>
+            
+            <button
+              type="submit"
+              className="w-full px-6 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-500 transition-colors"
+            >
+              Login
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
-      <AdminHeader onRefresh={loadData} />
+      <AdminHeader onRefresh={loadData} onLogout={handleLogout} />
       
       <AdminNavigation 
         activeTab={activeTab} 
@@ -332,19 +466,18 @@ const handleStatusUpdate = async (bookingId, newStatus) => {
         {activeTab === 'calendar' && <CalendarTab />}
 
         {activeTab === 'motorcycles' && <MotorcyclesTab />}
-         {activeTab === 'link-generator' && 
-    <BookingLinkGeneratorTab />
-  }
+        
+        {activeTab === 'link-generator' && <BookingLinkGeneratorTab />}
       </main>
 
       {/* Modals */}
-     <BookingDetailModal
-  booking={selectedBooking}
-  onClose={() => setSelectedBooking(null)}
-  onStatusUpdate={handleStatusUpdate}
-  onDelete={handleDeleteBooking}
-  onPaymentToggle={handlePaymentToggle}
-/>
+      <BookingDetailModal
+        booking={selectedBooking}
+        onClose={() => setSelectedBooking(null)}
+        onStatusUpdate={handleStatusUpdate}
+        onDelete={handleDeleteBooking}
+        onPaymentToggle={handlePaymentToggle}
+      />
 
       <AddBookingModal
         show={showAddBooking}

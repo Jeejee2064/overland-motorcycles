@@ -266,7 +266,7 @@ useEffect(() => {
     }
 
     // Check minimum 2 days rental
-    const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24));
+    const days = Math.ceil((endDate - startDate) / (1000 * 60 * 60 * 24)) +1;
     if (days < 2) {
       setValidationError(t('validationMinimum2Days'));
       return false;
@@ -355,13 +355,14 @@ useEffect(() => {
     });
   };
 
-  const calculateDays = () => {
+const calculateDays = () => {
     if (startDate && endDate) {
       const start = parseLocalDate(startDate);
       const end = parseLocalDate(endDate);
       const diffTime = Math.abs(end - start);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      return diffDays;
+      // Add 1 to include both start and end dates
+      return diffDays + 1;
     }
     return 0;
   };
