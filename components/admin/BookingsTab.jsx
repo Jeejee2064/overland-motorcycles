@@ -128,8 +128,7 @@ const BookingsTab = ({
                     </td>
 
                     <td className="px-6 py-4 text-sm text-gray-600">
-                      {new Date(booking.start_date).toLocaleDateString()} -{' '}
-                      {new Date(booking.end_date).toLocaleDateString()}
+                      {booking.start_date} - {booking.end_date}
                     </td>
 
                     <td className="px-6 py-4 text-sm text-gray-600">

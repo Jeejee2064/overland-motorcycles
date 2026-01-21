@@ -49,11 +49,22 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-500">Start Date</p>
-                <p className="font-semibold">{new Date(booking.start_date).toLocaleDateString()}</p>
+                <p className="font-semibold">{booking.start_date}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">End Date</p>
-                <p className="font-semibold">{new Date(booking.end_date).toLocaleDateString()}</p>
+                <p className="font-semibold">{booking.end_date}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Duration</p>
+                <p className="font-semibold">
+                  {(() => {
+                    const start = new Date(booking.start_date + 'T00:00:00');
+                    const end = new Date(booking.end_date + 'T00:00:00');
+                    const days = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                    return `${days} day${days !== 1 ? 's' : ''}`;
+                  })()}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-gray-500">Motorcycles</p>
