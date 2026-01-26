@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 
+export const runtime = 'nodejs';
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -11,38 +13,41 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
-    // PagueloFacil sends data as JSON in the body
     const data = await request.json();
-    
-    console.log('📥 PagueloFacil webhook received:', JSON.stringify(data, null, 2));
 
-    // Extract transaction details
+    console.log(
+      '📥 PagueloFacil webhook received:',
+      JSON.stringify(data, null, 2)
+    );
+
+    /* -------------------------------------------------
+       1️⃣ Extract required fields
+    --------------------------------------------------*/
+
     const {
-      codOper,      // Transaction code
-      status,       // 1 = approved, 0 = declined
-      totalPay,     // Total paid
-      email,
-      userName,
+      status,                 // 1 = approved
+      codOper,                // Transaction ID
       messageSys,
-      authStatus,
-      // Custom parameters we sent
-      PARM_1,       // Booking ID
-      PARM_2,       // Security token
-      PARM_3,       // Bike quantity
-      PARM_4,       // Start date
-      PARM_5,       // End date
-      PARM_6,       // Email
+      totalPay,
+      email,
+      customFields = {},
     } = data;
 
-    const bookingId = PARM_1;
-    const securityToken = PARM_2;
+    const bookingId = customFields['Booking ID'];
+    const securityToken = customFields['Security Token'];
 
     if (!bookingId || !securityToken) {
-      console.error('❌ Missing booking ID or token in webhook');
-      return NextResponse.json({ error: 'Missing parameters' }, { status: 400 });
+      console.error('❌ Missing booking ID or token', customFields);
+      return NextResponse.json(
+        { error: 'Missing booking ID or token' },
+        { status: 400 }
+      );
     }
 
-    // 1️⃣ Fetch the booking
+    /* -------------------------------------------------
+       2️⃣ Fetch booking + validate token
+    --------------------------------------------------*/
+
     const { data: booking, error: fetchError } = await supabase
       .from('bookings')
       .select('*')
@@ -52,25 +57,28 @@ export async function POST(request) {
 
     if (fetchError || !booking) {
       console.error('❌ Booking not found or token mismatch');
-      return NextResponse.json({ error: 'Invalid booking' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'Invalid booking' },
+        { status: 404 }
+      );
     }
 
-    // 2️⃣ Check if webhook already processed
+    /* -------------------------------------------------
+       3️⃣ Idempotency guard
+    --------------------------------------------------*/
+
     if (booking.webhook_received) {
-      console.log('⚠️ Webhook already processed for booking:', bookingId);
-      return NextResponse.json({ 
-        status: 'already_processed',
-        message: 'Webhook already processed'
-      });
+      console.log('⚠️ Webhook already processed:', bookingId);
+      return NextResponse.json({ status: 'already_processed' });
     }
 
-    // 3️⃣ Check payment status (status: 1 = approved, 0 = declined)
-    const isApproved = status === 1 || status === '1';
+    /* -------------------------------------------------
+       4️⃣ Handle declined payment
+    --------------------------------------------------*/
 
-    if (!isApproved) {
-      console.log('⚠️ Payment not approved:', messageSys);
-      
-      // Update booking status to failed
+    const approved = status === 1 || status === '1';
+
+    if (!approved) {
       await supabase
         .from('bookings')
         .update({
@@ -82,160 +90,138 @@ export async function POST(request) {
         })
         .eq('id', bookingId);
 
-      return NextResponse.json({ 
+      return NextResponse.json({
         status: 'payment_failed',
-        message: messageSys 
+        message: messageSys,
       });
     }
 
-    // 4️⃣ Payment approved - Update booking
-    const { error: updateError } = await supabase
+    /* -------------------------------------------------
+       5️⃣ Mark booking as confirmed
+    --------------------------------------------------*/
+
+    await supabase
       .from('bookings')
       .update({
         status: 'confirmed',
         payment_status: 'paid',
-        paid: false, // Still needs to pay remaining at pickup
-        paguelofacil_transaction_id: codOper,
+        paid: false, // remaining paid at pickup
         webhook_received: true,
         pending_verification: false,
+        paguelofacil_transaction_id: codOper,
       })
       .eq('id', bookingId);
 
-    if (updateError) {
-      console.error('❌ Failed to update booking:', updateError);
-      return NextResponse.json({ error: 'Update failed' }, { status: 500 });
-    }
-
-    // 5️⃣ Fetch updated booking for email
     const { data: updatedBooking } = await supabase
       .from('bookings')
       .select('*')
       .eq('id', bookingId)
       .single();
 
-    // 6️⃣ Get overlapping bookings to check motorcycle availability
+    /* -------------------------------------------------
+       6️⃣ Motorcycle availability logic
+    --------------------------------------------------*/
+
     const startDate = new Date(updatedBooking.start_date);
     const endDate = new Date(updatedBooking.end_date);
 
-    const { data: overlappingBookings, error: overlapError } = await supabase
+    const { data: overlappingBookings } = await supabase
       .from('bookings')
       .select(`
         id,
         start_date,
         end_date,
-        booking_motorcycles (
-          motorcycle_id
-        )
+        booking_motorcycles ( motorcycle_id )
       `)
       .in('status', ['confirmed', 'paid', 'pending']);
 
-    if (overlapError) {
-      console.error('❌ Error fetching overlapping bookings:', overlapError);
-    }
-
-    // 7️⃣ Extract booked motorcycle IDs
     const bookedMotorcycleIds = new Set();
 
-    if (overlappingBookings) {
-      for (const b of overlappingBookings) {
-        if (b.id === bookingId) continue; // Skip current booking
+    overlappingBookings?.forEach(b => {
+      if (b.id === bookingId) return;
 
-        const bStart = new Date(b.start_date);
-        const bEnd = new Date(b.end_date);
-        const overlaps = startDate <= bEnd && endDate >= bStart;
+      const bStart = new Date(b.start_date);
+      const bEnd = new Date(b.end_date);
 
-        if (overlaps && b.booking_motorcycles?.length) {
-          for (const bm of b.booking_motorcycles) {
-            bookedMotorcycleIds.add(bm.motorcycle_id);
-          }
-        }
+      if (startDate <= bEnd && endDate >= bStart) {
+        b.booking_motorcycles?.forEach(m =>
+          bookedMotorcycleIds.add(m.motorcycle_id)
+        );
       }
-    }
+    });
 
-    // 8️⃣ Fetch available motorcycles
-    const { data: allMotorcycles, error: motoError } = await supabase
+    const { data: allMotorcycles } = await supabase
       .from('motorcycles')
       .select('*')
-      .order('id', { ascending: true });
+      .order('id');
 
-    if (motoError) {
-      console.error('❌ Error fetching motorcycles:', motoError);
+    const available = allMotorcycles.filter(
+      m => !bookedMotorcycleIds.has(m.id)
+    );
+
+    const assigned = available.slice(0, updatedBooking.bike_quantity);
+
+    for (const moto of assigned) {
+      await supabase.from('booking_motorcycles').insert({
+        booking_id: bookingId,
+        motorcycle_id: moto.id,
+      });
     }
 
-    const availableMotorcycles = allMotorcycles?.filter(
-      (m) => !bookedMotorcycleIds.has(m.id)
-    ) || [];
+    /* -------------------------------------------------
+       7️⃣ Emails
+    --------------------------------------------------*/
 
-    let assignedMotorcycles = [];
+    const remainingPayment =
+      updatedBooking.total_price - updatedBooking.down_payment;
 
-    if (availableMotorcycles.length >= updatedBooking.bike_quantity) {
-      // 9️⃣ Assign motorcycles
-      assignedMotorcycles = availableMotorcycles.slice(0, updatedBooking.bike_quantity);
-
-      for (let moto of assignedMotorcycles) {
-        const { error: assignError } = await supabase
-          .from('booking_motorcycles')
-          .insert({
-            booking_id: bookingId,
-            motorcycle_id: moto.id,
-          });
-
-        if (assignError) {
-          console.error('❌ Error assigning motorcycle:', assignError);
-        }
-      }
-    } else {
-      console.warn('⚠️ Not enough motorcycles available');
-    }
-
-    // 🔟 Calculate remaining payment
-    const remainingPayment = updatedBooking.total_price - updatedBooking.down_payment;
-
-    // 1️⃣1️⃣ Send confirmation emails
     try {
-      // Customer email
-      console.log('📧 Sending customer confirmation email...');
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
         to: [updatedBooking.email],
-        subject: `🏍️ Booking Confirmation - ${updatedBooking.first_name} ${updatedBooking.last_name}`,
-        html: generateCustomerEmailHTML(updatedBooking, assignedMotorcycles, remainingPayment),
+        subject: `🏍️ Booking Confirmed`,
+        html: generateCustomerEmailHTML(
+          updatedBooking,
+          assigned,
+          remainingPayment
+        ),
       });
-      console.log('✅ Customer email sent!');
-    } catch (emailError) {
-      console.error('❌ Failed to send customer email:', emailError);
+    } catch (e) {
+      console.error('❌ Customer email failed', e);
     }
 
     try {
-      // Company email
-      console.log('📧 Sending company notification email...');
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
         to: ['overlandmotorcycles@gmail.com'],
-        subject: `🚨 NEW BOOKING - ${updatedBooking.first_name} ${updatedBooking.last_name} - ${updatedBooking.bike_quantity} Bike${updatedBooking.bike_quantity > 1 ? 's' : ''}`,
-        html: generateCompanyEmailHTML(updatedBooking, assignedMotorcycles, remainingPayment),
+        subject: `🚨 NEW BOOKING - ${updatedBooking.first_name} ${updatedBooking.last_name}`,
+        html: generateCompanyEmailHTML(
+          updatedBooking,
+          assigned,
+          remainingPayment
+        ),
       });
-      console.log('✅ Company email sent!');
-    } catch (emailError) {
-      console.error('❌ Failed to send company email:', emailError);
+    } catch (e) {
+      console.error('❌ Admin email failed', e);
     }
 
     console.log('✅ Webhook processed successfully');
 
     return NextResponse.json({
       status: 'success',
-      bookingId: bookingId,
+      bookingId,
       transactionId: codOper,
     });
 
-  } catch (error) {
-    console.error('❌ Webhook error:', error);
+  } catch (err) {
+    console.error('❌ Webhook fatal error:', err);
     return NextResponse.json(
-      { error: error.message || 'Webhook processing failed' },
+      { error: 'Webhook processing failed' },
       { status: 500 }
     );
   }
 }
+
 
 // Email generation functions (same as before)
 function generateCustomerEmailHTML(booking, motorcycles, remainingPayment) {
