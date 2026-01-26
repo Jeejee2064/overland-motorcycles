@@ -524,7 +524,8 @@
     "error": {
       "title": "Oops! Something went wrong",
       "message": "Don't worry, your payment was successful. Please contact us at",
-      "sessionId": "with your session ID"
+      "sessionId": " ",
+      "timeout": "Payment verification timed out. We haven't received confirmation from the provider."
     },
     "success": {
       "title": "Payment Successful!",
@@ -575,7 +576,9 @@
     },
     "actions": {
       "backHome": "Back to Home",
-      "contactUs": "Contact Us"
+      "contactUs": "Contact Us",
+                  "tryAgain": "Try Booking Again"
+
     }
   },
 

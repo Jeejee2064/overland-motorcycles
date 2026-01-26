@@ -470,9 +470,11 @@
       "wait": "Por favor espere un momento"
     },
     "error": {
+      
       "title": "¡Ups! Algo salió mal",
       "message": "No se preocupe, su pago fue exitoso. Por favor contáctenos en",
-      "sessionId": "con su ID de sesión"
+      "sessionId": "con su ID de sesión",
+      "timeout": "Se ha agotado el tiempo de verificación del pago. No hemos recibido la confirmación del proveedor."
     },
     "success": {
       "title": "¡Pago Exitoso!",
@@ -522,6 +524,7 @@
       "contact": "Contáctenos en overlandmotorcycles@gmail.com si tiene alguna pregunta"
     },
     "actions": {
+      "tryAgain": "Intentar de nuevo",
       "backHome": "Volver al Inicio",
       "contactUs": "Contáctenos"
     }

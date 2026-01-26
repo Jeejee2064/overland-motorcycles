@@ -32,13 +32,12 @@ export default function BookingSuccessPage() {
       return;
     }
 
-    const fetchBooking = async () => {
+const fetchBooking = async () => {
       try {
         console.log('Fetching booking:', bookingId);
 
-        // Poll for booking confirmation (webhook might take a few seconds)
         let attempts = 0;
-        const maxAttempts = 10;
+        const maxAttempts = 60; // 60 attempts * 2 seconds = 120 seconds (2 minutes)
         
         while (attempts < maxAttempts) {
           const { data: booking, error: fetchError } = await supabase
@@ -47,45 +46,29 @@ export default function BookingSuccessPage() {
             .eq('id', bookingId)
             .single();
 
-          if (fetchError) {
-            throw new Error('Booking not found');
-          }
+          if (fetchError) throw new Error('Booking not found');
 
           // Check if webhook has been received
           if (booking.webhook_received && booking.status === 'confirmed') {
-            console.log('Booking confirmed:', booking);
             setBookingDetails({ booking });
             setLoading(false);
             return;
           }
 
-          // If payment is still pending, wait and retry
-          if (booking.pending_verification) {
-            console.log(`Waiting for payment confirmation... (${attempts + 1}/${maxAttempts})`);
-            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
-            attempts++;
-          } else {
-            // Payment failed or other status
-            if (booking.status === 'failed') {
-              throw new Error('Payment was not approved');
-            }
-            break;
+          if (booking.status === 'failed') {
+            throw new Error('Payment was not approved');
           }
+
+          // Wait 2 seconds before next poll
+          await new Promise(resolve => setTimeout(resolve, 2000));
+          attempts++;
         }
 
-        // If we've exhausted attempts, show pending message
-        setPaymentPending(true);
-        const { data: pendingBooking } = await supabase
-          .from('bookings')
-          .select('*')
-          .eq('id', bookingId)
-          .single();
-          
-        setBookingDetails({ booking: pendingBooking });
+        // If we reach here, 2 minutes have passed without confirmation
+        setError('Payment verification timed out. Please try again.');
         setLoading(false);
 
       } catch (err) {
-        console.error('Error fetching booking:', err);
         setError(err.message);
         setLoading(false);
       }
@@ -121,26 +104,19 @@ export default function BookingSuccessPage() {
                   {t('error.title')}
                 </h1>
                 <p className="text-gray-600 mb-4">{error}</p>
-                <p className="text-sm text-gray-500">
-                  {t('error.message')}{' '}
-                  <a href="mailto:overlandmotorcycles@gmail.com" className="text-yellow-600 underline">
-                    overlandmotorcycles@gmail.com
-                  </a>
-                  {' '}{t('error.sessionId')}: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{bookingId}</code>
-                </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link 
-                  href="/"
+                  href="/Booking"
                   className="flex-1 px-6 py-3 bg-yellow-400 text-gray-900 font-bold text-center rounded-xl hover:shadow-lg transition-all"
                 >
-                  {t('actions.backHome')}
+                  {t('actions.tryAgain')}
                 </Link>
                 <Link 
-                  href="/contact"
+                  href="/"
                   className="flex-1 px-6 py-3 bg-gray-200 text-gray-900 font-semibold text-center rounded-xl hover:bg-gray-300 transition-all"
                 >
-                  {t('actions.contactUs')}
+                  {t('actions.backHome')}
                 </Link>
               </div>
             </div>

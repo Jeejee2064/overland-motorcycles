@@ -485,7 +485,8 @@
     "error": {
       "title": "Ops! Algo deu errado",
       "message": "Não se preocupe, seu pagamento foi bem-sucedido. Por favor, entre em contato conosco em",
-      "sessionId": "com seu ID de sessão"
+      "sessionId": "com seu ID de sessão",
+      "timeout": "O tempo de verificação do pagamento expirou. Não recebemos a confirmação do provedor."
     },
     "success": {
       "title": "Pagamento Bem-Sucedido!",
@@ -535,6 +536,7 @@
       "contact": "Entre em contato conosco em overlandmotorcycles@gmail.com se tiver alguma dúvida"
     },
     "actions": {
+      "tryAgain": "Tentar novamente",
       "backHome": "Voltar ao Início",
       "contactUs": "Entre em Contato"
     }
