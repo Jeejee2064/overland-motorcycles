@@ -108,7 +108,8 @@ export async function POST(request) {
     };
 
     // 5️⃣ Determine the endpoint (sandbox or production)
-    const linkDeamonUrl = 'https://sandbox.paguelofacil.com/LinkDeamon.cfm';
+    const linkDeamonUrl = 'https://secure.paguelofacil.com/LinkDeamon.cfm'
+
 
     // 6️⃣ Make POST request to PagueloFacil
     const formBody = Object.keys(pagueloFacilData)
