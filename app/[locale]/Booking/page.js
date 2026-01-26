@@ -304,65 +304,67 @@ useEffect(() => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!isFormValid()) {
-      showModal('warning', 'Please fill all required fields, accept the terms, and select a valid date range.');
-      return;
+  if (!isFormValid()) {
+    showModal('warning', 'Please fill all required fields, accept the terms, and select a valid date range.');
+    return;
+  }
+
+  if (!validateDates(startDate, endDate)) {
+    if (validationError) {
+      showModal('error', validationError);
     }
+    return;
+  }
 
-    if (!validateDates(startDate, endDate)) {
-      if (validationError) {
-        showModal('error', validationError);
-      }
-      return;
-    }
+  if (isSubmitting) return;
+  setIsSubmitting(true);
 
-    if (isSubmitting) return;
-    setIsSubmitting(true);
+  try {
+    const available = await checkBikesAvailable(startDate, endDate);
+    const needed = parseInt(formData.bikeQuantity);
 
-    try {
-      const available = await checkBikesAvailable(startDate, endDate);
-      const needed = parseInt(formData.bikeQuantity);
-
-      if (available < needed) {
-        showModal('error', `Sorry, only ${available} motorcycle(s) available for the selected dates. Please adjust your selection or choose different dates.`);
-        setIsSubmitting(false);
-        return;
-      }
-
-      const response = await fetch('/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          phone: formData.phone,
-          country: formData.country,
-          downPayment,
-          totalRentalPrice,
-          totalDeposit,
-          startDate,
-          endDate,
-          bikeQuantity: parseInt(formData.bikeQuantity),
-          calculatedDays: calculateDays(),
-        }),
-      });
-
-      const { url, error } = await response.json();
-
-      if (error) throw new Error(error);
-      if (!url) throw new Error('Missing Checkout URL from server.');
-
-      window.location.href = url;
-    } catch (error) {
-      console.error('Booking error:', error);
-      showModal('error', error.message || 'There was an error processing your booking. Please try again or contact us for assistance.');
+    if (available < needed) {
+      showModal('error', `Sorry, only ${available} motorcycle(s) available for the selected dates. Please adjust your selection or choose different dates.`);
       setIsSubmitting(false);
+      return;
     }
-  };
+
+    // Call PagueloFacil payment API instead of Stripe
+    const response = await fetch('/api/create-paguelofacil-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        country: formData.country,
+        downPayment,
+        totalRentalPrice,
+        totalDeposit,
+        startDate,
+        endDate,
+        bikeQuantity: parseInt(formData.bikeQuantity),
+        calculatedDays: calculateDays(),
+      }),
+    });
+
+    const { url, error, bookingId } = await response.json();
+
+    if (error) throw new Error(error);
+    if (!url) throw new Error('Missing Payment URL from server.');
+
+    // Redirect to PagueloFacil payment page
+    window.location.href = url;
+  } catch (error) {
+    console.error('Booking error:', error);
+    showModal('error', error.message || 'There was an error processing your booking. Please try again or contact us for assistance.');
+    setIsSubmitting(false);
+  }
+};
 
   const handleChange = async (e) => {
     const { name, value } = e.target;

@@ -8,52 +8,91 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import Navigation from '../../../../components/Navigation';
 import Footer from '../../../../components/Footer';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
 
 export default function BookingSuccessPage() {
   const t = useTranslations('SuccessPage');
   const searchParams = useSearchParams();
-  const sessionId = searchParams.get('session_id');
+  const bookingId = searchParams.get('booking_id');
+  
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [bookingDetails, setBookingDetails] = useState(null);
+  const [paymentPending, setPaymentPending] = useState(false);
 
   useEffect(() => {
-    if (!sessionId) {
-      setError('No session ID provided');
+    if (!bookingId) {
+      setError('No booking ID provided');
       setLoading(false);
       return;
     }
 
-    const verifyPayment = async () => {
+    const fetchBooking = async () => {
       try {
-        console.log('Verifying payment for session:', sessionId);
+        console.log('Fetching booking:', bookingId);
 
-        const response = await fetch('/api/verify-payment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ sessionId }),
-        });
+        // Poll for booking confirmation (webhook might take a few seconds)
+        let attempts = 0;
+        const maxAttempts = 10;
+        
+        while (attempts < maxAttempts) {
+          const { data: booking, error: fetchError } = await supabase
+            .from('bookings')
+            .select('*')
+            .eq('id', bookingId)
+            .single();
 
-        const data = await response.json();
+          if (fetchError) {
+            throw new Error('Booking not found');
+          }
 
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to verify payment');
+          // Check if webhook has been received
+          if (booking.webhook_received && booking.status === 'confirmed') {
+            console.log('Booking confirmed:', booking);
+            setBookingDetails({ booking });
+            setLoading(false);
+            return;
+          }
+
+          // If payment is still pending, wait and retry
+          if (booking.pending_verification) {
+            console.log(`Waiting for payment confirmation... (${attempts + 1}/${maxAttempts})`);
+            await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds
+            attempts++;
+          } else {
+            // Payment failed or other status
+            if (booking.status === 'failed') {
+              throw new Error('Payment was not approved');
+            }
+            break;
+          }
         }
 
-        console.log('Payment verified:', data);
-        setBookingDetails(data);
+        // If we've exhausted attempts, show pending message
+        setPaymentPending(true);
+        const { data: pendingBooking } = await supabase
+          .from('bookings')
+          .select('*')
+          .eq('id', bookingId)
+          .single();
+          
+        setBookingDetails({ booking: pendingBooking });
         setLoading(false);
+
       } catch (err) {
-        console.error('Error verifying payment:', err);
+        console.error('Error fetching booking:', err);
         setError(err.message);
         setLoading(false);
       }
     };
 
-    verifyPayment();
-  }, [sessionId]);
+    fetchBooking();
+  }, [bookingId]);
 
   // Loading state
   if (loading) {
@@ -87,7 +126,7 @@ export default function BookingSuccessPage() {
                   <a href="mailto:overlandmotorcycles@gmail.com" className="text-yellow-600 underline">
                     overlandmotorcycles@gmail.com
                   </a>
-                  {' '}{t('error.sessionId')}: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{sessionId}</code>
+                  {' '}{t('error.sessionId')}: <code className="bg-gray-100 px-2 py-1 rounded text-xs">{bookingId}</code>
                 </p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -103,6 +142,43 @@ export default function BookingSuccessPage() {
                 >
                   {t('actions.contactUs')}
                 </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Payment pending state
+  if (paymentPending) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
+        <section className="py-16 mt-16">
+          <div className="max-w-3xl mx-auto px-4">
+            <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+              <div className="text-center mb-8">
+                <Loader2 size={56} className="animate-spin text-yellow-400 mx-auto mb-4" />
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                  Payment Processing
+                </h1>
+                <p className="text-gray-600 mb-4">
+                  Your payment is being processed. This usually takes a few seconds.
+                </p>
+                <p className="text-sm text-gray-500">
+                  You will receive a confirmation email once the payment is confirmed.
+                  If you don't receive it within 5 minutes, please contact us.
+                </p>
+                <div className="mt-6">
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded-xl hover:shadow-lg transition-all"
+                  >
+                    Check Status Again
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -218,7 +294,7 @@ export default function BookingSuccessPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900">{t('next.reference.title')}</h3>
                     <p className="text-sm text-gray-600">
-                      {t('next.reference.sessionId')}: <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">{sessionId}</span>
+                      {t('next.reference.sessionId')}: <span className="font-mono text-xs bg-gray-100 px-2 py-1 rounded">{bookingId}</span>
                     </p>
                   </div>
                 </div>

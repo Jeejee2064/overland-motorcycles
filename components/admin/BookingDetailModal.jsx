@@ -65,7 +65,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                     return `${days} day${days !== 1 ? 's' : ''}`;
                   })()}
                 </p>
-              </div>
+              </div>]
               <div>
                 <p className="text-sm text-gray-500">Motorcycles</p>
                 <p className="font-semibold">{booking.bike_quantity}</p>
