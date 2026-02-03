@@ -484,7 +484,7 @@
     "error": {
       
       "title": "¡Ups! Algo salió mal",
-      "message": "No se preocupe, su pago fue exitoso. Por favor contáctenos en",
+  "message": "Estamos revisando el estado de tu pago. Nos pondremos en contacto contigo en breve.",
       "sessionId": "con su ID de sesión",
       "timeout": "Se ha agotado el tiempo de verificación del pago. No hemos recibido la confirmación del proveedor."
     },

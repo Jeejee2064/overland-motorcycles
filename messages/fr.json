@@ -489,7 +489,7 @@
     },
     "error": {
       "title": "Oups ! Une erreur s'est produite",
-      "message": "Ne vous inquiétez pas, votre paiement a été effectué avec succès. Veuillez nous contacter à",
+  "message": "Nous vérifions actuellement le statut de votre paiement. Nous vous contacterons sous peu.",
       "sessionId": "avec votre identifiant de session",
       "timeout": "Délai de vérification du paiement dépassé. Nous n'avons pas reçu de confirmation du prestataire."
     },

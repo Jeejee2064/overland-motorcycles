@@ -496,7 +496,7 @@
     },
     "error": {
       "title": "Ops! Algo deu errado",
-      "message": "Não se preocupe, seu pagamento foi bem-sucedido. Por favor, entre em contato conosco em",
+  "message": "Estamos analisando o status do seu pagamento. Entraremos em contato em breve.",
       "sessionId": "com seu ID de sessão",
       "timeout": "O tempo de verificação do pagamento expirou. Não recebemos a confirmação do provedor."
     },

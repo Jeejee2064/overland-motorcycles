@@ -535,7 +535,7 @@
     },
     "error": {
       "title": "Oops! Something went wrong",
-      "message": "Don't worry, your payment was successful. Please contact us at",
+      "message": "We are reviewing your payment status, we will contact you shortly.",
       "sessionId": " ",
       "timeout": "Payment verification timed out. We haven't received confirmation from the provider."
     },

@@ -113,15 +113,15 @@ export default function BookingCalendar({ onDateRangeChange }) {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-6">
+    <div className="w-full max-w-5xl mx-auto">
       <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
         {loading ? (
-          <div className="p-12 text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-600 border-t-yellow-400 mb-4"></div>
-            <p className="text-gray-400 text-lg">{t('loading')}</p>
+          <div className="p-8 text-center">
+            <div className="inline-block animate-spin rounded-full h-10 w-10 border-4 border-gray-600 border-t-yellow-400 mb-3"></div>
+            <p className="text-gray-400 text-base">{t('loading')}</p>
           </div>
         ) : (
-          <div className="flex justify-center items-center p-4 md:p-6">
+          <div className="flex justify-center items-center p-3 md:p-4">
             <DateRange
               ranges={[selectedRange]}
               onChange={handleRangeChange}
@@ -141,12 +141,9 @@ export default function BookingCalendar({ onDateRangeChange }) {
         )}
 
         {/* Legend - Improved Layout */}
-        <div className="bg-gray-800/80 backdrop-blur-sm border-t border-gray-700 px-4 md:px-6 py-4">
+        <div className="bg-gray-800/80 backdrop-blur-sm border-t border-gray-700 px-3 md:px-4 py-3">
           <div className="max-w-4xl mx-auto">
-            <h3 className="text-sm font-semibold text-gray-300 mb-3 text-center md:text-left">
-              Availability Legend
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
               <LegendItem 
                 color="bg-yellow-400" 
                 borderColor="border-yellow-500" 
@@ -183,9 +180,9 @@ export default function BookingCalendar({ onDateRangeChange }) {
 // Legend Item Component - Enhanced
 function LegendItem({ color, borderColor, label }) {
   return (
-    <div className="flex items-center gap-2 p-2 rounded-lg bg-gray-700/30 hover:bg-gray-700/50 transition-colors">
-      <span className={`w-4 h-4 ${color} rounded border-2 ${borderColor} flex-shrink-0 shadow-sm`} />
-      <span className="text-gray-200 font-medium text-xs md:text-sm">{label}</span>
+    <div className="flex items-center gap-1.5 p-1.5 rounded-lg bg-gray-700/20">
+      <span className={`w-3 h-3 ${color} rounded border-2 ${borderColor} flex-shrink-0 shadow-sm`} />
+      <span className="text-gray-200 font-medium text-xs">{label}</span>
     </div>
   );
 }

@@ -37,7 +37,8 @@ const fetchBooking = async () => {
         console.log('Fetching booking:', bookingId);
 
         let attempts = 0;
-        const maxAttempts = 60; // 60 attempts * 2 seconds = 120 seconds (2 minutes)
+        // const maxAttempts = 60; 
+        const maxAttempts = 2;
         
         while (attempts < maxAttempts) {
           const { data: booking, error: fetchError } = await supabase
@@ -99,19 +100,22 @@ const fetchBooking = async () => {
           <div className="max-w-3xl mx-auto px-4">
             <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
               <div className="text-center mb-8">
-                <AlertCircle size={56} className="text-red-500 mx-auto mb-4" />
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                {/* <AlertCircle size={56} className="text-red-500 mx-auto mb-4" /> */}
+                {/* <h1 className="text-3xl font-bold text-gray-900 mb-4">
                   {t('error.title')}
+                </h1> */}
+                   <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                  {t('error.message')}
                 </h1>
-                <p className="text-gray-600 mb-4">{error}</p>
+                {/* <p className="text-gray-600 mb-4">{error}</p> */}
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link 
+                {/* <Link 
                   href="/Booking"
                   className="flex-1 px-6 py-3 bg-yellow-400 text-gray-900 font-bold text-center rounded-xl hover:shadow-lg transition-all"
                 >
                   {t('actions.tryAgain')}
-                </Link>
+                </Link> */}
                 <Link 
                   href="/"
                   className="flex-1 px-6 py-3 bg-gray-200 text-gray-900 font-semibold text-center rounded-xl hover:bg-gray-300 transition-all"
