@@ -53,7 +53,7 @@ const Navigation = () => {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
             <motion.span 
-              className="text-xl lg:text-2xl font-bold bg-gradient-to-br from-gray-50 to-gray-200 bg-clip-text text-transparent"
+              className="text-lg lg:text-xl font-bold bg-gradient-to-br from-gray-50 to-gray-200 bg-clip-text text-transparent"
               whileHover={{ scale: 1.02 }}
             >
               {/* Logo text is often not translated, but using a key for consistency is fine */}
@@ -86,11 +86,12 @@ const Navigation = () => {
                 </Link>
               </motion.div>
             ))}
+               <LocaleSwitcher />
           </div>
 
           {/* Desktop Right Side - Locale Switcher + CTA */}
           <div className="hidden lg:flex items-center gap-4">
-            <LocaleSwitcher />
+         
             
             <motion.div
               initial={{ opacity: 0, x: 20 }}
