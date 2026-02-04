@@ -102,9 +102,19 @@ const AdminDashboard = () => {
       if (updatedBooking) {
         setSelectedBooking(updatedBooking);
       }
+      // Also refresh the main bookings list
+      setBookings(freshBookings);
     } catch (error) {
       console.error('Error refreshing booking:', error);
     }
+  };
+
+  const handleBookingUpdate = async () => {
+    // Refresh both the selected booking and the entire bookings list
+    if (selectedBooking) {
+      await refreshSelectedBooking(selectedBooking.id);
+    }
+    await loadData();
   };
 
   const handlePaymentToggle = async (bookingId, newPaidStatus) => {
@@ -477,6 +487,7 @@ const AdminDashboard = () => {
         onStatusUpdate={handleStatusUpdate}
         onDelete={handleDeleteBooking}
         onPaymentToggle={handlePaymentToggle}
+        onUpdate={handleBookingUpdate}
       />
 
       <AddBookingModal
