@@ -324,7 +324,7 @@ const AdminDashboard = () => {
     { days: 6, price: 790 },
     { days: 7, price: 899 },
     { days: 8, price: 1010 },
-    { days: 9, price: 1175 },
+    { days: 9, price: 1 },
     { days: 10, price: 1230 },
     { days: 11, price: 1290 },
     { days: 12, price: 1350 },
