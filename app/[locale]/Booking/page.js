@@ -44,7 +44,7 @@ const CFMOTO_PRICING = [
   { days: 4,  price: 640 },
   { days: 5,  price: 790 },
   { days: 6,  price: 950 },
-  { days: 7,  price: 1 },
+  { days: 7,  price: 1080 },
   { days: 8,  price: 1210 },
   { days: 9,  price: 1410 },
   { days: 10, price: 1480 },
