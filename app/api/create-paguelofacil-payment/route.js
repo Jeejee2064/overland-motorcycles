@@ -118,9 +118,8 @@ export async function POST(request) {
       EXPIRES_IN: 3600,
     };
 
-    const linkDeamonUrl = process.env.NODE_ENV === 'production'
-      ? 'https://www.paguelofacil.com/LinkDeamon.cfm'
-      : 'https://sandbox.paguelofacil.com/LinkDeamon.cfm';
+    const linkDeamonUrl =  'https://www.paguelofacil.com/LinkDeamon.cfm'
+     
 
     // 5️⃣ POST to PaguéloFácil
     const formBody = Object.keys(pagueloFacilData)
