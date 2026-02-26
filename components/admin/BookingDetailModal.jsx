@@ -1,23 +1,28 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { XCircle, Edit2, Save, X, Bike } from 'lucide-react';
-import { 
-  getBookingMotorcycles, 
-  updateBookingDetails, 
+import {
+  getBookingMotorcycles,
+  updateBookingDetails,
   getAvailableMotorcyclesForEdit,
-  updateSingleMotorcycleAssignment
+  updateSingleMotorcycleAssignment,
 } from '@/lib/supabase/bookings-admin-helpers';
 import { getAllMotorcycles } from '@/lib/supabase/bookings';
 
+const MODEL_LABELS = {
+  Himalayan: 'Royal Enfield Himalayan 450',
+  CFMoto700: 'CF Moto 700 CL-X',
+};
+
 const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaymentToggle, onUpdate }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedBooking, setEditedBooking] = useState(null);
+  const [isEditing, setIsEditing]                   = useState(false);
+  const [editedBooking, setEditedBooking]           = useState(null);
   const [assignedMotorcycles, setAssignedMotorcycles] = useState([]);
   const [availableMotorcycles, setAvailableMotorcycles] = useState([]);
-  const [allMotorcycles, setAllMotorcycles] = useState([]);
+  const [allMotorcycles, setAllMotorcycles]         = useState([]);
   const [motorcycleSelections, setMotorcycleSelections] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [savingMotorcycle, setSavingMotorcycle] = useState(false);
+  const [loading, setLoading]                       = useState(false);
+  const [savingMotorcycle, setSavingMotorcycle]     = useState(false);
 
   useEffect(() => {
     if (booking) {
@@ -27,27 +32,21 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
   }, [booking]);
 
   useEffect(() => {
-    if (editedBooking && isEditing) {
-      loadAvailableMotorcycles();
-    }
-  }, [editedBooking?.start_date, editedBooking?.end_date, isEditing]);
+    if (editedBooking && isEditing) loadAvailableMotorcycles();
+  }, [editedBooking?.start_date, editedBooking?.end_date, editedBooking?.motorcycle_model, isEditing]);
 
   useEffect(() => {
-    if (booking && assignedMotorcycles) {
-      initializeMotorcycleSelections();
-    }
+    if (booking && assignedMotorcycles) initializeMotorcycleSelections();
   }, [booking, assignedMotorcycles]);
 
   const loadMotorcycleData = async () => {
     if (!booking) return;
-    
     setLoading(true);
     try {
       const [assigned, all] = await Promise.all([
         getBookingMotorcycles(booking.id),
-        getAllMotorcycles()
+        getAllMotorcycles(),
       ]);
-      
       setAssignedMotorcycles(assigned);
       setAllMotorcycles(all);
     } catch (error) {
@@ -60,15 +59,14 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
 
   const initializeMotorcycleSelections = () => {
     if (!booking) return;
-    
     const slots = [];
     for (let i = 0; i < booking.bike_quantity; i++) {
       const assignment = assignedMotorcycles[i];
       slots.push({
-        index: i,
-        assignmentId: assignment?.id || null,
-        motorcycleId: assignment?.motorcycle_id || '',
-        motorcycleName: assignment?.motorcycles?.name || ''
+        index:          i,
+        assignmentId:   assignment?.id || null,
+        motorcycleId:   assignment?.motorcycle_id || '',
+        motorcycleName: assignment?.motorcycles?.name || '',
       });
     }
     setMotorcycleSelections(slots);
@@ -76,14 +74,19 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
 
   const loadAvailableMotorcycles = async () => {
     if (!editedBooking?.start_date || !editedBooking?.end_date) return;
-
     try {
+      // Get bikes available for the date range, then filter by the booking's model
       const available = await getAvailableMotorcyclesForEdit(
         editedBooking.start_date,
         editedBooking.end_date,
         booking.id
       );
-      setAvailableMotorcycles(available);
+      // Filter to only show bikes matching the booking's model
+      const model     = editedBooking.motorcycle_model || booking.motorcycle_model;
+      const filtered  = model
+        ? available.filter(m => m.model === model)
+        : available;
+      setAvailableMotorcycles(filtered);
     } catch (error) {
       console.error('Error loading available motorcycles:', error);
     }
@@ -93,25 +96,23 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
     setLoading(true);
     try {
       await updateBookingDetails(booking.id, {
-        first_name: editedBooking.first_name,
-        last_name: editedBooking.last_name,
-        email: editedBooking.email,
-        phone: editedBooking.phone,
-        country: editedBooking.country,
-        start_date: editedBooking.start_date,
-        end_date: editedBooking.end_date,
-        bike_quantity: editedBooking.bike_quantity,
-        total_price: editedBooking.total_price,
-        down_payment: editedBooking.down_payment,
-        deposit: editedBooking.deposit,
+        first_name:       editedBooking.first_name,
+        last_name:        editedBooking.last_name,
+        email:            editedBooking.email,
+        phone:            editedBooking.phone,
+        country:          editedBooking.country,
+        start_date:       editedBooking.start_date,
+        end_date:         editedBooking.end_date,
+        bike_quantity:    editedBooking.bike_quantity,
+        motorcycle_model: editedBooking.motorcycle_model,
+        total_price:      editedBooking.total_price,
+        down_payment:     editedBooking.down_payment,
+        deposit:          editedBooking.deposit,
         special_requests: editedBooking.special_requests,
-        hear_about_us: editedBooking.hear_about_us
+        hear_about_us:    editedBooking.hear_about_us,
       });
-
       setIsEditing(false);
-      if (onUpdate) {
-        await onUpdate();
-      }
+      if (onUpdate) await onUpdate();
       alert('Booking updated successfully!');
     } catch (error) {
       console.error('Error saving booking:', error);
@@ -124,12 +125,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
   const handleMotorcycleChange = async (slotIndex, newMotorcycleId, oldAssignmentId) => {
     setSavingMotorcycle(true);
     try {
-      await updateSingleMotorcycleAssignment(
-        booking.id,
-        oldAssignmentId,
-        newMotorcycleId
-      );
-      
+      await updateSingleMotorcycleAssignment(booking.id, oldAssignmentId, newMotorcycleId);
       await loadMotorcycleData();
       alert('Motorcycle updated successfully!');
     } catch (error) {
@@ -141,62 +137,55 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
   };
 
   const handleFieldChange = (field, value) => {
-    setEditedBooking(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setEditedBooking(prev => ({ ...prev, [field]: value }));
   };
 
   const calculateDuration = () => {
     if (!editedBooking?.start_date || !editedBooking?.end_date) return 0;
     const start = new Date(editedBooking.start_date + 'T00:00:00');
-    const end = new Date(editedBooking.end_date + 'T00:00:00');
+    const end   = new Date(editedBooking.end_date   + 'T00:00:00');
     return Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
   };
 
   if (!booking || !editedBooking) return null;
 
   const remainingAmount = (
-    parseFloat(editedBooking.total_price) + 
-    parseFloat(editedBooking.deposit) - 
+    parseFloat(editedBooking.total_price) +
+    parseFloat(editedBooking.deposit) -
     parseFloat(editedBooking.down_payment)
   ).toFixed(2);
+
+  const modelLabel = MODEL_LABELS[editedBooking.motorcycle_model] || editedBooking.motorcycle_model || 'Unknown model';
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+
         {/* Header */}
         <div className="p-6 border-b border-gray-200 sticky top-0 bg-white z-10">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
+              {/* Model badge */}
+              <span className="inline-block mt-1 text-xs font-bold px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 border border-yellow-300">
+                {modelLabel}
+              </span>
+            </div>
             <div className="flex items-center gap-2">
               {!isEditing ? (
-                <button
-                  onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                >
-                  <Edit2 size={18} />
-                  Edit
+                <button onClick={() => setIsEditing(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                  <Edit2 size={18} /> Edit
                 </button>
               ) : (
                 <>
-                  <button
-                    onClick={handleSave}
-                    disabled={loading}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50"
-                  >
-                    <Save size={18} />
-                    {loading ? 'Saving...' : 'Save'}
+                  <button onClick={handleSave} disabled={loading}
+                    className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50">
+                    <Save size={18} /> {loading ? 'Saving...' : 'Save'}
                   </button>
-                  <button
-                    onClick={() => {
-                      setIsEditing(false);
-                      setEditedBooking({ ...booking });
-                    }}
-                    className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors"
-                  >
-                    <X size={18} />
-                    Cancel
+                  <button onClick={() => { setIsEditing(false); setEditedBooking({ ...booking }); }}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+                    <X size={18} /> Cancel
                   </button>
                 </>
               )}
@@ -206,85 +195,37 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             </div>
           </div>
         </div>
-        
+
         <div className="p-6 space-y-6">
-          {/* Customer Info */}
+
+          {/* Customer Info — unchanged */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3">Customer Information</h3>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-sm text-gray-500 mb-1">First Name</p>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editedBooking.first_name}
-                    onChange={(e) => handleFieldChange('first_name', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                  />
-                ) : (
-                  <p className="font-semibold">{editedBooking.first_name}</p>
-                )}
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Last Name</p>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editedBooking.last_name}
-                    onChange={(e) => handleFieldChange('last_name', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                  />
-                ) : (
-                  <p className="font-semibold">{editedBooking.last_name}</p>
-                )}
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Email</p>
-                {isEditing ? (
-                  <input
-                    type="email"
-                    value={editedBooking.email}
-                    onChange={(e) => handleFieldChange('email', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                  />
-                ) : (
-                  <p className="font-semibold">{editedBooking.email}</p>
-                )}
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Phone</p>
-                {isEditing ? (
-                  <input
-                    type="tel"
-                    value={editedBooking.phone}
-                    onChange={(e) => handleFieldChange('phone', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                  />
-                ) : (
-                  <p className="font-semibold">{editedBooking.phone}</p>
-                )}
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Country</p>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    value={editedBooking.country}
-                    onChange={(e) => handleFieldChange('country', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                  />
-                ) : (
-                  <p className="font-semibold">{editedBooking.country}</p>
-                )}
-              </div>
+              {[
+                { label: 'First Name', field: 'first_name', type: 'text' },
+                { label: 'Last Name',  field: 'last_name',  type: 'text' },
+                { label: 'Email',      field: 'email',      type: 'email' },
+                { label: 'Phone',      field: 'phone',      type: 'tel' },
+                { label: 'Country',    field: 'country',    type: 'text' },
+              ].map(({ label, field, type }) => (
+                <div key={field}>
+                  <p className="text-sm text-gray-500 mb-1">{label}</p>
+                  {isEditing ? (
+                    <input type={type} value={editedBooking[field] || ''}
+                      onChange={(e) => handleFieldChange(field, e.target.value)}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400" />
+                  ) : (
+                    <p className="font-semibold">{editedBooking[field]}</p>
+                  )}
+                </div>
+              ))}
               <div>
                 <p className="text-sm text-gray-500 mb-1">How did you hear about us?</p>
                 {isEditing ? (
-                  <select
-                    value={editedBooking.hear_about_us || ''}
+                  <select value={editedBooking.hear_about_us || ''}
                     onChange={(e) => handleFieldChange('hear_about_us', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                  >
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400">
                     <option value="">Select...</option>
                     <option value="walk-in">Walk-in</option>
                     <option value="google">Google</option>
@@ -299,19 +240,16 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             </div>
           </div>
 
-          {/* Trip Details */}
+          {/* Trip Details + Model */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3">Trip Details</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <p className="text-sm text-gray-500 mb-1">Start Date</p>
                 {isEditing ? (
-                  <input
-                    type="date"
-                    value={editedBooking.start_date}
+                  <input type="date" value={editedBooking.start_date}
                     onChange={(e) => handleFieldChange('start_date', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                  />
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400" />
                 ) : (
                   <p className="font-semibold">{editedBooking.start_date}</p>
                 )}
@@ -319,26 +257,37 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
               <div>
                 <p className="text-sm text-gray-500 mb-1">End Date</p>
                 {isEditing ? (
-                  <input
-                    type="date"
-                    value={editedBooking.end_date}
+                  <input type="date" value={editedBooking.end_date}
                     onChange={(e) => handleFieldChange('end_date', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                  />
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400" />
                 ) : (
                   <p className="font-semibold">{editedBooking.end_date}</p>
                 )}
               </div>
               <div>
                 <p className="text-sm text-gray-500 mb-1">Duration</p>
-                <p className="font-semibold">
-                  {calculateDuration()} day{calculateDuration() !== 1 ? 's' : ''}
-                </p>
+                <p className="font-semibold">{calculateDuration()} day{calculateDuration() !== 1 ? 's' : ''}</p>
               </div>
               <div>
                 <p className="text-sm text-gray-500 mb-1">Bike Quantity</p>
                 <p className="font-semibold">{editedBooking.bike_quantity}</p>
               </div>
+
+              {/* Motorcycle Model — editable */}
+              <div className="col-span-2">
+                <p className="text-sm text-gray-500 mb-1">Motorcycle Model</p>
+                {isEditing ? (
+                  <select value={editedBooking.motorcycle_model || 'Himalayan'}
+                    onChange={(e) => handleFieldChange('motorcycle_model', e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400">
+                    <option value="Himalayan">Royal Enfield Himalayan 450</option>
+                    <option value="CFMoto700">CF Moto 700 CL-X</option>
+                  </select>
+                ) : (
+                  <p className="font-semibold">{modelLabel}</p>
+                )}
+              </div>
+
               <div>
                 <p className="text-sm text-gray-500 mb-1">Status</p>
                 <p className="font-semibold capitalize">{editedBooking.status}</p>
@@ -346,11 +295,12 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             </div>
           </div>
 
-          {/* Assigned Motorcycles */}
+          {/* Assigned Motorcycles — filtered by model */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <Bike size={20} />
               Assigned Motorcycles
+              <span className="text-sm font-normal text-gray-500">({modelLabel})</span>
             </h3>
             {loading ? (
               <div className="text-center py-4 text-gray-500">Loading motorcycles...</div>
@@ -360,26 +310,18 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                   <div key={slot.index}>
                     <p className="text-sm text-gray-500 mb-1">Motorcycle {index + 1}</p>
                     {isEditing ? (
-                      <select
-                        value={slot.motorcycleId}
+                      <select value={slot.motorcycleId}
                         onChange={(e) => handleMotorcycleChange(slot.index, e.target.value, slot.assignmentId)}
                         disabled={savingMotorcycle}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 disabled:opacity-50"
-                      >
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 disabled:opacity-50">
                         <option value="">Select a motorcycle...</option>
-                        {/* Show currently assigned motorcycle */}
                         {slot.motorcycleId && slot.motorcycleName && (
-                          <option value={slot.motorcycleId}>
-                            {slot.motorcycleName} (Current)
-                          </option>
+                          <option value={slot.motorcycleId}>{slot.motorcycleName} (Current)</option>
                         )}
-                        {/* Show available motorcycles */}
                         {availableMotorcycles
                           .filter(m => m.id !== slot.motorcycleId)
                           .map((moto) => (
-                            <option key={moto.id} value={moto.id}>
-                              {moto.name}
-                            </option>
+                            <option key={moto.id} value={moto.id}>{moto.name}</option>
                           ))}
                       </select>
                     ) : (
@@ -397,79 +339,54 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                     No motorcycle slots available
                   </div>
                 )}
+                {isEditing && availableMotorcycles.length === 0 && (
+                  <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
+                    ⚠️ No available {modelLabel} bikes for this date range.
+                  </div>
+                )}
               </div>
             )}
           </div>
 
-          {/* Pricing */}
+          {/* Pricing — unchanged */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3">Pricing</h3>
             <div className="bg-gray-50 p-4 rounded-lg space-y-3">
               <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Total Price</p>
-                  {isEditing ? (
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={editedBooking.total_price}
-                      onChange={(e) => handleFieldChange('total_price', parseFloat(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                    />
-                  ) : (
-                    <p className="font-semibold">${editedBooking.total_price}</p>
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Down Payment</p>
-                  {isEditing ? (
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={editedBooking.down_payment}
-                      onChange={(e) => handleFieldChange('down_payment', parseFloat(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                    />
-                  ) : (
-                    <p className="font-semibold">${editedBooking.down_payment}</p>
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Deposit</p>
-                  {isEditing ? (
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={editedBooking.deposit}
-                      onChange={(e) => handleFieldChange('deposit', parseFloat(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                    />
-                  ) : (
-                    <p className="font-semibold">${editedBooking.deposit}</p>
-                  )}
-                </div>
+                {[
+                  { label: 'Total Price',   field: 'total_price'  },
+                  { label: 'Down Payment',  field: 'down_payment' },
+                  { label: 'Deposit',       field: 'deposit'      },
+                ].map(({ label, field }) => (
+                  <div key={field}>
+                    <p className="text-sm text-gray-500 mb-1">{label}</p>
+                    {isEditing ? (
+                      <input type="number" step="0.01" value={editedBooking[field]}
+                        onChange={(e) => handleFieldChange(field, parseFloat(e.target.value))}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400" />
+                    ) : (
+                      <p className="font-semibold">${editedBooking[field]}</p>
+                    )}
+                  </div>
+                ))}
               </div>
-              
+
               {!editedBooking.paid && (
                 <div className="flex justify-between pt-2 border-t border-gray-200">
                   <span className="text-gray-600">Amount Still to be Paid</span>
                   <span className="font-semibold text-red-600">${remainingAmount}</span>
                 </div>
               )}
-              
               <div className="flex justify-between pt-2 border-t border-gray-200">
                 <span className="text-gray-900 font-bold">Payment Status</span>
                 <span className={`font-bold ${editedBooking.paid ? 'text-green-600' : 'text-red-600'}`}>
                   {editedBooking.paid ? 'PAID' : 'UNPAID'}
                 </span>
               </div>
-              
               {!editedBooking.paid && (
                 <div className="pt-2">
-                  <button
-                    onClick={() => onPaymentToggle(editedBooking.id, true)}
-                    className="w-full px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors"
-                  >
+                  <button onClick={() => onPaymentToggle(editedBooking.id, true)}
+                    className="w-full px-4 py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors">
                     Mark as Fully Paid
                   </button>
                 </div>
@@ -477,17 +394,15 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             </div>
           </div>
 
-          {/* Special Requests */}
+          {/* Special Requests — unchanged */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3">Special Requests</h3>
             {isEditing ? (
-              <textarea
-                value={editedBooking.special_requests || ''}
+              <textarea value={editedBooking.special_requests || ''}
                 onChange={(e) => handleFieldChange('special_requests', e.target.value)}
                 rows={4}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
-                placeholder="Enter any special requests..."
-              />
+                placeholder="Enter any special requests..." />
             ) : (
               <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">
                 {editedBooking.special_requests || 'No special requests'}
@@ -498,21 +413,17 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
           {/* Actions */}
           {!isEditing && (
             <div className="flex gap-3 pt-4 border-t border-gray-200">
-              <select
-                onChange={(e) => onStatusUpdate(editedBooking.id, e.target.value)}
+              <select onChange={(e) => onStatusUpdate(editedBooking.id, e.target.value)}
                 value={editedBooking.status}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg"
-              >
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
                 <option value="fully paid">Fully Paid</option>
                 <option value="cancelled">Cancelled</option>
                 <option value="completed">Completed</option>
               </select>
-              <button
-                onClick={() => onDelete(editedBooking.id)}
-                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-              >
+              <button onClick={() => onDelete(editedBooking.id)}
+                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
                 Delete
               </button>
             </div>

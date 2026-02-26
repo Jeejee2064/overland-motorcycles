@@ -1,9 +1,9 @@
 'use client'
+
 import React, { useState, useEffect } from 'react';
 import { createBooking, updateBookingPayment, getAllBookings, updateBookingStatus, deleteBooking } from '@/lib/supabase/bookings';
 import { getAllMessages, markMessageAsRead, markMessageAsReplied, deleteMessage } from '@/lib/supabase/messages';
 
-// Import all the new components
 import AdminHeader from '@/components/admin/AdminHeader';
 import AdminNavigation from '@/components/admin/AdminNavigation';
 import OverviewTab from '@/components/admin/OverviewTab';
@@ -16,38 +16,95 @@ import AddBookingModal from '@/components/admin/AddBookingModal';
 import BookingLinkGeneratorTab from '@/components/admin/BookingLinkGeneratorTab';
 import { supabase } from '@/lib/supabase/client';
 
+// ─── Pricing tables ───────────────────────────────────────────
+const HIMALAYAN_PRICING = [
+  { days: 1,  price: 280 },
+  { days: 2,  price: 280 },
+  { days: 3,  price: 400 },
+  { days: 4,  price: 530 },
+  { days: 5,  price: 660 },
+  { days: 6,  price: 790 },
+  { days: 7,  price: 899 },
+  { days: 8,  price: 1010 },
+  { days: 9,  price: 1175 },
+  { days: 10, price: 1230 },
+  { days: 11, price: 1290 },
+  { days: 12, price: 1350 },
+  { days: 13, price: 1380 },
+  { days: 14, price: 1420 },
+  { days: 21, price: 1800 },
+];
+
+const CFMOTO_PRICING = [
+  { days: 1,  price: 340 },
+  { days: 2,  price: 340 },
+  { days: 3,  price: 480 },
+  { days: 4,  price: 640 },
+  { days: 5,  price: 790 },
+  { days: 6,  price: 950 },
+  { days: 7,  price: 1080 },
+  { days: 8,  price: 1210 },
+  { days: 9,  price: 1410 },
+  { days: 10, price: 1480 },
+  { days: 11, price: 1550 },
+  { days: 12, price: 1620 },
+  { days: 13, price: 1660 },
+  { days: 14, price: 1700 },
+  { days: 21, price: 2160 },
+];
+
+export const getPricingTable = (model) =>
+  model === 'CFMoto700' ? CFMOTO_PRICING : HIMALAYAN_PRICING;
+
+export const calculatePriceForModel = (days, model) => {
+  if (days === 0) return 0;
+  const table  = getPricingTable(model);
+  const exact  = table.find(p => p.days === days);
+  if (exact) return exact.price;
+  const sorted = [...table].sort((a, b) => a.days - b.days);
+  for (let i = 0; i < sorted.length - 1; i++) {
+    if (days > sorted[i].days && days < sorted[i + 1].days) return sorted[i + 1].price;
+  }
+  if (days > 21) {
+    const last = sorted[sorted.length - 1];
+    return Math.round((last.price / last.days) * days);
+  }
+  return 0;
+};
+
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [password, setPassword] = useState('');
-  const [activeTab, setActiveTab] = useState('overview');
-  const [bookings, setBookings] = useState([]);
-  const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [password, setPassword]               = useState('');
+  const [activeTab, setActiveTab]             = useState('overview');
+  const [bookings, setBookings]               = useState([]);
+  const [messages, setMessages]               = useState([]);
+  const [loading, setLoading]                 = useState(true);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedMessage, setSelectedMessage] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [showAddBooking, setShowAddBooking] = useState(false);
+  const [searchTerm, setSearchTerm]           = useState('');
+  const [filterStatus, setFilterStatus]       = useState('all');
+  const [showAddBooking, setShowAddBooking]   = useState(false);
+
   const [newBooking, setNewBooking] = useState({
-    first_name: '',
-    last_name: '',
-    email: '',
-    phone: '',
-    country: '',
-    start_date: '',
-    end_date: '',
-    bike_quantity: 1,
-    total_price: 0,
-    down_payment: 0,
-    deposit: 1000,
+    first_name:       '',
+    last_name:        '',
+    email:            '',
+    phone:            '',
+    country:          '',
+    start_date:       '',
+    end_date:         '',
+    bike_quantity:    1,
+    motorcycle_model: 'Himalayan',   // ← new field
+    total_price:      0,
+    down_payment:     0,
+    deposit:          1000,
     special_requests: '',
-    hear_about_us: 'walk-in',
-    status: 'confirmed',
-    paid: false
+    hear_about_us:    'walk-in',
+    status:           'confirmed',
+    paid:             false,
   });
 
   useEffect(() => {
-    // Check if already authenticated (stays logged in permanently)
     const authenticated = localStorage.getItem('admin_authenticated');
     if (authenticated === 'true') {
       setIsAuthenticated(true);
@@ -59,9 +116,7 @@ const AdminDashboard = () => {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // ⚠️ CHANGE THIS PASSWORD TO YOUR OWN SECURE PASSWORD
     const ADMIN_PASSWORD = 'RoyaleMotoPanama!';
-    
     if (password === ADMIN_PASSWORD) {
       setIsAuthenticated(true);
       localStorage.setItem('admin_authenticated', 'true');
@@ -82,7 +137,7 @@ const AdminDashboard = () => {
     try {
       const [bookingsData, messagesData] = await Promise.all([
         getAllBookings(),
-        getAllMessages()
+        getAllMessages(),
       ]);
       setBookings(bookingsData || []);
       setMessages(messagesData || []);
@@ -99,10 +154,7 @@ const AdminDashboard = () => {
     try {
       const freshBookings = await getAllBookings();
       const updatedBooking = freshBookings.find(b => b.id === bookingId);
-      if (updatedBooking) {
-        setSelectedBooking(updatedBooking);
-      }
-      // Also refresh the main bookings list
+      if (updatedBooking) setSelectedBooking(updatedBooking);
       setBookings(freshBookings);
     } catch (error) {
       console.error('Error refreshing booking:', error);
@@ -110,37 +162,31 @@ const AdminDashboard = () => {
   };
 
   const handleBookingUpdate = async () => {
-    // Refresh both the selected booking and the entire bookings list
-    if (selectedBooking) {
-      await refreshSelectedBooking(selectedBooking.id);
-    }
+    if (selectedBooking) await refreshSelectedBooking(selectedBooking.id);
     await loadData();
   };
 
   const handlePaymentToggle = async (bookingId, newPaidStatus) => {
     try {
       await updateBookingPayment(bookingId, newPaidStatus);
-      if (newPaidStatus) {
-        await updateBookingStatus(bookingId, 'fully paid');
-      }
-      
+      if (newPaidStatus) await updateBookingStatus(bookingId, 'fully paid');
       await refreshSelectedBooking(bookingId);
       await loadData();
-      
       alert('Payment marked as fully paid!');
     } catch (error) {
       alert('Error updating payment status: ' + error.message);
     }
   };
 
-  // Calculate stats
   const stats = {
-    totalBookings: bookings.length,
-    pendingBookings: bookings.filter(b => b.status === 'pending').length,
+    totalBookings:     bookings.length,
+    pendingBookings:   bookings.filter(b => b.status === 'pending').length,
     confirmedBookings: bookings.filter(b => b.status === 'confirmed').length,
-    totalRevenue: bookings.filter(b => b.paid).reduce((sum, b) => sum + parseFloat(b.total_price), 0),
-    unreadMessages: messages.filter(m => m.status === 'unread').length,
-    avgBookingValue: bookings.length > 0 ? bookings.reduce((sum, b) => sum + parseFloat(b.total_price), 0) / bookings.length : 0
+    totalRevenue:      bookings.filter(b => b.paid).reduce((sum, b) => sum + parseFloat(b.total_price), 0),
+    unreadMessages:    messages.filter(m => m.status === 'unread').length,
+    avgBookingValue:   bookings.length > 0
+      ? bookings.reduce((sum, b) => sum + parseFloat(b.total_price), 0) / bookings.length
+      : 0,
   };
 
   const handleStatusUpdate = async (bookingId, newStatus) => {
@@ -167,135 +213,89 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleMarkMessageRead = async (messageId) => {
-    try {
-      await markMessageAsRead(messageId);
-      await loadData();
-    } catch (error) {
-      alert('Error marking message as read: ' + error.message);
-    }
-  };
+  const handleMarkMessageRead    = async (messageId) => { try { await markMessageAsRead(messageId); await loadData(); } catch (e) { alert('Error: ' + e.message); } };
+  const handleMarkMessageReplied = async (messageId, notes) => { try { await markMessageAsReplied(messageId, notes); await loadData(); setSelectedMessage(null); alert('Message marked as replied!'); } catch (e) { alert('Error: ' + e.message); } };
+  const handleDeleteMessage      = async (messageId) => { if (confirm('Delete this message?')) { try { await deleteMessage(messageId); await loadData(); setSelectedMessage(null); alert('Message deleted!'); } catch (e) { alert('Error: ' + e.message); } } };
 
-  const handleMarkMessageReplied = async (messageId, notes) => {
-    try {
-      await markMessageAsReplied(messageId, notes);
-      await loadData();
-      setSelectedMessage(null);
-      alert('Message marked as replied!');
-    } catch (error) {
-      alert('Error marking message as replied: ' + error.message);
-    }
-  };
-
-  const handleDeleteMessage = async (messageId) => {
-    if (confirm('Are you sure you want to delete this message?')) {
-      try {
-        await deleteMessage(messageId);
-        await loadData();
-        setSelectedMessage(null);
-        alert('Message deleted successfully!');
-      } catch (error) {
-        alert('Error deleting message: ' + error.message);
-      }
-    }
-  };
-
+  // ── Add booking (model-aware motorcycle assignment) ──────────
+ // ── Add booking (availability check BEFORE creating) ────────
   const handleAddBooking = async (e) => {
     e.preventDefault();
     try {
-      // Create the booking first
-      const booking = await createBooking(newBooking);
-      
-      // If the booking is confirmed (manual booking), assign motorcycles immediately
-      if (booking && newBooking.status === 'confirmed') {
-        const startDate = new Date(newBooking.start_date);
-        const endDate = new Date(newBooking.end_date);
+      const startDate = new Date(newBooking.start_date);
+      const endDate   = new Date(newBooking.end_date);
 
-        // Get all confirmed bookings that overlap the requested period
-        const { data: overlappingBookings, error: overlapError } = await supabase
-          .from('bookings')
-          .select(`
-            id,
-            start_date,
-            end_date,
-            booking_motorcycles (
-              motorcycle_id
-            )
-          `)
-          .in('status', ['confirmed', 'paid', 'pending']);
+      // ── 1. Check availability BEFORE creating anything ──────
+      const { data: overlappingBookings, error: overlapError } = await supabase
+        .from('bookings')
+        .select(`id, start_date, end_date, booking_motorcycles ( motorcycle_id )`)
+        .in('status', ['confirmed', 'paid', 'pending']);
 
-        if (overlapError) throw overlapError;
+      if (overlapError) throw overlapError;
 
-        // Extract IDs of motorcycles already booked during this period
-        const bookedMotorcycleIds = new Set();
-
-        for (const b of overlappingBookings) {
-          const bStart = new Date(b.start_date);
-          const bEnd = new Date(b.end_date);
-
-          const overlaps = startDate <= bEnd && endDate >= bStart;
-
-          if (overlaps && b.booking_motorcycles?.length) {
-            for (const bm of b.booking_motorcycles) {
-              bookedMotorcycleIds.add(bm.motorcycle_id);
-            }
-          }
+      const bookedMotorcycleIds = new Set();
+      for (const b of overlappingBookings) {
+        const bStart   = new Date(b.start_date);
+        const bEnd     = new Date(b.end_date);
+        const overlaps = startDate <= bEnd && endDate >= bStart;
+        if (overlaps && b.booking_motorcycles?.length) {
+          for (const bm of b.booking_motorcycles) bookedMotorcycleIds.add(bm.motorcycle_id);
         }
+      }
 
-        // Fetch motorcycles that are NOT booked in this range
-        const { data: allMotorcycles, error: motoError } = await supabase
-          .from('motorcycles')
-          .select('*')
-          .order('id', { ascending: true });
+      const { data: modelMotorcycles, error: motoError } = await supabase
+        .from('motorcycles')
+        .select('*')
+        .eq('model', newBooking.motorcycle_model)
+        .eq('is_available', true)
+        .order('name');
 
-        if (motoError) throw motoError;
+      if (motoError) throw motoError;
 
-        const availableMotorcycles = allMotorcycles.filter(
-          (m) => !bookedMotorcycleIds.has(m.id)
+      const available = (modelMotorcycles || []).filter(m => !bookedMotorcycleIds.has(m.id));
+      const needed    = newBooking.motorcycle_model === 'CFMoto700' ? 1 : newBooking.bike_quantity;
+
+      // ── 2. Hard-stop if not enough bikes — no booking created ──
+      if (available.length < needed) {
+        const modelLabel = newBooking.motorcycle_model === 'CFMoto700'
+          ? 'CF Moto 700'
+          : 'Himalayan';
+        alert(
+          `Not enough ${modelLabel} bikes available for ${newBooking.start_date} → ${newBooking.end_date}.\n` +
+          `Needed: ${needed}  |  Available: ${available.length}\n\n` +
+          `No booking was created.`
         );
+        return; // bail out — nothing written to DB yet
+      }
 
-        if (availableMotorcycles.length < booking.bike_quantity) {
-          alert(`Warning: Not enough motorcycles available. Only ${availableMotorcycles.length} available.`);
-        }
+      // ── 3. All clear — create the booking ───────────────────
+      const booking = await createBooking({
+        ...newBooking,
+        motorcycle_model: newBooking.motorcycle_model,
+        bike_quantity:    needed,
+      });
 
-        // Assign motorcycles to booking
-        const assigned = availableMotorcycles.slice(0, booking.bike_quantity);
-
-        for (let moto of assigned) {
+      // ── 4. Assign motorcycles (we already know they're free) ─
+      if (booking && newBooking.status === 'confirmed') {
+        const assigned = available.slice(0, needed);
+        for (const moto of assigned) {
           const { error: assignError } = await supabase
             .from('booking_motorcycles')
-            .insert({
-              booking_id: booking.id,
-              motorcycle_id: moto.id
-            });
-
-          if (assignError) {
-            console.error('Error inserting booking_motorcycles:', assignError);
-            throw new Error('Failed to assign motorcycles');
-          }
+            .insert({ booking_id: booking.id, motorcycle_id: moto.id });
+          if (assignError) throw new Error('Failed to assign motorcycles: ' + assignError.message);
         }
-        
-        console.log(`Motorcycles assigned to manual booking ${booking.id}:`, assigned.map(m => m.name));
+        console.log(`Assigned to booking ${booking.id}:`, assigned.map(m => m.name));
       }
-      
+
       await loadData();
       setShowAddBooking(false);
       setNewBooking({
-        first_name: '',
-        last_name: '',
-        email: '',
-        phone: '',
-        country: '',
-        start_date: '',
-        end_date: '',
-        bike_quantity: 1,
-        total_price: 0,
-        down_payment: 0,
-        deposit: 1000,
-        special_requests: '',
-        hear_about_us: 'walk-in',
-        status: 'confirmed',
-        paid: false
+        first_name: '', last_name: '', email: '', phone: '', country: '',
+        start_date: '', end_date: '', bike_quantity: 1,
+        motorcycle_model: 'Himalayan',
+        total_price: 0, down_payment: 0, deposit: 1000,
+        special_requests: '', hear_about_us: 'walk-in',
+        status: 'confirmed', paid: false,
       });
       alert('Booking added successfully with motorcycles assigned!');
     } catch (error) {
@@ -304,96 +304,53 @@ const AdminDashboard = () => {
     }
   };
 
+  // ── Price helpers (passed to AddBookingModal) ────────────────
   const calculateDays = () => {
-    if (newBooking.start_date && newBooking.end_date) {
-      const start = new Date(newBooking.start_date);
-      const end = new Date(newBooking.end_date);
-      const diffTime = Math.abs(end - start);
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-      return diffDays;
-    }
-    return 0;
+    if (!newBooking.start_date || !newBooking.end_date) return 0;
+    const start = new Date(newBooking.start_date);
+    const end   = new Date(newBooking.end_date);
+    return Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) + 1;
   };
 
-  const pricingData = [
-    { days: 1, price: 280 },
-    { days: 2, price: 280 },
-    { days: 3, price: 400 },
-    { days: 4, price: 530 },
-    { days: 5, price: 660 },
-    { days: 6, price: 790 },
-    { days: 7, price: 899 },
-    { days: 8, price: 1010 },
-    { days: 9, price: 1 },
-    { days: 10, price: 1230 },
-    { days: 11, price: 1290 },
-    { days: 12, price: 1350 },
-    { days: 13, price: 1380 },
-    { days: 14, price: 1420 },
-    { days: 21, price: 1800 }
-  ];
+  const calculatePrice = () =>
+    calculatePriceForModel(calculateDays(), newBooking.motorcycle_model);
 
-  const calculatePrice = () => {
-    const days = calculateDays();
-    if (days === 0) return 0;
-    
-    const pricing = pricingData.find(p => p.days === days);
-    if (pricing) return pricing.price;
-    
-    const sortedPricing = [...pricingData].sort((a, b) => a.days - b.days);
-    for (let i = 0; i < sortedPricing.length - 1; i++) {
-      if (days > sortedPricing[i].days && days < sortedPricing[i + 1].days) {
-        return sortedPricing[i + 1].price;
-      }
-    }
-    
-    if (days > 21) {
-      const basePrice = 1800;
-      const baseDays = 21;
-      return Math.round((basePrice / baseDays) * days);
-    }
-    
-    return 0;
-  };
-
-  // Auto-calculate prices when dates or bike quantity changes
+  // Auto-recalculate when dates, qty, or model change
   useEffect(() => {
     if (newBooking.start_date && newBooking.end_date) {
-      const rentalPrice = calculatePrice();
-      const numBikes = newBooking.bike_quantity;
+      const rentalPrice      = calculatePrice();
+      const numBikes         = newBooking.motorcycle_model === 'CFMoto700' ? 1 : newBooking.bike_quantity;
       const totalRentalPrice = rentalPrice * numBikes;
-      const depositPerBike = 1000;
-      const totalDeposit = depositPerBike * numBikes;
-      const downPayment = totalRentalPrice / 2;
-
+      const totalDeposit     = 1000 * numBikes;
+      const downPayment      = totalRentalPrice / 2;
       setNewBooking(prev => ({
         ...prev,
-        total_price: totalRentalPrice,
-        down_payment: downPayment,
-        deposit: totalDeposit
+        total_price:   totalRentalPrice,
+        down_payment:  downPayment,
+        deposit:       totalDeposit,
+        // Force qty to 1 if CF Moto selected
+        bike_quantity: prev.motorcycle_model === 'CFMoto700' ? 1 : prev.bike_quantity,
       }));
     }
-  }, [newBooking.start_date, newBooking.end_date, newBooking.bike_quantity]);
+  }, [newBooking.start_date, newBooking.end_date, newBooking.bike_quantity, newBooking.motorcycle_model]);
 
   const handleMessageClick = (msg) => {
     setSelectedMessage(msg);
-    if (msg.status === 'unread') {
-      handleMarkMessageRead(msg.id);
-    }
+    if (msg.status === 'unread') handleMarkMessageRead(msg.id);
   };
 
+  // ── Loading / login screens (unchanged) ─────────────────────
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
           <p className="text-gray-600">Loading dashboard...</p>
         </div>
       </div>
     );
   }
 
-  // Login screen
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
@@ -402,12 +359,9 @@ const AdminDashboard = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Login</h1>
             <p className="text-gray-600">Enter password to access dashboard</p>
           </div>
-          
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Password
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
               <input
                 type="password"
                 value={password}
@@ -417,11 +371,7 @@ const AdminDashboard = () => {
                 autoFocus
               />
             </div>
-            
-            <button
-              type="submit"
-              className="w-full px-6 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-500 transition-colors"
-            >
+            <button type="submit" className="w-full px-6 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-500 transition-colors">
               Login
             </button>
           </form>
@@ -433,24 +383,12 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminHeader onRefresh={loadData} onLogout={handleLogout} />
-      
-      <AdminNavigation 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab} 
-        stats={stats} 
-      />
 
-      {/* Main Content */}
+      <AdminNavigation activeTab={activeTab} setActiveTab={setActiveTab} stats={stats} />
+
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {activeTab === 'overview' && (
-          <OverviewTab 
-            stats={stats} 
-            bookings={bookings} 
-            messages={messages} 
-          />
-        )}
-
-        {activeTab === 'bookings' && (
+        {activeTab === 'overview'        && <OverviewTab stats={stats} bookings={bookings} messages={messages} />}
+        {activeTab === 'bookings'        && (
           <BookingsTab
             bookings={bookings}
             searchTerm={searchTerm}
@@ -461,8 +399,7 @@ const AdminDashboard = () => {
             onAddBooking={() => setShowAddBooking(true)}
           />
         )}
-
-        {activeTab === 'messages' && (
+        {activeTab === 'messages'        && (
           <MessagesTab
             messages={messages}
             searchTerm={searchTerm}
@@ -472,15 +409,11 @@ const AdminDashboard = () => {
             onDeleteMessage={handleDeleteMessage}
           />
         )}
-
-        {activeTab === 'calendar' && <CalendarTab />}
-
-        {activeTab === 'motorcycles' && <MotorcyclesTab />}
-        
-        {activeTab === 'link-generator' && <BookingLinkGeneratorTab />}
+        {activeTab === 'calendar'        && <CalendarTab />}
+        {activeTab === 'motorcycles'     && <MotorcyclesTab />}
+        {activeTab === 'link-generator'  && <BookingLinkGeneratorTab />}
       </main>
 
-      {/* Modals */}
       <BookingDetailModal
         booking={selectedBooking}
         onClose={() => setSelectedBooking(null)}
