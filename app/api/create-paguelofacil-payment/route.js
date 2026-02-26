@@ -114,12 +114,12 @@ export async function POST(request) {
       PARM_4:     startDate,
       PARM_5:     endDate,
       PARM_6:     email,
-      PARM_7:     motorcycleModel,   // extra param so it's visible in PF dashboard
       EXPIRES_IN: 3600,
     };
 
-    const linkDeamonUrl =  'https://www.paguelofacil.com/LinkDeamon.cfm'
-     
+    const linkDeamonUrl = process.env.NODE_ENV === 'production'
+      ? 'https://www.paguelofacil.com/LinkDeamon.cfm'
+      : 'https://sandbox.paguelofacil.com/LinkDeamon.cfm';
 
     // 5️⃣ POST to PaguéloFácil
     const formBody = Object.keys(pagueloFacilData)
