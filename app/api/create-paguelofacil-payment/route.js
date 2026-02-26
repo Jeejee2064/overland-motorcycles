@@ -118,7 +118,7 @@ export async function POST(request) {
     };
 
     const linkDeamonUrl = process.env.NODE_ENV === 'production'
-      ? 'https://www.paguelofacil.com/LinkDeamon.cfm'
+      ? 'https://secure.paguelofacil.com/LinkDeamon.cfm'
       : 'https://sandbox.paguelofacil.com/LinkDeamon.cfm';
 
     // 5️⃣ POST to PaguéloFácil
