@@ -16,6 +16,7 @@ const FleetPage = () => {
   const tNav = useTranslations('Navigation');
   const tPanama = useTranslations('PanamaPage');
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedBike, setSelectedBike] = useState('himalayan'); // 'himalayan' or 'cfmoto'
   const { scrollY } = useScroll();
 
   const yBg = useTransform(scrollY, [0, 1000], [0, -200]);
@@ -23,29 +24,32 @@ const FleetPage = () => {
 
   const springConfig = { stiffness: 300, damping: 30 };
 
-  // Gallery images array
-  const galleryImages = [
+  // Gallery images array for Himalayan
+  const himalayanGalleryImages = [
     'Moto1.jpg', 'Moto2.jpg', 'Moto3.jpg', 'Moto4.jpg', 'Moto5.jpg',
     'Moto6.jpg', 'Moto7.jpg', 'Moto8.jpg', 'Moto9.jpg', 'Moto10.jpg',
     'Moto11.jpg', 'Moto12.jpg', 'Moto13.jpg', 'Moto14.jpg', 'Moto15.jpg',
     'Moto16.jpg', 'Moto17.jpg', 'Moto18.jpg', 'Moto19.jpg'
   ];
 
+  // Gallery images array for CF MOTO
+  const cfMotoGalleryImages = [
+    'CFMoto1.jpg', 'CFMoto2.jpg', 'CFMoto3.jpg', 'CFMoto4.jpg', 'CFMoto5.jpg',
+    'CFMoto6.jpg', 'CFMoto7.jpg', 'CFMoto8.jpg', 'CFMoto9.jpg', 'CFMoto10.jpg'
+  ];
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-white">
       <Navigation />
 
-      {/* Hero Section - Clean & Direct */}
-      <section className="relative pt-32 pb-16 bg-white overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-yellow-400/5 rounded-full blur-3xl" />
-        
+      {/* Bike Selector Tabs */}
+      <section className="relative pt-32 pb-8 bg-white overflow-hidden">
         <div className="container mx-auto px-6 relative z-10">
-          {/* Title */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-4"
+            className="text-center mb-8"
           >
             <h1 className="text-5xl md:text-7xl font-bold mb-4 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">
               {t('heroTitle')}
@@ -55,104 +59,240 @@ const FleetPage = () => {
             </p>
           </motion.div>
 
-          {/* Main Grid - Motorcycle + Equipment */}
-          <div className="grid lg:grid-cols-2 gap-16 items-start max-w-7xl mx-auto">
-            {/* Motorcycle Image */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
+          {/* Bike Selection Tabs */}
+          <div className="flex justify-center gap-4 mb-12">
+            <button
+              onClick={() => setSelectedBike('himalayan')}
+              className={`px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
+                selectedBike === 'himalayan'
+                  ? 'bg-yellow-400 text-gray-900 shadow-lg'
+                  : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+              }`}
             >
-              <div className="absolute inset-0 flex items-center justify-center -z-10">
-                <div className="w-[500px] h-[500px] bg-gradient-to-br from-yellow-400/10 via-transparent to-yellow-400/10 rounded-full blur-3xl" />
-              </div>
-
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.4 }}
-                className="relative z-10"
-              >
-                <Image
-                  src="/royal-enfield-himalayan.png"
-                  alt={t('bikeAlt')}
-                  width={700}
-                  height={500}
-                  className="w-full h-auto drop-shadow-2xl"
-                  priority
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 }}
-                className="absolute top-8 left-8 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full font-bold text-sm shadow-xl z-20"
-              >
-                {t('badge')}
-              </motion.div>
-
-              {/* View Specifications Button */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="mt-8 text-center"
-              >
-                <a
-                  href="#specs"
-                  className="inline-flex items-center px-8 py-4 bg-gray-900 text-white rounded-full font-semibold hover:bg-gray-800 transition-colors duration-300 group"
-                >
-                  {t('viewSpecs')}
-                  <ChevronDown className="ml-2 group-hover:translate-y-1 transition-transform duration-300" size={20} />
-                </a>
-              </motion.div>
-            </motion.div>
-
-            {/* Included Equipment */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="space-y-6"
+              {t('himalayanTab')}
+            </button>
+            <button
+              onClick={() => setSelectedBike('cfmoto')}
+              className={`px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
+                selectedBike === 'cfmoto'
+                  ? 'bg-yellow-400 text-gray-900 shadow-lg'
+                  : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+              }`}
             >
-              <div className="mb-8">
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                  {t('equipmentTitle')}
-                </h2>
-                <p className="text-gray-500">
-                  {t('equipmentSubtitle')}
-                </p>
-              </div>
-
-              <div className="space-y-4">
-                {[
-                  { icon: Package, title: t('cases'), desc: t('casesDesc') },
-                  { icon: Shield, title: t('helmets'), desc: t('helmetsDesc') },
-                  { icon: Smartphone, title: t('phone'), desc: t('phoneDesc') },
-                  { icon: User, title: t('passenger'), desc: t('passengerDesc') }
-                ].map((item, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 + index * 0.1 }}
-                    className="flex items-start space-x-4 p-5 rounded-xl bg-gray-50/50 hover:bg-gray-50 transition-colors duration-300"
-                  >
-                    <div className="w-12 h-12 bg-yellow-400/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <item.icon size={24} className="text-gray-900" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">{item.title}</h3>
-                      <p className="text-gray-600 leading-relaxed">{item.desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+              {t('cfmotoTab')}
+            </button>
           </div>
         </div>
       </section>
+
+      {/* Hero Section - Clean & Direct */}
+      {selectedBike === 'himalayan' ? (
+        <section className="relative pb-16 bg-white overflow-hidden">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-yellow-400/5 rounded-full blur-3xl" />
+          
+          <div className="container mx-auto px-6 relative z-10">
+            {/* Main Grid - Motorcycle + Equipment */}
+            <div className="grid lg:grid-cols-2 gap-16 items-start max-w-7xl mx-auto">
+              {/* Motorcycle Image */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative"
+              >
+                <div className="absolute inset-0 flex items-center justify-center -z-10">
+                  <div className="w-[500px] h-[500px] bg-gradient-to-br from-yellow-400/10 via-transparent to-yellow-400/10 rounded-full blur-3xl" />
+                </div>
+
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.4 }}
+                  className="relative z-10"
+                >
+                  <Image
+                    src="/royal-enfield-himalayan.png"
+                    alt={t('himalayanAlt')}
+                    width={700}
+                    height={500}
+                    className="w-full h-auto drop-shadow-2xl"
+                    priority
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="absolute top-8 left-8 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full font-bold text-sm shadow-xl z-20"
+                >
+                  {t('himalayanBadge')}
+                </motion.div>
+
+                {/* View Specifications Button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="mt-8 text-center"
+                >
+                  <a
+                    href="#specs-himalayan"
+                    className="inline-flex items-center px-8 py-4 bg-gray-900 text-white rounded-full font-semibold hover:bg-gray-800 transition-colors duration-300 group"
+                  >
+                    {t('viewSpecs')}
+                    <ChevronDown className="ml-2 group-hover:translate-y-1 transition-transform duration-300" size={20} />
+                  </a>
+                </motion.div>
+              </motion.div>
+
+              {/* Included Equipment */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="space-y-6"
+              >
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    {t('himalayanEquipmentTitle')}
+                  </h2>
+                  <p className="text-gray-500">
+                    {t('himalayanEquipmentSubtitle')}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {[
+                    { icon: Package, title: t('cases'), desc: t('casesDesc') },
+                    { icon: Shield, title: t('helmets'), desc: t('helmetsDesc') },
+                    { icon: Smartphone, title: t('phone'), desc: t('phoneDesc') },
+                    { icon: User, title: t('passenger'), desc: t('passengerDesc') }
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 + index * 0.1 }}
+                      className="flex items-start space-x-4 p-5 rounded-xl bg-gray-50/50 hover:bg-gray-50 transition-colors duration-300"
+                    >
+                      <div className="w-12 h-12 bg-yellow-400/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <item.icon size={24} className="text-gray-900" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1">{item.title}</h3>
+                        <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section className="relative pb-16 bg-white overflow-hidden">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-yellow-400/5 rounded-full blur-3xl" />
+          
+          <div className="container mx-auto px-6 relative z-10">
+            {/* Main Grid - Motorcycle + Equipment */}
+            <div className="grid lg:grid-cols-2 gap-16 items-start max-w-7xl mx-auto">
+              {/* Motorcycle Image */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                className="relative"
+              >
+                <div className="absolute inset-0 flex items-center justify-center -z-10">
+                  <div className="w-[500px] h-[500px] bg-gradient-to-br from-yellow-400/10 via-transparent to-yellow-400/10 rounded-full blur-3xl" />
+                </div>
+
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 0.4 }}
+                  className="relative z-10"
+                >
+                  <Image
+                    src="/CFMoto.jpeg"
+                    alt={t('cfmotoAlt')}
+                    width={700}
+                    height={500}
+                    className="w-full h-auto drop-shadow-2xl"
+                    priority
+                  />
+                </motion.div>
+
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5 }}
+                  className="absolute top-8 left-8 bg-yellow-400 text-gray-900 px-6 py-3 rounded-full font-bold text-sm shadow-xl z-20"
+                >
+                  {t('cfmotoBadge')}
+                </motion.div>
+
+                {/* View Specifications Button */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6 }}
+                  className="mt-8 text-center"
+                >
+                  <a
+                    href="#specs-cfmoto"
+                    className="inline-flex items-center px-8 py-4 bg-gray-900 text-white rounded-full font-semibold hover:bg-gray-800 transition-colors duration-300 group"
+                  >
+                    {t('viewSpecs')}
+                    <ChevronDown className="ml-2 group-hover:translate-y-1 transition-transform duration-300" size={20} />
+                  </a>
+                </motion.div>
+              </motion.div>
+
+              {/* Included Equipment */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                className="space-y-6"
+              >
+                <div className="mb-8">
+                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                    {t('cfmotoEquipmentTitle')}
+                  </h2>
+                  <p className="text-gray-500">
+                    {t('cfmotoEquipmentSubtitle')}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {[
+                    { icon: Package, title: t('cases'), desc: t('casesDesc') },
+                    { icon: Shield, title: t('helmets'), desc: t('helmetsDesc') },
+                    { icon: Smartphone, title: t('phone'), desc: t('phoneDesc') },
+                    { icon: User, title: t('passenger'), desc: t('passengerDesc') }
+                  ].map((item, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.5 + index * 0.1 }}
+                      className="flex items-start space-x-4 p-5 rounded-xl bg-gray-50/50 hover:bg-gray-50 transition-colors duration-300"
+                    >
+                      <div className="w-12 h-12 bg-yellow-400/10 rounded-full flex items-center justify-center flex-shrink-0">
+                        <item.icon size={24} className="text-gray-900" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1">{item.title}</h3>
+                        <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Bike Showcase Section */}
       <section className="relative py-20 bg-gray-50 overflow-hidden">
@@ -164,10 +304,10 @@ const FleetPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-4">
-              {t('bikeTitle')}
+              {selectedBike === 'himalayan' ? t('himalayanTitle') : t('cfmotoTitle')}
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              {t('bikeSubtitle')}
+              {selectedBike === 'himalayan' ? t('himalayanSubtitle') : t('cfmotoSubtitle')}
             </p>
             <div className="h-1 w-24 bg-yellow-400 mx-auto rounded-full mt-6" />
           </motion.div>
@@ -180,12 +320,14 @@ const FleetPage = () => {
               transition={{ duration: 0.8 }}
               className="space-y-6"
             >
-              <h3 className="text-3xl font-bold text-gray-900">{t('descTitle')}</h3>
+              <h3 className="text-3xl font-bold text-gray-900">
+                {selectedBike === 'himalayan' ? t('himalayanDescTitle') : t('cfmotoDescTitle')}
+              </h3>
               <p className="text-xl text-gray-600 leading-relaxed">
-                {t('descText1')}
+                {selectedBike === 'himalayan' ? t('himalayanDescText1') : t('cfmotoDescText1')}
               </p>
               <p className="text-xl text-gray-600 leading-relaxed">
-                {t('descText2')}
+                {selectedBike === 'himalayan' ? t('himalayanDescText2') : t('cfmotoDescText2')}
               </p>
             </motion.div>
 
@@ -210,86 +352,169 @@ const FleetPage = () => {
         </div>
       </section>
 
-      {/* Technical Specs */}
-      <section id="specs" className="py-20 bg-background">
-        <div className="max-w-7xl mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">
-              {t('specsTitle')}
-            </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              {t('specsSubtitle')}
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Zap, label: t('engine'), value: t('engineValue') },
-              { icon: Gauge, label: t('power'), value: t('powerValue') },
-              { icon: Settings, label: t('torque'), value: t('torqueValue') },
-              { icon: Weight, label: t('weight'), value: t('weightValue') },
-              { icon: Fuel, label: t('tank'), value: t('tankValue') },
-              { icon: Mountain, label: t('ground'), value: t('groundValue') }
-            ].map((spec, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
-              >
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-yellow-400/20 rounded-full flex items-center justify-center">
-                    <spec.icon size={24} className="text-yellow-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">{spec.label}</p>
-                    <p className="text-xl font-bold text-white">{spec.value}</p>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Subtle CTA to Panama */}
-          <motion.a
-            href="/Panama"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="block max-w-2xl mx-auto mt-16 group"
-          >
-            <div className="flex items-center justify-between p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-yellow-400/30 transition-all duration-300">
-              <div>
-                <p className="text-lg font-semibold text-white group-hover:text-yellow-400 transition-colors">
-                  {tPanama('heroTitle')}
-                </p>
-              </div>
-              <ArrowRight className="text-gray-400 group-hover:text-yellow-400 group-hover:translate-x-2 transition-all duration-300" size={24} />
-            </div>
-          </motion.a>
-
-          {/* Book Now Button */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-center mt-12"
-          >
-            <a
-              href="/Booking"
-              className="inline-flex items-center px-10 py-5 bg-yellow-400 text-gray-900 rounded-full font-bold text-lg hover:bg-yellow-500 transition-colors duration-300 shadow-lg hover:shadow-xl"
+      {/* Technical Specs - Himalayan */}
+      {selectedBike === 'himalayan' && (
+        <section id="specs-himalayan" className="py-20 bg-background">
+          <div className="max-w-7xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="text-center mb-16"
             >
-              {t('bookNow')}
-            </a>
-          </motion.div>
-        </div>
-      </section>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">
+                {t('himalayanSpecsTitle')}
+              </h2>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                {t('himalayanSpecsSubtitle')}
+              </p>
+            </motion.div>
 
-      {/* Features Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { icon: Zap, label: t('himalayanEngine'), value: t('himalayanEngineValue') },
+                { icon: Gauge, label: t('himalayanPower'), value: t('himalayanPowerValue') },
+                { icon: Settings, label: t('himalayanTorque'), value: t('himalayanTorqueValue') },
+                { icon: Weight, label: t('himalayanWeight'), value: t('himalayanWeightValue') },
+                { icon: Fuel, label: t('himalayanTank'), value: t('himalayanTankValue') },
+                { icon: Mountain, label: t('himalayanGround'), value: t('himalayanGroundValue') }
+              ].map((spec, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-yellow-400/20 rounded-full flex items-center justify-center">
+                      <spec.icon size={24} className="text-yellow-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-400">{spec.label}</p>
+                      <p className="text-xl font-bold text-white">{spec.value}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Subtle CTA to Panama */}
+            <motion.a
+              href="/Panama"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="block max-w-2xl mx-auto mt-16 group"
+            >
+              <div className="flex items-center justify-between p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-yellow-400/30 transition-all duration-300">
+                <div>
+                  <p className="text-lg font-semibold text-white group-hover:text-yellow-400 transition-colors">
+                    {tPanama('heroTitle')}
+                  </p>
+                </div>
+                <ArrowRight className="text-gray-400 group-hover:text-yellow-400 group-hover:translate-x-2 transition-all duration-300" size={24} />
+              </div>
+            </motion.a>
+
+            {/* Book Now Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-center mt-12"
+            >
+              <a
+                href="/Booking"
+                className="inline-flex items-center px-10 py-5 bg-yellow-400 text-gray-900 rounded-full font-bold text-lg hover:bg-yellow-500 transition-colors duration-300 shadow-lg hover:shadow-xl"
+              >
+                {t('bookNow')}
+              </a>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* Technical Specs - CF MOTO */}
+      {selectedBike === 'cfmoto' && (
+        <section id="specs-cfmoto" className="py-20 bg-background">
+          <div className="max-w-7xl mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">
+                {t('cfmotoSpecsTitle')}
+              </h2>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+                {t('cfmotoSpecsSubtitle')}
+              </p>
+            </motion.div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { icon: Zap, label: t('cfmotoEngine'), value: t('cfmotoEngineValue') },
+                { icon: Gauge, label: t('cfmotoPower'), value: t('cfmotoPowerValue') },
+                { icon: Settings, label: t('cfmotoTorque'), value: t('cfmotoTorqueValue') },
+                { icon: Weight, label: t('cfmotoWeight'), value: t('cfmotoWeightValue') },
+                { icon: Fuel, label: t('cfmotoTank'), value: t('cfmotoTankValue') },
+                { icon: Mountain, label: t('cfmotoGround'), value: t('cfmotoGroundValue') }
+              ].map((spec, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
+                >
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-yellow-400/20 rounded-full flex items-center justify-center">
+                      <spec.icon size={24} className="text-yellow-400" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-400">{spec.label}</p>
+                      <p className="text-xl font-bold text-white">{spec.value}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Subtle CTA to Panama */}
+            <motion.a
+              href="/Panama"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              className="block max-w-2xl mx-auto mt-16 group"
+            >
+              <div className="flex items-center justify-between p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-yellow-400/30 transition-all duration-300">
+                <div>
+                  <p className="text-lg font-semibold text-white group-hover:text-yellow-400 transition-colors">
+                    {tPanama('heroTitle')}
+                  </p>
+                </div>
+                <ArrowRight className="text-gray-400 group-hover:text-yellow-400 group-hover:translate-x-2 transition-all duration-300" size={24} />
+              </div>
+            </motion.a>
+
+            {/* Book Now Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-center mt-12"
+            >
+              <a
+                href="/Booking"
+                className="inline-flex items-center px-10 py-5 bg-yellow-400 text-gray-900 rounded-full font-bold text-lg hover:bg-yellow-500 transition-colors duration-300 shadow-lg hover:shadow-xl"
+              >
+                {t('bookNow')}
+              </a>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {/* Features Grid - Conditional */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
@@ -298,33 +523,57 @@ const FleetPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">
-              {t('featuresTitle')}
+              {selectedBike === 'himalayan' ? t('himalayanFeaturesTitle') : t('cfmotoFeaturesTitle')}
             </h2>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8">
-            {[
-              { title: t('feature1Title'), desc: t('feature1Desc') },
-              { title: t('feature2Title'), desc: t('feature2Desc') },
-              { title: t('feature3Title'), desc: t('feature3Desc') },
-              { title: t('feature4Title'), desc: t('feature4Desc') }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="p-8 rounded-2xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
-              >
-                <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
-                <p className="text-gray-300 leading-relaxed">{feature.desc}</p>
-              </motion.div>
-            ))}
+            {selectedBike === 'himalayan' ? (
+              <>
+                {[
+                  { title: t('himalayanFeature1Title'), desc: t('himalayanFeature1Desc') },
+                  { title: t('himalayanFeature2Title'), desc: t('himalayanFeature2Desc') },
+                  { title: t('himalayanFeature3Title'), desc: t('himalayanFeature3Desc') },
+                  { title: t('himalayanFeature4Title'), desc: t('himalayanFeature4Desc') }
+                ].map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="p-8 rounded-2xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
+                  >
+                    <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
+                    <p className="text-gray-300 leading-relaxed">{feature.desc}</p>
+                  </motion.div>
+                ))}
+              </>
+            ) : (
+              <>
+                {[
+                  { title: t('cfmotoFeature1Title'), desc: t('cfmotoFeature1Desc') },
+                  { title: t('cfmotoFeature2Title'), desc: t('cfmotoFeature2Desc') },
+                  { title: t('cfmotoFeature3Title'), desc: t('cfmotoFeature3Desc') },
+                  { title: t('cfmotoFeature4Title'), desc: t('cfmotoFeature4Desc') }
+                ].map((feature, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.1 }}
+                    className="p-8 rounded-2xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
+                  >
+                    <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
+                    <p className="text-gray-300 leading-relaxed">{feature.desc}</p>
+                  </motion.div>
+                ))}
+              </>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Gallery Section */}
+      {/* Gallery Section - Conditional */}
       <section className="py-20 bg-background">
         <div className="max-w-7xl mx-auto px-4">
           <motion.div
@@ -333,12 +582,12 @@ const FleetPage = () => {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">
-              {t('galleryTitle')}
+              {selectedBike === 'himalayan' ? t('himalayanGalleryTitle') : t('cfmotoGalleryTitle')}
             </h2>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {galleryImages.map((image, index) => (
+            {(himalayanGalleryImages).map((image, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -351,7 +600,7 @@ const FleetPage = () => {
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
                   <Image
                     src={`/${image}`}
-                    alt={`${t('galleryAlt')} ${index + 1}`}
+                    alt={`${selectedBike === 'himalayan' ? t('himalayanGalleryAlt') : t('cfmotoGalleryAlt')} ${index + 1}`}
                     fill
                     className="object-cover group-hover:scale-110 transition-transform duration-700"
                     loading="lazy"
@@ -420,12 +669,12 @@ const FleetPage = () => {
         </motion.div>
       )}
 
-      {/* SEO Banner Section */}
+      {/* SEO Banner Section - Conditional */}
       <section className="relative h-screen overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/Moto6.jpg"
-            alt={t('bannerTitle')}
+            src={selectedBike === 'himalayan' ? "/Moto6.jpg" : "/CFMoto.jpeg"}
+            alt={selectedBike === 'himalayan' ? t('himalayanBannerTitle') : t('cfmotoBannerTitle')}
             fill
             className="object-cover opacity-20"
           />
@@ -440,17 +689,17 @@ const FleetPage = () => {
             className="text-center px-4 z-10 max-w-5xl"
           >
             <h3 className="text-4xl md:text-6xl font-bold text-white mb-8">
-              {t('bannerTitle')}
+              {selectedBike === 'himalayan' ? t('himalayanBannerTitle') : t('cfmotoBannerTitle')}
             </h3>
             <div className="bg-gray-900/80 backdrop-blur-md rounded-3xl p-8 md:p-12 border border-yellow-400/20">
               <p className="text-lg md:text-xl text-gray-200 leading-relaxed mb-6">
-                {t('seoText1')}
+                {selectedBike === 'himalayan' ? t('himalayanSeoText1') : t('cfmotoSeoText1')}
               </p>
               <p className="text-lg md:text-xl text-gray-200 leading-relaxed mb-6">
-                {t('seoText2')}
+                {selectedBike === 'himalayan' ? t('himalayanSeoText2') : t('cfmotoSeoText2')}
               </p>
               <p className="text-lg md:text-xl text-gray-200 leading-relaxed">
-                {t('seoText3')}
+                {selectedBike === 'himalayan' ? t('himalayanSeoText3') : t('cfmotoSeoText3')}
               </p>
             </div>
           </motion.div>
@@ -463,7 +712,7 @@ const FleetPage = () => {
       <section id="booking" className="relative min-h-screen py-32 overflow-hidden bg-background">
         <motion.div style={{ y: yBg }} className="absolute inset-0 z-0">
           <Image
-            src="/moto2.webp"
+            src={selectedBike === 'himalayan' ? "/moto2.webp" : "/CFMoto.jpeg"}
             alt={t('ctaAlt')}
             fill
             priority
