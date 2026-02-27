@@ -367,11 +367,7 @@ const BookingPage = () => {
                             </li>
                           ))}
                         </ul>
-                        <div className="mt-3 pt-3 border-t border-gray-700 flex items-baseline gap-1">
-                          <span className="text-xs text-gray-500">{t('priceFrom')}</span>
-                          <span className="text-xl font-black text-yellow-400">${(model.pricing[0].price/2).toFixed(0)}</span>
-                          <span className="text-xs text-gray-500">{t('perDay')}</span>
-                        </div>
+                    
                       </div>
                     </motion.button>
                   ))}
