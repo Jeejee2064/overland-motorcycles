@@ -97,6 +97,8 @@ export async function POST(request) {
       { id: 'bookingId',      nameOrLabel: 'Booking ID',      value: booking.id },
       { id: 'token',          nameOrLabel: 'Security Token',  value: uniqueToken },
       { id: 'motorcycleModel',nameOrLabel: 'Motorcycle Model',value: motorcycleModel },
+        { id: 'paymentType',   nameOrLabel: 'Payment Type',   value: 'INITIAL' }, // ← ajout
+
     ];
     const customFieldsHex = Buffer.from(JSON.stringify(customFields)).toString('hex');
 

@@ -16,41 +16,20 @@ import AddBookingModal from '@/components/admin/AddBookingModal';
 import BookingLinkGeneratorTab from '@/components/admin/BookingLinkGeneratorTab';
 import { supabase } from '@/lib/supabase/client';
 
-// ─── Pricing tables ───────────────────────────────────────────
 const HIMALAYAN_PRICING = [
-  { days: 1,  price: 280 },
-  { days: 2,  price: 280 },
-  { days: 3,  price: 400 },
-  { days: 4,  price: 530 },
-  { days: 5,  price: 660 },
-  { days: 6,  price: 790 },
-  { days: 7,  price: 899 },
-  { days: 8,  price: 1010 },
-  { days: 9,  price: 1175 },
-  { days: 10, price: 1230 },
-  { days: 11, price: 1290 },
-  { days: 12, price: 1350 },
-  { days: 13, price: 1380 },
-  { days: 14, price: 1420 },
-  { days: 21, price: 1800 },
+  { days: 1,  price: 280 }, { days: 2,  price: 280 }, { days: 3,  price: 400 },
+  { days: 4,  price: 530 }, { days: 5,  price: 660 }, { days: 6,  price: 790 },
+  { days: 7,  price: 899 }, { days: 8,  price: 1010 }, { days: 9,  price: 1175 },
+  { days: 10, price: 1230 }, { days: 11, price: 1290 }, { days: 12, price: 1350 },
+  { days: 13, price: 1380 }, { days: 14, price: 1420 }, { days: 21, price: 1800 },
 ];
 
 const CFMOTO_PRICING = [
-  { days: 1,  price: 340 },
-  { days: 2,  price: 340 },
-  { days: 3,  price: 480 },
-  { days: 4,  price: 640 },
-  { days: 5,  price: 790 },
-  { days: 6,  price: 950 },
-  { days: 7,  price: 1080 },
-  { days: 8,  price: 1210 },
-  { days: 9,  price: 1410 },
-  { days: 10, price: 1480 },
-  { days: 11, price: 1550 },
-  { days: 12, price: 1620 },
-  { days: 13, price: 1660 },
-  { days: 14, price: 1700 },
-  { days: 21, price: 2160 },
+  { days: 1,  price: 340 }, { days: 2,  price: 340 }, { days: 3,  price: 480 },
+  { days: 4,  price: 640 }, { days: 5,  price: 790 }, { days: 6,  price: 950 },
+  { days: 7,  price: 1080 }, { days: 8,  price: 1210 }, { days: 9,  price: 1410 },
+  { days: 10, price: 1480 }, { days: 11, price: 1550 }, { days: 12, price: 1620 },
+  { days: 13, price: 1660 }, { days: 14, price: 1700 }, { days: 21, price: 2160 },
 ];
 
 export const getPricingTable = (model) =>
@@ -72,6 +51,27 @@ export const calculatePriceForModel = (days, model) => {
   return 0;
 };
 
+const EMPTY_BOOKING = {
+  first_name:       '',
+  last_name:        '',
+  email:            '',
+  phone:            '',
+  country:          '',
+  start_date:       '',
+  end_date:         '',
+  bike_quantity:    1,
+  motorcycle_model: 'Himalayan',
+  total_price:      0,
+  down_payment:     0,
+  deposit:          1000,
+  special_requests: '',
+  hear_about_us:    'walk-in',
+  status:           'confirmed',
+  paid:             false,
+  auth_status:      null,
+  balance_status:   null,
+};
+
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword]               = useState('');
@@ -84,25 +84,7 @@ const AdminDashboard = () => {
   const [searchTerm, setSearchTerm]           = useState('');
   const [filterStatus, setFilterStatus]       = useState('all');
   const [showAddBooking, setShowAddBooking]   = useState(false);
-
-  const [newBooking, setNewBooking] = useState({
-    first_name:       '',
-    last_name:        '',
-    email:            '',
-    phone:            '',
-    country:          '',
-    start_date:       '',
-    end_date:         '',
-    bike_quantity:    1,
-    motorcycle_model: 'Himalayan',   // ← new field
-    total_price:      0,
-    down_payment:     0,
-    deposit:          1000,
-    special_requests: '',
-    hear_about_us:    'walk-in',
-    status:           'confirmed',
-    paid:             false,
-  });
+  const [newBooking, setNewBooking]           = useState(EMPTY_BOOKING);
 
   useEffect(() => {
     const authenticated = localStorage.getItem('admin_authenticated');
@@ -217,15 +199,13 @@ const AdminDashboard = () => {
   const handleMarkMessageReplied = async (messageId, notes) => { try { await markMessageAsReplied(messageId, notes); await loadData(); setSelectedMessage(null); alert('Message marked as replied!'); } catch (e) { alert('Error: ' + e.message); } };
   const handleDeleteMessage      = async (messageId) => { if (confirm('Delete this message?')) { try { await deleteMessage(messageId); await loadData(); setSelectedMessage(null); alert('Message deleted!'); } catch (e) { alert('Error: ' + e.message); } } };
 
-  // ── Add booking (model-aware motorcycle assignment) ──────────
- // ── Add booking (availability check BEFORE creating) ────────
   const handleAddBooking = async (e) => {
     e.preventDefault();
     try {
       const startDate = new Date(newBooking.start_date);
       const endDate   = new Date(newBooking.end_date);
 
-      // ── 1. Check availability BEFORE creating anything ──────
+      // 1. Check availability
       const { data: overlappingBookings, error: overlapError } = await supabase
         .from('bookings')
         .select(`id, start_date, end_date, booking_motorcycles ( motorcycle_id )`)
@@ -255,27 +235,25 @@ const AdminDashboard = () => {
       const available = (modelMotorcycles || []).filter(m => !bookedMotorcycleIds.has(m.id));
       const needed    = newBooking.motorcycle_model === 'CFMoto700' ? 1 : newBooking.bike_quantity;
 
-      // ── 2. Hard-stop if not enough bikes — no booking created ──
       if (available.length < needed) {
-        const modelLabel = newBooking.motorcycle_model === 'CFMoto700'
-          ? 'CF Moto 700'
-          : 'Himalayan';
+        const modelLabel = newBooking.motorcycle_model === 'CFMoto700' ? 'CF Moto 700' : 'Himalayan';
         alert(
           `Not enough ${modelLabel} bikes available for ${newBooking.start_date} → ${newBooking.end_date}.\n` +
-          `Needed: ${needed}  |  Available: ${available.length}\n\n` +
-          `No booking was created.`
+          `Needed: ${needed}  |  Available: ${available.length}\n\nNo booking was created.`
         );
-        return; // bail out — nothing written to DB yet
+        return;
       }
 
-      // ── 3. All clear — create the booking ───────────────────
+      // 2. Create booking
       const booking = await createBooking({
         ...newBooking,
         motorcycle_model: newBooking.motorcycle_model,
         bike_quantity:    needed,
+        auth_status:      newBooking.auth_status,
+        balance_status:   newBooking.balance_status,
       });
 
-      // ── 4. Assign motorcycles (we already know they're free) ─
+      // 3. Assign motorcycles
       if (booking && newBooking.status === 'confirmed') {
         const assigned = available.slice(0, needed);
         for (const moto of assigned) {
@@ -284,27 +262,18 @@ const AdminDashboard = () => {
             .insert({ booking_id: booking.id, motorcycle_id: moto.id });
           if (assignError) throw new Error('Failed to assign motorcycles: ' + assignError.message);
         }
-        console.log(`Assigned to booking ${booking.id}:`, assigned.map(m => m.name));
       }
 
       await loadData();
       setShowAddBooking(false);
-      setNewBooking({
-        first_name: '', last_name: '', email: '', phone: '', country: '',
-        start_date: '', end_date: '', bike_quantity: 1,
-        motorcycle_model: 'Himalayan',
-        total_price: 0, down_payment: 0, deposit: 1000,
-        special_requests: '', hear_about_us: 'walk-in',
-        status: 'confirmed', paid: false,
-      });
-      alert('Booking added successfully with motorcycles assigned!');
+      setNewBooking(EMPTY_BOOKING);
+      alert('Booking added successfully!');
     } catch (error) {
       console.error('Error adding booking:', error);
       alert('Error adding booking: ' + error.message);
     }
   };
 
-  // ── Price helpers (passed to AddBookingModal) ────────────────
   const calculateDays = () => {
     if (!newBooking.start_date || !newBooking.end_date) return 0;
     const start = new Date(newBooking.start_date);
@@ -312,10 +281,8 @@ const AdminDashboard = () => {
     return Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) + 1;
   };
 
-  const calculatePrice = () =>
-    calculatePriceForModel(calculateDays(), newBooking.motorcycle_model);
+  const calculatePrice = () => calculatePriceForModel(calculateDays(), newBooking.motorcycle_model);
 
-  // Auto-recalculate when dates, qty, or model change
   useEffect(() => {
     if (newBooking.start_date && newBooking.end_date) {
       const rentalPrice      = calculatePrice();
@@ -328,7 +295,6 @@ const AdminDashboard = () => {
         total_price:   totalRentalPrice,
         down_payment:  downPayment,
         deposit:       totalDeposit,
-        // Force qty to 1 if CF Moto selected
         bike_quantity: prev.motorcycle_model === 'CFMoto700' ? 1 : prev.bike_quantity,
       }));
     }
@@ -339,7 +305,6 @@ const AdminDashboard = () => {
     if (msg.status === 'unread') handleMarkMessageRead(msg.id);
   };
 
-  // ── Loading / login screens (unchanged) ─────────────────────
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -362,16 +327,12 @@ const AdminDashboard = () => {
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                placeholder="Enter admin password"
-                autoFocus
-              />
+                placeholder="Enter admin password" autoFocus />
             </div>
-            <button type="submit" className="w-full px-6 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-500 transition-colors">
+            <button type="submit"
+              className="w-full px-6 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-500 transition-colors">
               Login
             </button>
           </form>
@@ -383,12 +344,11 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminHeader onRefresh={loadData} onLogout={handleLogout} />
-
       <AdminNavigation activeTab={activeTab} setActiveTab={setActiveTab} stats={stats} />
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        {activeTab === 'overview'        && <OverviewTab stats={stats} bookings={bookings} messages={messages} />}
-        {activeTab === 'bookings'        && (
+        {activeTab === 'overview'       && <OverviewTab stats={stats} bookings={bookings} messages={messages} />}
+        {activeTab === 'bookings'       && (
           <BookingsTab
             bookings={bookings}
             searchTerm={searchTerm}
@@ -399,7 +359,7 @@ const AdminDashboard = () => {
             onAddBooking={() => setShowAddBooking(true)}
           />
         )}
-        {activeTab === 'messages'        && (
+        {activeTab === 'messages'       && (
           <MessagesTab
             messages={messages}
             searchTerm={searchTerm}
@@ -409,9 +369,9 @@ const AdminDashboard = () => {
             onDeleteMessage={handleDeleteMessage}
           />
         )}
-        {activeTab === 'calendar'        && <CalendarTab />}
-        {activeTab === 'motorcycles'     && <MotorcyclesTab />}
-        {activeTab === 'link-generator'  && <BookingLinkGeneratorTab />}
+        {activeTab === 'calendar'       && <CalendarTab />}
+        {activeTab === 'motorcycles'    && <MotorcyclesTab />}
+        {activeTab === 'link-generator' && <BookingLinkGeneratorTab />}
       </main>
 
       <BookingDetailModal

@@ -9,6 +9,139 @@ import {
 } from '@/lib/supabase/bookings-admin-helpers';
 import { getAllMotorcycles } from '@/lib/supabase/bookings';
 
+function PaymentMailGenerator({ booking, onSent }) {
+  const bikeCount  = booking.bike_quantity || 1;
+  const authCount  = booking.auth_count || 0;
+  const authDone   = booking.auth_status === 'authorized';
+  const balDone    = booking.balance_status === 'captured';
+  const initDone   = booking.webhook_received && booking.payment_status === 'paid';
+  const isPending  = booking.status === 'pending' || !initDone;
+
+  const options = [];
+
+  // Si pending — option payer tout en un seul lien
+  if (isPending && !booking.paid) {
+    options.push({
+      id:    'full',
+      label: `Full Payment (Initial + Balance) — $${parseFloat(booking.total_price).toFixed(2)}`,
+      done:  booking.paid,
+      type:  'full',
+      index: 0,
+    });
+  }
+
+  // Initial seul (si pas encore payé)
+  if (!initDone) {
+    options.push({
+      id:    'initial',
+      label: `Initial Payment (50%) — $${parseFloat(booking.down_payment).toFixed(2)}`,
+      done:  initDone,
+      type:  'initial',
+      index: 0,
+    });
+  }
+
+  // AUTH — un par bike
+  for (let i = 0; i < bikeCount; i++) {
+    const done = authDone && authCount > i;
+    options.push({
+      id:    `auth_${i}`,
+      label: bikeCount > 1 ? `Security Deposit #${i + 1} — $1,000` : 'Security Deposit — $1,000',
+      done,
+      type:  'auth',
+      index: i,
+    });
+  }
+
+  // Balance
+  options.push({
+    id:    'balance',
+    label: `Remaining Balance — $${(parseFloat(booking.total_price) - parseFloat(booking.down_payment)).toFixed(2)}`,
+    done:  balDone,
+    type:  'balance',
+    index: 0,
+  });
+
+  const [selected, setSelected] = React.useState(
+    options.filter(o => !o.done).map(o => o.id)
+  );
+  const [sending, setSending] = React.useState(false);
+
+  // Si full est sélectionné, désélectionne initial + balance automatiquement
+const toggle = (id) => {
+  setSelected(prev => {
+    // full et initial/balance sont mutuellement exclusifs entre eux
+    // mais full + auth est OK, initial + auth est OK, etc.
+    if (id === 'full') {
+      // désélectionne initial et balance si on active full
+      const without = prev.filter(x => x !== 'initial' && x !== 'balance');
+      return without.includes('full') ? without.filter(x => x !== 'full') : [...without, 'full'];
+    }
+    if (id === 'initial' || id === 'balance') {
+      // désélectionne full si on active initial ou balance
+      const without = prev.filter(x => x !== 'full');
+      return without.includes(id) ? without.filter(x => x !== id) : [...without, id];
+    }
+    // auth_0, auth_1... — toggle libre, pas d'exclusion
+    return prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
+  });
+};
+
+  const handleSend = async () => {
+    if (selected.length === 0) return;
+    setSending(true);
+    try {
+      const res = await fetch('/api/pay/send-payment-mail', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bookingId: booking.id,
+          links: selected.map(id => {
+            const opt = options.find(o => o.id === id);
+            return { type: opt.type, index: opt.index };
+          }),
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      alert('Payment mail sent!');
+      if (onSent) await onSent();
+    } catch (e) {
+      alert('Error: ' + e.message);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+      <p className="text-sm font-bold text-gray-700 mb-3">📧 Send Payment Links</p>
+      <div className="space-y-2 mb-4">
+        {options.map(opt => (
+          <label key={opt.id} className={'flex items-center gap-3 p-2 rounded-lg cursor-pointer transition ' + (opt.done ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-100')}>
+            <input
+              type="checkbox"
+              disabled={opt.done}
+              checked={selected.includes(opt.id)}
+              onChange={() => toggle(opt.id)}
+              className="w-4 h-4 rounded text-yellow-400"
+            />
+            <span className="text-sm text-gray-800">{opt.label}</span>
+            {opt.done && <span className="text-xs text-green-600 ml-auto">✅ Done</span>}
+          </label>
+        ))}
+      </div>
+      <button
+        onClick={handleSend}
+        disabled={sending || selected.length === 0}
+        className="w-full py-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition disabled:opacity-50 text-sm"
+      >
+        {sending ? 'Sending...' : `Send ${selected.length} link${selected.length !== 1 ? 's' : ''}`}
+      </button>
+    </div>
+  );
+}
+
 const MODEL_LABELS = {
   Himalayan: 'Royal Enfield Himalayan 450',
   CFMoto700: 'CF Moto 700 CL-X',
@@ -23,6 +156,29 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
   const [motorcycleSelections, setMotorcycleSelections] = useState([]);
   const [loading, setLoading]                       = useState(false);
   const [savingMotorcycle, setSavingMotorcycle]     = useState(false);
+  const [sendingMail, setSendingMail] = useState(false);
+const [mailSent, setMailSent]       = useState(false);
+
+// La fonction :
+const handleSendPaymentMail = async () => {
+  setSendingMail(true);
+  try {
+    const res = await fetch('/api/pay/send-payment-mail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bookingId: booking.id }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    setMailSent(true);
+    if (onUpdate) await onUpdate();
+    alert('Payment mail sent successfully!');
+  } catch (e) {
+    alert('Error sending mail: ' + e.message);
+  } finally {
+    setSendingMail(false);
+  }
+};
 
   useEffect(() => {
     if (booking) {
@@ -409,7 +565,91 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
               </p>
             )}
           </div>
+{/* Payments */}
+<div>
+  <h3 className="text-lg font-bold text-gray-900 mb-4">Payments</h3>
 
+  {/* Transaction 1 — Initial */}
+  <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-3">
+    <div>
+      <p className="font-semibold text-gray-900 text-sm">Initial Payment (50%)</p>
+      <p className="text-xs text-gray-500">${parseFloat(editedBooking.down_payment).toFixed(2)}</p>
+      {editedBooking.paguelofacil_transaction_id && (
+        <p className="text-xs text-gray-400">ID: {editedBooking.paguelofacil_transaction_id}</p>
+      )}
+    </div>
+    <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
+      editedBooking.webhook_received && editedBooking.payment_status === 'paid' ? 'bg-green-100 text-green-700'
+      : editedBooking.payment_status === 'failed' ? 'bg-red-100 text-red-700'
+      : 'bg-yellow-100 text-yellow-700'
+    )}>
+      {editedBooking.webhook_received && editedBooking.payment_status === 'paid' ? '✅ Paid'
+        : editedBooking.payment_status === 'failed' ? '❌ Failed' : '⏳ Pending'}
+    </span>
+  </div>
+
+  {/* AUTH rows — one per bike */}
+  {Array.from({ length: editedBooking.bike_quantity || 1 }).map((_, i) => {
+    const isAuthorized = editedBooking.auth_status === 'authorized' && (editedBooking.auth_count || 0) > i;
+    return (
+      <div key={i} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-3">
+        <div>
+          <p className="font-semibold text-gray-900 text-sm">
+            Security Deposit {editedBooking.bike_quantity > 1 ? `#${i + 1}` : ''} (AUTH)
+          </p>
+          <p className="text-xs text-gray-500">$1,000.00</p>
+          {isAuthorized && editedBooking.auth_transaction_id && (
+            <p className="text-xs text-gray-400">ID: {editedBooking.auth_transaction_id}</p>
+          )}
+        </div>
+        <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
+          isAuthorized ? 'bg-green-100 text-green-700'
+          : editedBooking.auth_status === 'failed' ? 'bg-red-100 text-red-700'
+          : editedBooking.auth_status === 'pending' ? 'bg-blue-100 text-blue-700'
+          : 'bg-gray-100 text-gray-500'
+        )}>
+          {isAuthorized ? '✅ Authorized'
+            : editedBooking.auth_status === 'failed' ? '❌ Failed'
+            : editedBooking.auth_status === 'pending' ? '⏳ Pending'
+            : '— Not sent'}
+        </span>
+      </div>
+    );
+  })}
+
+  {/* Balance */}
+  <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-4">
+    <div>
+      <p className="font-semibold text-gray-900 text-sm">Remaining Balance</p>
+      <p className="text-xs text-gray-500">
+        ${(parseFloat(editedBooking.total_price) - parseFloat(editedBooking.down_payment)).toFixed(2)}
+      </p>
+      {editedBooking.balance_transaction_id && (
+        <p className="text-xs text-gray-400">ID: {editedBooking.balance_transaction_id}</p>
+      )}
+    </div>
+    <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
+      editedBooking.balance_status === 'captured' ? 'bg-green-100 text-green-700'
+      : editedBooking.balance_status === 'failed'  ? 'bg-red-100 text-red-700'
+      : editedBooking.balance_status === 'pending' ? 'bg-blue-100 text-blue-700'
+      : 'bg-gray-100 text-gray-500'
+    )}>
+      {editedBooking.balance_status === 'captured' ? '✅ Paid'
+        : editedBooking.balance_status === 'failed'  ? '❌ Failed'
+        : editedBooking.balance_status === 'pending' ? '⏳ Pending'
+        : '— Not sent'}
+    </span>
+  </div>
+
+  {/* Mail generator */}
+  <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} />
+
+  {editedBooking.payment_mail_sent_at && (
+    <p className="text-xs text-gray-400 text-center mt-2">
+      Last mail sent: {new Date(editedBooking.payment_mail_sent_at).toLocaleString()}
+    </p>
+  )}
+</div>
           {/* Actions */}
           {!isEditing && (
             <div className="flex gap-3 pt-4 border-t border-gray-200">

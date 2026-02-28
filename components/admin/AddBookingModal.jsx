@@ -18,14 +18,19 @@ const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, c
     setNewBooking(prev => ({
       ...prev,
       motorcycle_model: model,
-      // CF Moto only supports 1 bike
       bike_quantity: model === 'CFMoto700' ? 1 : prev.bike_quantity,
     }));
   };
 
+  const balanceAmount = newBooking.total_price > 0
+    ? (parseFloat(newBooking.total_price) - parseFloat(newBooking.down_payment)).toFixed(2)
+    : '—';
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+
+        {/* Header */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold text-gray-900">Add New Booking</h2>
@@ -79,25 +84,19 @@ const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, c
             </div>
           </div>
 
-          {/* Motorcycle Model — NEW */}
+          {/* Motorcycle Model */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-4">Motorcycle Model</h3>
             <div className="grid md:grid-cols-2 gap-3">
               {MODEL_OPTIONS.map((model) => (
-                <button
-                  key={model.value}
-                  type="button"
-                  onClick={() => handleModelChange(model.value)}
+                <button key={model.value} type="button" onClick={() => handleModelChange(model.value)}
                   className={`p-4 rounded-xl border-2 text-left transition-all ${
                     newBooking.motorcycle_model === model.value
                       ? 'border-yellow-400 bg-yellow-50'
                       : 'border-gray-200 hover:border-gray-400'
-                  }`}
-                >
+                  }`}>
                   <div className="font-bold text-gray-900">{model.label}</div>
-                  <div className="text-sm text-gray-500 mt-1">
-                    Max {model.maxBikes} bike{model.maxBikes > 1 ? 's' : ''}
-                  </div>
+                  <div className="text-sm text-gray-500 mt-1">Max {model.maxBikes} bike{model.maxBikes > 1 ? 's' : ''}</div>
                 </button>
               ))}
             </div>
@@ -199,30 +198,61 @@ const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, c
             )}
           </div>
 
-          {/* Status & Payment */}
+          {/* Status & Payments */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-4">Status</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Booking Status</label>
-                <select value={newBooking.status}
-                  onChange={(e) => setNewBooking({ ...newBooking, status: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
-                  <option value="pending">Pending</option>
-                  <option value="confirmed">Confirmed</option>
-                  <option value="cancelled">Cancelled</option>
-                  <option value="completed">Completed</option>
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Payment Status</label>
-                <select value={newBooking.paid}
-                  onChange={(e) => setNewBooking({ ...newBooking, paid: e.target.value === 'true' })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
-                  <option value="false">Unpaid</option>
-                  <option value="true">Paid</option>
-                </select>
-              </div>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Status & Payments</h3>
+            <div className="mb-4">
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Booking Status</label>
+              <select value={newBooking.status}
+                onChange={(e) => setNewBooking({ ...newBooking, status: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent">
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+
+            <p className="text-sm font-semibold text-gray-700 mb-3">Payment Status</p>
+            <div className="space-y-3">
+
+              {/* Initial 50% */}
+              <label className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+                <input type="checkbox" checked={newBooking.paid}
+                  onChange={(e) => setNewBooking({ ...newBooking, paid: e.target.checked })}
+                  className="w-4 h-4 rounded text-yellow-400 focus:ring-yellow-400" />
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">Initial Payment (50%) paid</p>
+                  <p className="text-xs text-gray-500">
+                    ${newBooking.down_payment > 0 ? parseFloat(newBooking.down_payment).toFixed(2) : '—'}
+                  </p>
+                </div>
+              </label>
+
+              {/* AUTH */}
+              <label className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+                <input type="checkbox"
+                  checked={newBooking.auth_status === 'authorized'}
+                  onChange={(e) => setNewBooking({ ...newBooking, auth_status: e.target.checked ? 'authorized' : null })}
+                  className="w-4 h-4 rounded text-yellow-400 focus:ring-yellow-400" />
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">Security Deposit authorized</p>
+                  <p className="text-xs text-gray-500">$1,000.00 AUTH</p>
+                </div>
+              </label>
+
+              {/* Balance */}
+              <label className="flex items-center gap-3 p-3 bg-gray-50 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-100 transition-colors">
+                <input type="checkbox"
+                  checked={newBooking.balance_status === 'captured'}
+                  onChange={(e) => setNewBooking({ ...newBooking, balance_status: e.target.checked ? 'captured' : null })}
+                  className="w-4 h-4 rounded text-yellow-400 focus:ring-yellow-400" />
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">Remaining balance paid</p>
+                  <p className="text-xs text-gray-500">${balanceAmount}</p>
+                </div>
+              </label>
+
             </div>
           </div>
 

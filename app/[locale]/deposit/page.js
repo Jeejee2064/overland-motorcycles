@@ -1,110 +1,49 @@
-'use client'
-import React, { useState } from 'react'
-import { motion } from 'framer-motion'
-import { useTranslations } from 'next-intl'
-import Image from 'next/image'
-import { Shield, Lock, CheckCircle } from 'lucide-react'
+'use client';
 
-import Navigation from '../../../components/Navigation'
-import Footer from '../../../components/Footer'
-import ButtonPrimary from '../../../components/ButtonPrimary'
+import { useState } from 'react';
 
-const DepositPage = () => {
-  const t = useTranslations('DepositPage')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+export default function TestAuthPage() {
+  const [loading, setLoading] = useState(false);
 
   const handleAuth = async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
 
-      const res = await fetch('/api/create-deposit-auth', {
-        method: 'POST'
-      })
+      const response = await fetch('/api/test-auth', {
+        method: 'POST',
+      });
 
-      const data = await res.json()
+      const data = await response.json();
 
-      if (!res.ok) {
-        throw new Error(data.message)
+      if (!response.ok) {
+        alert(data.error || 'Failed');
+        setLoading(false);
+        return;
       }
 
-      alert(t('successMessage'))
-
+      // 🔥 Redirect to PagueloFacil AUTH link
+      window.location.href = data.url;
     } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
+      alert('Error creating AUTH link');
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen overflow-x-hidden bg-background">
-      <Navigation />
+    <div style={{ padding: '40px' }}>
+      <h1>Test $1000 Deposit Authorization</h1>
 
-      <section className="py-24">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <Image
-              src="/LOGOBL.svg"
-              alt="Overland Motorcycles"
-              width={220}
-              height={80}
-              className="mx-auto mb-10"
-            />
-
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent">
-              {t('title')}
-            </h1>
-
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-10">
-              {t('subtitle')}
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-gray-800/30 border border-gray-700/50 rounded-3xl p-10 backdrop-blur-sm space-y-6"
-          >
-            <div className="flex items-start gap-4 text-left">
-              <Shield className="text-yellow-400 flex-shrink-0 mt-1" />
-              <p className="text-gray-300">{t('point1')}</p>
-            </div>
-
-            <div className="flex items-start gap-4 text-left">
-              <Lock className="text-yellow-400 flex-shrink-0 mt-1" />
-              <p className="text-gray-300">{t('point2')}</p>
-            </div>
-
-            <div className="flex items-start gap-4 text-left">
-              <CheckCircle className="text-yellow-400 flex-shrink-0 mt-1" />
-              <p className="text-gray-300">{t('point3')}</p>
-            </div>
-
-            {error && (
-              <p className="text-red-400 mt-4">{error}</p>
-            )}
-
-            <div className="pt-6">
-              <ButtonPrimary
-                onClick={handleAuth}
-                text={loading ? t('processing') : t('button')}
-              />
-            </div>
-          </motion.div>
-
-        </div>
-      </section>
-
-      <Footer />
+      <button
+        onClick={handleAuth}
+        disabled={loading}
+        style={{
+          padding: '12px 24px',
+          fontSize: '16px',
+          cursor: 'pointer',
+        }}
+      >
+        {loading ? 'Creating link...' : 'Authorize $1000'}
+      </button>
     </div>
-  )
+  );
 }
-
-export default DepositPage
