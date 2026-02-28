@@ -1,3 +1,4 @@
+
 'use client'
 import React, { useState, useEffect } from 'react';
 import { XCircle, Edit2, Save, X, Bike } from 'lucide-react';
@@ -10,16 +11,15 @@ import {
 import { getAllMotorcycles } from '@/lib/supabase/bookings';
 
 function PaymentMailGenerator({ booking, onSent }) {
-  const bikeCount  = booking.bike_quantity || 1;
-  const authCount  = booking.auth_count || 0;
-  const authDone   = booking.auth_status === 'authorized';
-  const balDone    = booking.balance_status === 'captured';
-  const initDone   = booking.webhook_received && booking.payment_status === 'paid';
-  const isPending  = booking.status === 'pending' || !initDone;
+  const bikeCount = booking.bike_quantity || 1;
+  const authCount = booking.auth_count || 0;
+  const authDone  = booking.auth_status === 'authorized';
+  const balDone   = booking.balance_status === 'captured';
+  const initDone  = booking.webhook_received && booking.payment_status === 'paid';
+  const isPending = booking.status === 'pending' || !initDone;
 
   const options = [];
 
-  // Si pending — option payer tout en un seul lien
   if (isPending && !booking.paid) {
     options.push({
       id:    'full',
@@ -30,7 +30,6 @@ function PaymentMailGenerator({ booking, onSent }) {
     });
   }
 
-  // Initial seul (si pas encore payé)
   if (!initDone) {
     options.push({
       id:    'initial',
@@ -41,7 +40,6 @@ function PaymentMailGenerator({ booking, onSent }) {
     });
   }
 
-  // AUTH — un par bike
   for (let i = 0; i < bikeCount; i++) {
     const done = authDone && authCount > i;
     options.push({
@@ -53,7 +51,6 @@ function PaymentMailGenerator({ booking, onSent }) {
     });
   }
 
-  // Balance
   options.push({
     id:    'balance',
     label: `Remaining Balance — $${(parseFloat(booking.total_price) - parseFloat(booking.down_payment)).toFixed(2)}`,
@@ -67,25 +64,19 @@ function PaymentMailGenerator({ booking, onSent }) {
   );
   const [sending, setSending] = React.useState(false);
 
-  // Si full est sélectionné, désélectionne initial + balance automatiquement
-const toggle = (id) => {
-  setSelected(prev => {
-    // full et initial/balance sont mutuellement exclusifs entre eux
-    // mais full + auth est OK, initial + auth est OK, etc.
-    if (id === 'full') {
-      // désélectionne initial et balance si on active full
-      const without = prev.filter(x => x !== 'initial' && x !== 'balance');
-      return without.includes('full') ? without.filter(x => x !== 'full') : [...without, 'full'];
-    }
-    if (id === 'initial' || id === 'balance') {
-      // désélectionne full si on active initial ou balance
-      const without = prev.filter(x => x !== 'full');
-      return without.includes(id) ? without.filter(x => x !== id) : [...without, id];
-    }
-    // auth_0, auth_1... — toggle libre, pas d'exclusion
-    return prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
-  });
-};
+  const toggle = (id) => {
+    setSelected(prev => {
+      if (id === 'full') {
+        const without = prev.filter(x => x !== 'initial' && x !== 'balance');
+        return without.includes('full') ? without.filter(x => x !== 'full') : [...without, 'full'];
+      }
+      if (id === 'initial' || id === 'balance') {
+        const without = prev.filter(x => x !== 'full');
+        return without.includes(id) ? without.filter(x => x !== id) : [...without, id];
+      }
+      return prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
+    });
+  };
 
   const handleSend = async () => {
     if (selected.length === 0) return;
@@ -118,7 +109,10 @@ const toggle = (id) => {
       <p className="text-sm font-bold text-gray-700 mb-3">📧 Send Payment Links</p>
       <div className="space-y-2 mb-4">
         {options.map(opt => (
-          <label key={opt.id} className={'flex items-center gap-3 p-2 rounded-lg cursor-pointer transition ' + (opt.done ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-100')}>
+          <label
+            key={opt.id}
+            className={'flex items-center gap-3 p-2 rounded-lg transition ' + (opt.done ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100')}
+          >
             <input
               type="checkbox"
               disabled={opt.done}
@@ -148,37 +142,14 @@ const MODEL_LABELS = {
 };
 
 const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaymentToggle, onUpdate }) => {
-  const [isEditing, setIsEditing]                   = useState(false);
-  const [editedBooking, setEditedBooking]           = useState(null);
-  const [assignedMotorcycles, setAssignedMotorcycles] = useState([]);
+  const [isEditing, setIsEditing]                       = useState(false);
+  const [editedBooking, setEditedBooking]               = useState(null);
+  const [assignedMotorcycles, setAssignedMotorcycles]   = useState([]);
   const [availableMotorcycles, setAvailableMotorcycles] = useState([]);
-  const [allMotorcycles, setAllMotorcycles]         = useState([]);
+  const [allMotorcycles, setAllMotorcycles]             = useState([]);
   const [motorcycleSelections, setMotorcycleSelections] = useState([]);
-  const [loading, setLoading]                       = useState(false);
-  const [savingMotorcycle, setSavingMotorcycle]     = useState(false);
-  const [sendingMail, setSendingMail] = useState(false);
-const [mailSent, setMailSent]       = useState(false);
-
-// La fonction :
-const handleSendPaymentMail = async () => {
-  setSendingMail(true);
-  try {
-    const res = await fetch('/api/pay/send-payment-mail', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bookingId: booking.id }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-    setMailSent(true);
-    if (onUpdate) await onUpdate();
-    alert('Payment mail sent successfully!');
-  } catch (e) {
-    alert('Error sending mail: ' + e.message);
-  } finally {
-    setSendingMail(false);
-  }
-};
+  const [loading, setLoading]                           = useState(false);
+  const [savingMotorcycle, setSavingMotorcycle]         = useState(false);
 
   useEffect(() => {
     if (booking) {
@@ -207,7 +178,6 @@ const handleSendPaymentMail = async () => {
       setAllMotorcycles(all);
     } catch (error) {
       console.error('Error loading motorcycle data:', error);
-      alert('Error loading motorcycle data: ' + error.message);
     } finally {
       setLoading(false);
     }
@@ -231,17 +201,13 @@ const handleSendPaymentMail = async () => {
   const loadAvailableMotorcycles = async () => {
     if (!editedBooking?.start_date || !editedBooking?.end_date) return;
     try {
-      // Get bikes available for the date range, then filter by the booking's model
       const available = await getAvailableMotorcyclesForEdit(
         editedBooking.start_date,
         editedBooking.end_date,
         booking.id
       );
-      // Filter to only show bikes matching the booking's model
-      const model     = editedBooking.motorcycle_model || booking.motorcycle_model;
-      const filtered  = model
-        ? available.filter(m => m.model === model)
-        : available;
+      const model    = editedBooking.motorcycle_model || booking.motorcycle_model;
+      const filtered = model ? available.filter(m => m.model === model) : available;
       setAvailableMotorcycles(filtered);
     } catch (error) {
       console.error('Error loading available motorcycles:', error);
@@ -266,6 +232,14 @@ const handleSendPaymentMail = async () => {
         deposit:          editedBooking.deposit,
         special_requests: editedBooking.special_requests,
         hear_about_us:    editedBooking.hear_about_us,
+        // payment statuses
+        payment_status:   editedBooking.payment_status,
+        webhook_received: editedBooking.webhook_received,
+        auth_status:      editedBooking.auth_status,
+        auth_count:       editedBooking.auth_count,
+        balance_status:   editedBooking.balance_status,
+        balance_paid_at:  editedBooking.balance_paid_at,
+        paid:             editedBooking.paid,
       });
       setIsEditing(false);
       if (onUpdate) await onUpdate();
@@ -322,7 +296,6 @@ const handleSendPaymentMail = async () => {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
-              {/* Model badge */}
               <span className="inline-block mt-1 text-xs font-bold px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 border border-yellow-300">
                 {modelLabel}
               </span>
@@ -354,7 +327,7 @@ const handleSendPaymentMail = async () => {
 
         <div className="p-6 space-y-6">
 
-          {/* Customer Info — unchanged */}
+          {/* Customer Info */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3">Customer Information</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -396,7 +369,7 @@ const handleSendPaymentMail = async () => {
             </div>
           </div>
 
-          {/* Trip Details + Model */}
+          {/* Trip Details */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3">Trip Details</h3>
             <div className="grid grid-cols-2 gap-4">
@@ -428,8 +401,6 @@ const handleSendPaymentMail = async () => {
                 <p className="text-sm text-gray-500 mb-1">Bike Quantity</p>
                 <p className="font-semibold">{editedBooking.bike_quantity}</p>
               </div>
-
-              {/* Motorcycle Model — editable */}
               <div className="col-span-2">
                 <p className="text-sm text-gray-500 mb-1">Motorcycle Model</p>
                 {isEditing ? (
@@ -443,7 +414,6 @@ const handleSendPaymentMail = async () => {
                   <p className="font-semibold">{modelLabel}</p>
                 )}
               </div>
-
               <div>
                 <p className="text-sm text-gray-500 mb-1">Status</p>
                 <p className="font-semibold capitalize">{editedBooking.status}</p>
@@ -451,7 +421,7 @@ const handleSendPaymentMail = async () => {
             </div>
           </div>
 
-          {/* Assigned Motorcycles — filtered by model */}
+          {/* Assigned Motorcycles */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
               <Bike size={20} />
@@ -504,15 +474,15 @@ const handleSendPaymentMail = async () => {
             )}
           </div>
 
-          {/* Pricing — unchanged */}
+          {/* Pricing */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3">Pricing</h3>
             <div className="bg-gray-50 p-4 rounded-lg space-y-3">
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { label: 'Total Price',   field: 'total_price'  },
-                  { label: 'Down Payment',  field: 'down_payment' },
-                  { label: 'Deposit',       field: 'deposit'      },
+                  { label: 'Total Price',  field: 'total_price'  },
+                  { label: 'Down Payment', field: 'down_payment' },
+                  { label: 'Deposit',      field: 'deposit'      },
                 ].map(({ label, field }) => (
                   <div key={field}>
                     <p className="text-sm text-gray-500 mb-1">{label}</p>
@@ -526,7 +496,6 @@ const handleSendPaymentMail = async () => {
                   </div>
                 ))}
               </div>
-
               {!editedBooking.paid && (
                 <div className="flex justify-between pt-2 border-t border-gray-200">
                   <span className="text-gray-600">Amount Still to be Paid</span>
@@ -535,7 +504,7 @@ const handleSendPaymentMail = async () => {
               )}
               <div className="flex justify-between pt-2 border-t border-gray-200">
                 <span className="text-gray-900 font-bold">Payment Status</span>
-                <span className={`font-bold ${editedBooking.paid ? 'text-green-600' : 'text-red-600'}`}>
+                <span className={'font-bold ' + (editedBooking.paid ? 'text-green-600' : 'text-red-600')}>
                   {editedBooking.paid ? 'PAID' : 'UNPAID'}
                 </span>
               </div>
@@ -550,7 +519,7 @@ const handleSendPaymentMail = async () => {
             </div>
           </div>
 
-          {/* Special Requests — unchanged */}
+          {/* Special Requests */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-3">Special Requests</h3>
             {isEditing ? (
@@ -565,109 +534,174 @@ const handleSendPaymentMail = async () => {
               </p>
             )}
           </div>
-{/* Payments */}
-<div>
-  <h3 className="text-lg font-bold text-gray-900 mb-4">Payments</h3>
 
-  {/* Transaction 1 — Initial */}
-  <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-3">
-    <div>
-      <p className="font-semibold text-gray-900 text-sm">Initial Payment (50%)</p>
-      <p className="text-xs text-gray-500">${parseFloat(editedBooking.down_payment).toFixed(2)}</p>
-      {editedBooking.paguelofacil_transaction_id && (
-        <p className="text-xs text-gray-400">ID: {editedBooking.paguelofacil_transaction_id}</p>
-      )}
-    </div>
-    <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
-      editedBooking.webhook_received && editedBooking.payment_status === 'paid' ? 'bg-green-100 text-green-700'
-      : editedBooking.payment_status === 'failed' ? 'bg-red-100 text-red-700'
-      : 'bg-yellow-100 text-yellow-700'
-    )}>
-      {editedBooking.webhook_received && editedBooking.payment_status === 'paid' ? '✅ Paid'
-        : editedBooking.payment_status === 'failed' ? '❌ Failed' : '⏳ Pending'}
-    </span>
-  </div>
+          {/* Payments */}
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Payments</h3>
 
-  {/* AUTH rows — one per bike */}
-  {Array.from({ length: editedBooking.bike_quantity || 1 }).map((_, i) => {
-    const isAuthorized = editedBooking.auth_status === 'authorized' && (editedBooking.auth_count || 0) > i;
-    return (
-      <div key={i} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-3">
-        <div>
-          <p className="font-semibold text-gray-900 text-sm">
-            Security Deposit {editedBooking.bike_quantity > 1 ? `#${i + 1}` : ''} (AUTH)
-          </p>
-          <p className="text-xs text-gray-500">$1,000.00</p>
-          {isAuthorized && editedBooking.auth_transaction_id && (
-            <p className="text-xs text-gray-400">ID: {editedBooking.auth_transaction_id}</p>
-          )}
-        </div>
-        <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
-          isAuthorized ? 'bg-green-100 text-green-700'
-          : editedBooking.auth_status === 'failed' ? 'bg-red-100 text-red-700'
-          : editedBooking.auth_status === 'pending' ? 'bg-blue-100 text-blue-700'
-          : 'bg-gray-100 text-gray-500'
-        )}>
-          {isAuthorized ? '✅ Authorized'
-            : editedBooking.auth_status === 'failed' ? '❌ Failed'
-            : editedBooking.auth_status === 'pending' ? '⏳ Pending'
-            : '— Not sent'}
-        </span>
-      </div>
-    );
-  })}
+            {/* Initial Payment */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-3">
+              <div>
+                <p className="font-semibold text-gray-900 text-sm">Initial Payment (50%)</p>
+                <p className="text-xs text-gray-500">${parseFloat(editedBooking.down_payment).toFixed(2)}</p>
+                {editedBooking.paguelofacil_transaction_id && (
+                  <p className="text-xs text-gray-400">ID: {editedBooking.paguelofacil_transaction_id}</p>
+                )}
+              </div>
+              {isEditing ? (
+                <select
+                  value={editedBooking.payment_status === 'paid' && editedBooking.webhook_received ? 'paid' : editedBooking.payment_status || 'pending'}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    handleFieldChange('payment_status', val);
+                    handleFieldChange('webhook_received', val === 'paid');
+                    if (val === 'paid') handleFieldChange('paid', true);
+                  }}
+                  className="px-2 py-1 border border-gray-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-yellow-400"
+                >
+                  <option value="pending">⏳ Pending</option>
+                  <option value="paid">✅ Paid</option>
+                  <option value="failed">❌ Failed</option>
+                </select>
+              ) : (
+                <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
+                  editedBooking.webhook_received && editedBooking.payment_status === 'paid' ? 'bg-green-100 text-green-700'
+                  : editedBooking.payment_status === 'failed' ? 'bg-red-100 text-red-700'
+                  : 'bg-yellow-100 text-yellow-700'
+                )}>
+                  {editedBooking.webhook_received && editedBooking.payment_status === 'paid' ? '✅ Paid'
+                    : editedBooking.payment_status === 'failed' ? '❌ Failed' : '⏳ Pending'}
+                </span>
+              )}
+            </div>
 
-  {/* Balance */}
-  <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-4">
-    <div>
-      <p className="font-semibold text-gray-900 text-sm">Remaining Balance</p>
-      <p className="text-xs text-gray-500">
-        ${(parseFloat(editedBooking.total_price) - parseFloat(editedBooking.down_payment)).toFixed(2)}
-      </p>
-      {editedBooking.balance_transaction_id && (
-        <p className="text-xs text-gray-400">ID: {editedBooking.balance_transaction_id}</p>
-      )}
-    </div>
-    <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
-      editedBooking.balance_status === 'captured' ? 'bg-green-100 text-green-700'
-      : editedBooking.balance_status === 'failed'  ? 'bg-red-100 text-red-700'
-      : editedBooking.balance_status === 'pending' ? 'bg-blue-100 text-blue-700'
-      : 'bg-gray-100 text-gray-500'
-    )}>
-      {editedBooking.balance_status === 'captured' ? '✅ Paid'
-        : editedBooking.balance_status === 'failed'  ? '❌ Failed'
-        : editedBooking.balance_status === 'pending' ? '⏳ Pending'
-        : '— Not sent'}
-    </span>
-  </div>
+            {/* AUTH rows — one per bike */}
+            {Array.from({ length: editedBooking.bike_quantity || 1 }).map((_, i) => {
+              const isAuthorized = editedBooking.auth_status === 'authorized' && (editedBooking.auth_count || 0) > i;
+              return (
+                <div key={i} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-3">
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">
+                      Security Deposit {editedBooking.bike_quantity > 1 ? `#${i + 1}` : ''} (AUTH)
+                    </p>
+                    <p className="text-xs text-gray-500">$1,000.00</p>
+                    {isAuthorized && editedBooking.auth_transaction_id && (
+                      <p className="text-xs text-gray-400">ID: {editedBooking.auth_transaction_id}</p>
+                    )}
+                  </div>
+                  {isEditing ? (
+                    <select
+                      value={isAuthorized ? 'authorized' : editedBooking.auth_status || 'not_sent'}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        handleFieldChange('auth_status', val === 'not_sent' ? null : val);
+                        if (val === 'authorized') {
+                          handleFieldChange('auth_count', i + 1);
+                        } else if ((editedBooking.auth_count || 0) > i) {
+                          handleFieldChange('auth_count', i);
+                        }
+                      }}
+                      className="px-2 py-1 border border-gray-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-yellow-400"
+                    >
+                      <option value="not_sent">— Not sent</option>
+                      <option value="pending">⏳ Pending</option>
+                      <option value="authorized">✅ Authorized</option>
+                      <option value="failed">❌ Failed</option>
+                    </select>
+                  ) : (
+                    <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
+                      isAuthorized ? 'bg-green-100 text-green-700'
+                      : editedBooking.auth_status === 'failed'  ? 'bg-red-100 text-red-700'
+                      : editedBooking.auth_status === 'pending' ? 'bg-blue-100 text-blue-700'
+                      : 'bg-gray-100 text-gray-500'
+                    )}>
+                      {isAuthorized ? '✅ Authorized'
+                        : editedBooking.auth_status === 'failed'  ? '❌ Failed'
+                        : editedBooking.auth_status === 'pending' ? '⏳ Pending'
+                        : '— Not sent'}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
 
-  {/* Mail generator */}
-  <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} />
+            {/* Balance */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-4">
+              <div>
+                <p className="font-semibold text-gray-900 text-sm">Remaining Balance</p>
+                <p className="text-xs text-gray-500">
+                  ${(parseFloat(editedBooking.total_price) - parseFloat(editedBooking.down_payment)).toFixed(2)}
+                </p>
+                {editedBooking.balance_transaction_id && (
+                  <p className="text-xs text-gray-400">ID: {editedBooking.balance_transaction_id}</p>
+                )}
+              </div>
+              {isEditing ? (
+                <select
+                  value={editedBooking.balance_status || 'not_sent'}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    handleFieldChange('balance_status', val === 'not_sent' ? null : val);
+                    if (val === 'captured') {
+                      handleFieldChange('paid', true);
+                      handleFieldChange('balance_paid_at', new Date().toISOString());
+                    }
+                  }}
+                  className="px-2 py-1 border border-gray-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-yellow-400"
+                >
+                  <option value="not_sent">— Not sent</option>
+                  <option value="pending">⏳ Pending</option>
+                  <option value="captured">✅ Paid</option>
+                  <option value="failed">❌ Failed</option>
+                </select>
+              ) : (
+                <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
+                  editedBooking.balance_status === 'captured' ? 'bg-green-100 text-green-700'
+                  : editedBooking.balance_status === 'failed'  ? 'bg-red-100 text-red-700'
+                  : editedBooking.balance_status === 'pending' ? 'bg-blue-100 text-blue-700'
+                  : 'bg-gray-100 text-gray-500'
+                )}>
+                  {editedBooking.balance_status === 'captured' ? '✅ Paid'
+                    : editedBooking.balance_status === 'failed'  ? '❌ Failed'
+                    : editedBooking.balance_status === 'pending' ? '⏳ Pending'
+                    : '— Not sent'}
+                </span>
+              )}
+            </div>
 
-  {editedBooking.payment_mail_sent_at && (
-    <p className="text-xs text-gray-400 text-center mt-2">
-      Last mail sent: {new Date(editedBooking.payment_mail_sent_at).toLocaleString()}
-    </p>
-  )}
-</div>
+            {/* Mail generator */}
+            <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} />
+
+            {editedBooking.payment_mail_sent_at && (
+              <p className="text-xs text-gray-400 text-center mt-2">
+                Last mail sent: {new Date(editedBooking.payment_mail_sent_at).toLocaleString()}
+              </p>
+            )}
+          </div>
+
           {/* Actions */}
           {!isEditing && (
             <div className="flex gap-3 pt-4 border-t border-gray-200">
-              <select onChange={(e) => onStatusUpdate(editedBooking.id, e.target.value)}
+              <select
+                onChange={(e) => onStatusUpdate(editedBooking.id, e.target.value)}
                 value={editedBooking.status}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg"
+              >
                 <option value="pending">Pending</option>
                 <option value="confirmed">Confirmed</option>
                 <option value="fully paid">Fully Paid</option>
                 <option value="cancelled">Cancelled</option>
                 <option value="completed">Completed</option>
               </select>
-              <button onClick={() => onDelete(editedBooking.id)}
-                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600">
+              <button
+                onClick={() => onDelete(editedBooking.id)}
+                className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+              >
                 Delete
               </button>
             </div>
           )}
+
         </div>
       </div>
     </div>
