@@ -32,7 +32,7 @@ export async function POST(request) {
       } else if (l.type === 'full') {
         url = `${base}/en/pay/${bookingId}/balance?mode=full`;
       } else if (l.type === 'initial') {
-        url = `${base}/en/pay/${bookingId}/auth?mode=initial`; // page initiale existante
+        url = `${base}/en/pay/${bookingId}/balance?mode=initial`; // page initiale existante
       } else {
         url = `${base}/en/pay/${bookingId}/balance`;
       }

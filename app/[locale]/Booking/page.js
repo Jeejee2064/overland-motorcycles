@@ -1,12 +1,12 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import {
   Check, AlertCircle, MessageCircle, ChevronRight, ChevronLeft,
-  Edit2, CreditCard
+  Edit2, CreditCard, Tag, X, Loader2,
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import Navigation from '../../../components/Navigation';
@@ -108,11 +108,114 @@ const ProgressDots = ({ currentStep, totalSteps }) => (
   </div>
 );
 
+// ─── PromoCodeInput ───────────────────────────────────────────
+const PromoCodeInput = ({ appliedPromo, onApply, onRemove, totalBeforeDiscount }) => {
+  const [code, setCode]       = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError]     = useState('');
+  const inputRef = useRef(null);
+
+  const handleApply = async () => {
+    const trimmed = code.trim().toUpperCase();
+    if (!trimmed) return;
+    setLoading(true);
+    setError('');
+    try {
+      const res  = await fetch('/api/validate-promo-code', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: trimmed, totalBeforeDiscount }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        onApply({ code: trimmed, ...data });
+        setCode('');
+      } else {
+        setError(data.error || 'Invalid promo code.');
+      }
+    } catch {
+      setError('Could not validate code. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRemove = () => {
+    onRemove();
+    setCode('');
+    setError('');
+  };
+
+  if (appliedPromo) {
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex items-center justify-between bg-green-500/10 border border-green-500/50 rounded-xl px-4 py-3"
+      >
+        <div className="flex items-center gap-2">
+          <Tag size={16} className="text-green-400" />
+          <span className="text-green-400 font-bold text-sm">{appliedPromo.code}</span>
+          <span className="text-green-300 text-xs">
+            −{appliedPromo.discountValue}% (−${appliedPromo.discountAmount.toFixed(2)})
+          </span>
+        </div>
+        <button onClick={handleRemove} className="text-gray-400 hover:text-red-400 transition-colors ml-2">
+          <X size={16} />
+        </button>
+      </motion.div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex gap-2">
+        <div className="relative flex-1">
+          <Tag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={code}
+            onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(''); }}
+            onKeyDown={(e) => e.key === 'Enter' && handleApply()}
+            placeholder="Promo code"
+            className="w-full pl-9 pr-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition-all text-sm uppercase tracking-widest placeholder:normal-case placeholder:tracking-normal"
+          />
+        </div>
+        <motion.button
+          onClick={handleApply}
+          disabled={!code.trim() || loading}
+          whileHover={code.trim() && !loading ? { scale: 1.03 } : {}}
+          whileTap={code.trim() && !loading ? { scale: 0.97 } : {}}
+          className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+            code.trim() && !loading
+              ? 'bg-yellow-400 text-gray-900 hover:bg-yellow-300'
+              : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+          }`}
+        >
+          {loading ? <Loader2 size={16} className="animate-spin" /> : 'Apply'}
+        </motion.button>
+      </div>
+      <AnimatePresence>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="text-red-400 text-xs mt-1.5 flex items-center gap-1"
+          >
+            <AlertCircle size={12} /> {error}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 // ─── Main page ────────────────────────────────────────────────
 const BookingPage = () => {
   const t = useTranslations('BookingPage');
 
-  // MODELS built inside component so specs use translation keys
   const MODELS = {
     Himalayan: {
       id: 'Himalayan',
@@ -144,6 +247,7 @@ const BookingPage = () => {
   const [availabilityError, setAvailabilityError] = useState('');
   const [isSubmitting, setIsSubmitting]           = useState(false);
   const [acceptedTerms, setAcceptedTerms]         = useState(false);
+  const [appliedPromo, setAppliedPromo]           = useState(null);
   const [modal, setModal] = useState({ isOpen: false, type: 'info', message: '', onConfirm: null });
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '',
@@ -160,7 +264,7 @@ const BookingPage = () => {
 
     if (model && MODELS[model]) {
       setSelectedModel(model);
-      setCurrentStep(2); // skip model selection if pre-selected
+      setCurrentStep(2);
     }
     if (start) setStartDate(start);
     if (end)   setEndDate(end);
@@ -223,6 +327,7 @@ const BookingPage = () => {
     const end   = formatLocalDate(range.endDate);
     setStartDate(start);
     setEndDate(end);
+    setAppliedPromo(null); // reset promo when dates change
     if (start && end) {
       validateDates(start, end);
       await checkAvailability(start, end, formData.bikeQuantity);
@@ -232,8 +337,11 @@ const BookingPage = () => {
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    if (name === 'bikeQuantity' && startDate && endDate && selectedModel) {
-      await checkAvailability(startDate, endDate, value);
+    if (name === 'bikeQuantity') {
+      setAppliedPromo(null); // reset promo when quantity changes
+      if (startDate && endDate && selectedModel) {
+        await checkAvailability(startDate, endDate, value);
+      }
     }
   };
 
@@ -261,8 +369,13 @@ const BookingPage = () => {
   const rentalPrice      = calculatePrice();
   const numBikes         = selectedModel === 'CFMoto700' ? 1 : (parseInt(formData.bikeQuantity) || 1);
   const totalRentalPrice = rentalPrice * numBikes;
-  const itbmsTax         = totalRentalPrice * 0.07;
-  const subtotalWithTax  = totalRentalPrice + itbmsTax;
+
+  // Promo applied to base rental before tax + fees
+  const promoDiscount    = appliedPromo ? appliedPromo.discountAmount : 0;
+  const discountedRental = Math.max(0, totalRentalPrice - promoDiscount);
+
+  const itbmsTax         = discountedRental * 0.07;
+  const subtotalWithTax  = discountedRental + itbmsTax;
   const cardFee          = subtotalWithTax * 0.035;
   const totalWithAllFees = subtotalWithTax + cardFee;
   const totalDeposit     = 1000 * numBikes;
@@ -297,6 +410,8 @@ const BookingPage = () => {
           bikeQuantity:    numBikes,
           motorcycleModel: selectedModel,
           calculatedDays:  calculateDays(),
+          promoCode:       appliedPromo?.code ?? null,
+          promoDiscount:   promoDiscount > 0 ? promoDiscount : null,
         }),
       });
       const { url, error } = await response.json();
@@ -339,7 +454,7 @@ const BookingPage = () => {
                 <div className="grid md:grid-cols-2 gap-4 mb-6">
                   {Object.values(MODELS).map((model) => (
                     <motion.button key={model.id}
-                      onClick={() => { setSelectedModel(model.id); setFormData(prev => ({ ...prev, bikeQuantity: '1' })); setAvailabilityError(''); }}
+                      onClick={() => { setSelectedModel(model.id); setFormData(prev => ({ ...prev, bikeQuantity: '1' })); setAvailabilityError(''); setAppliedPromo(null); }}
                       whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }}
                       className={`relative rounded-2xl border-2 overflow-hidden transition-all text-left ${
                         selectedModel === model.id ? 'border-yellow-400 shadow-xl shadow-yellow-400/20' : 'border-gray-700 hover:border-gray-500'
@@ -367,7 +482,6 @@ const BookingPage = () => {
                             </li>
                           ))}
                         </ul>
-                    
                       </div>
                     </motion.button>
                   ))}
@@ -558,7 +672,7 @@ const BookingPage = () => {
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                   className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-4 md:p-6 border border-yellow-400/30 mb-6">
 
-                  {/* Bikes & dates header */}
+                  {/* Bikes & dates */}
                   <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-700">
                     <h3 className="text-lg font-black text-white">{t('summaryMotorcycles')} & {t('summaryDates')}</h3>
                     <button onClick={() => setCurrentStep(1)}
@@ -601,6 +715,19 @@ const BookingPage = () => {
                     <div><span className="text-gray-400">{t('country')}: </span><span className="text-white font-semibold">{formData.country}</span></div>
                   </div>
 
+                  {/* ── Promo Code ── */}
+                  <div className="mb-4 pb-4 border-b border-gray-700">
+                    <h3 className="text-sm font-bold text-gray-300 mb-2 flex items-center gap-2">
+                      <Tag size={14} className="text-yellow-400" /> Promo Code
+                    </h3>
+                    <PromoCodeInput
+                      appliedPromo={appliedPromo}
+                      onApply={setAppliedPromo}
+                      onRemove={() => setAppliedPromo(null)}
+                      totalBeforeDiscount={totalRentalPrice}
+                    />
+                  </div>
+
                   {/* Price breakdown */}
                   <h3 className="text-base font-black text-yellow-400 mb-3">{t('summaryPaymentTitle')}</h3>
                   <div className="space-y-2 text-sm">
@@ -608,6 +735,23 @@ const BookingPage = () => {
                       <span className="text-gray-400">{t('summaryRentalCost')}</span>
                       <span className="text-white font-bold">${totalRentalPrice.toFixed(2)}</span>
                     </div>
+
+                    <AnimatePresence>
+                      {appliedPromo && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: 'auto' }}
+                          exit={{ opacity: 0, height: 0 }}
+                          className="flex justify-between"
+                        >
+                          <span className="text-green-400 flex items-center gap-1 text-sm">
+                            <Tag size={12} /> {appliedPromo.code} (−{appliedPromo.discountValue}%)
+                          </span>
+                          <span className="text-green-400 font-bold">−${promoDiscount.toFixed(2)}</span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     <div className="flex justify-between text-xs">
                       <span className="text-gray-500">{t('summaryTax')}</span>
                       <span className="text-gray-400">+${itbmsTax.toFixed(2)}</span>
