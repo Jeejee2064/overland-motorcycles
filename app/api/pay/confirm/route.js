@@ -33,6 +33,40 @@ export async function POST(request) {
 
     const modelLabel = MODEL_LABELS[booking.motorcycle_model] || booking.motorcycle_model;
 
+    
+if (type === 'initial') {
+  if (booking.payment_status === 'paid' && booking.webhook_received) {
+    return NextResponse.json({ success: true });
+  }
+  await supabase
+    .from('bookings')
+    .update({
+      payment_status:   'paid',
+      webhook_received: true,
+      status:           'confirmed',
+    })
+    .eq('id', bookingId);
+
+  try {
+    await resend.emails.send({
+      from:    process.env.RESEND_FROM_EMAIL,
+      to:      [booking.email],
+      subject: '✅ Initial Payment Received',
+      html:    `<p>Hi ${booking.first_name}, your initial payment of $${parseFloat(booking.down_payment).toFixed(2)} has been received. Your booking is now confirmed!</p>`,
+    });
+  } catch (e) { console.error('Initial client email error', e); }
+
+  try {
+    await resend.emails.send({
+      from:    process.env.RESEND_FROM_EMAIL,
+      to:      ['overlandmotorcycles@gmail.com'],
+      subject: `💳 INITIAL PAID — ${booking.first_name} ${booking.last_name}`,
+      html:    `<p>Initial payment received.<br/>Booking: ${bookingId}<br/>Amount: $${parseFloat(booking.down_payment).toFixed(2)}<br/>Transaction: ${codOper}</p>`,
+    });
+  } catch (e) { console.error('Initial internal email error', e); }
+
+  return NextResponse.json({ success: true });
+}
     /* ── FULL (initial + balance en un seul paiement) ── */
     if (type === 'full') {
       if (booking.paid) return NextResponse.json({ success: true });

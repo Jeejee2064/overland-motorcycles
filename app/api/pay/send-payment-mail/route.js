@@ -1,3 +1,4 @@
+// app/api/send-payment-link/route.js
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
@@ -24,6 +25,7 @@ export async function POST(request) {
     }
 
     const base = process.env.NEXT_PUBLIC_BASE_URL;
+    const now  = new Date().toISOString();
 
     const urlLinks = (links || []).map(l => {
       let url;
@@ -32,13 +34,45 @@ export async function POST(request) {
       } else if (l.type === 'full') {
         url = `${base}/en/pay/${bookingId}/balance?mode=full`;
       } else if (l.type === 'initial') {
-        url = `${base}/en/pay/${bookingId}/balance?mode=initial`; // page initiale existante
+        url = `${base}/en/pay/${bookingId}/balance?mode=initial`;
       } else {
         url = `${base}/en/pay/${bookingId}/balance`;
       }
       return { type: l.type, index: l.index, url };
     });
 
+    // ── Build status update based on which link types are in this email ──
+    const linkTypes = new Set((links || []).map(l => l.type));
+
+    const statusUpdate = {
+      payment_mail_sent_at: now,
+    };
+
+    if (linkTypes.has('initial')) {
+      // Initial 50% down payment
+      statusUpdate.payment_status = 'pending';
+    }
+
+    if (linkTypes.has('balance')) {
+      // Remaining 50% balance
+      statusUpdate.balance_status       = 'pending';
+      statusUpdate.balance_link_sent_at = now;
+    }
+
+    if (linkTypes.has('full')) {
+      // Full payment in one shot (initial + balance together)
+      statusUpdate.payment_status       = 'pending';
+      statusUpdate.balance_status       = 'pending';
+      statusUpdate.balance_link_sent_at = now;
+    }
+
+    if (linkTypes.has('auth')) {
+      // Security deposit authorization
+      statusUpdate.auth_status       = 'pending';
+      statusUpdate.auth_link_sent_at = now;
+    }
+
+    // Send email first — only persist to DB if it succeeds
     await resend.emails.send({
       from:    process.env.RESEND_FROM_EMAIL,
       to:      [booking.email],
@@ -48,12 +82,13 @@ export async function POST(request) {
 
     await supabase
       .from('bookings')
-      .update({ payment_mail_sent_at: new Date().toISOString() })
+      .update(statusUpdate)
       .eq('id', bookingId);
 
     return NextResponse.json({ success: true });
 
   } catch (error) {
+    console.error('[send-payment-link]', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

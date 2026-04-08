@@ -75,7 +75,7 @@ const EMPTY_BOOKING = {
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword]               = useState('');
-  const [activeTab, setActiveTab]             = useState('overview');
+  const [activeTab, setActiveTab]             = useState('calendar');
   const [bookings, setBookings]               = useState([]);
   const [messages, setMessages]               = useState([]);
   const [loading, setLoading]                 = useState(true);

@@ -1,7 +1,6 @@
-
 'use client'
 import React, { useState, useEffect } from 'react';
-import { XCircle, Edit2, Save, X, Bike } from 'lucide-react';
+import { XCircle, Edit2, Save, X, Bike, Mail, Share2, Check } from 'lucide-react';
 import {
   getBookingMotorcycles,
   updateBookingDetails,
@@ -136,6 +135,75 @@ function PaymentMailGenerator({ booking, onSent }) {
   );
 }
 
+// ─── Share button — copies link to /admin/ok/bookings/[id] ───
+function ShareButton({ bookingId }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = () => {
+    const url = `${window.location.origin}/admin/ok/bookings/${bookingId}`;
+    navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <button
+      onClick={handleCopy}
+      className={
+        'flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition ' +
+        (copied
+          ? 'bg-green-100 text-green-700 border border-green-300'
+          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200')
+      }
+    >
+      {copied ? <Check size={16} /> : <Share2 size={16} />}
+      {copied ? 'Link copied!' : 'Share'}
+    </button>
+  );
+}
+
+// ─── New component: sends the same booking confirmation the customer gets online ───
+function SendConfirmationMailButton({ booking }) {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent]       = useState(false);
+
+  const handleSend = async () => {
+    if (!confirm(`Send booking confirmation email to ${booking.email}?`)) return;
+    setSending(true);
+    try {
+      const res = await fetch('/api/bookings/send-confirmation-mail', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId: booking.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setSent(true);
+      alert('Confirmation email sent to ' + booking.email);
+    } catch (e) {
+      alert('Error: ' + e.message);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleSend}
+      disabled={sending}
+      className={
+        'flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition disabled:opacity-50 ' +
+        (sent
+          ? 'bg-green-100 text-green-700 border border-green-300 hover:bg-green-200'
+          : 'bg-blue-500 text-white hover:bg-blue-600')
+      }
+    >
+      <Mail size={16} />
+      {sending ? 'Sending…' : sent ? '✅ Confirmation Sent' : 'Send Confirmation Email'}
+    </button>
+  );
+}
+
 const MODEL_LABELS = {
   Himalayan: 'Royal Enfield Himalayan 450',
   CFMoto700: 'CF Moto 700 CL-X',
@@ -206,8 +274,12 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
         editedBooking.end_date,
         booking.id
       );
+      console.log('From DB (before model filter):', available.map(m => ({ id: m.id, name: m.name, model: m.model })));
+
       const model    = editedBooking.motorcycle_model || booking.motorcycle_model;
       const filtered = model ? available.filter(m => m.model === model) : available;
+      console.log('After model filter:', filtered.map(m => m.name), '| filtering by:', model);
+
       setAvailableMotorcycles(filtered);
     } catch (error) {
       console.error('Error loading available motorcycles:', error);
@@ -302,10 +374,13 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             </div>
             <div className="flex items-center gap-2">
               {!isEditing ? (
-                <button onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                  <Edit2 size={18} /> Edit
-                </button>
+                <>
+                  <ShareButton bookingId={booking.id} />
+                  <button onClick={() => { setIsEditing(true); loadAvailableMotorcycles(); }}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    <Edit2 size={18} /> Edit
+                  </button>
+                </>
               ) : (
                 <>
                   <button onClick={handleSave} disabled={loading}
@@ -329,7 +404,13 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
 
           {/* Customer Info */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Customer Information</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-bold text-gray-900">Customer Information</h3>
+              {/* Confirmation mail button — only shown in view mode */}
+              {!isEditing && (
+                <SendConfirmationMailButton booking={editedBooking} />
+              )}
+            </div>
             <div className="grid grid-cols-2 gap-4">
               {[
                 { label: 'First Name', field: 'first_name', type: 'text' },

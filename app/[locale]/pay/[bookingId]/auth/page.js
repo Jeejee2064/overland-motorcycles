@@ -10,10 +10,10 @@ const supabase = createClient(
 
 export default async function AuthPage({ params, searchParams }) {
   const { bookingId } = await params;
-  const sp = await searchParams;
-  const index = parseInt(sp?.index || '0');
-  const locale = (await params).locale || 'en';
-  const t = await getTranslations({ locale, namespace: 'auth' });
+  const sp            = await searchParams;
+  const index         = parseInt(sp?.index || '0');
+  const locale        = (await params).locale || 'en';
+  const t             = await getTranslations({ locale, namespace: 'auth' });
 
   const { data: booking } = await supabase
     .from('bookings')
@@ -29,7 +29,8 @@ export default async function AuthPage({ params, searchParams }) {
     );
   }
 
-  if (booking.auth_status === 'authorized') {
+  // Bloque seulement si ce dépôt spécifique a déjà été autorisé
+  if ((booking.auth_count || 0) > index) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-green-600 text-xl font-semibold">✅ {t('alreadyPaid')}</p>
@@ -50,9 +51,18 @@ export default async function AuthPage({ params, searchParams }) {
         <h1 className="text-2xl font-bold text-gray-800 mb-2">{depositLabel}</h1>
         <p className="text-gray-500 mb-6">{t('subtitle')}</p>
         <div className="bg-gray-50 rounded-xl p-4 mb-6 space-y-2 text-sm text-gray-700">
-          <div className="flex justify-between"><span>{t('name')}</span><span className="font-medium">{booking.first_name} {booking.last_name}</span></div>
-          <div className="flex justify-between"><span>{t('motorcycle')}</span><span className="font-medium">{booking.motorcycle_model}</span></div>
-          <div className="flex justify-between"><span>{t('dates')}</span><span className="font-medium">{booking.start_date} → {booking.end_date}</span></div>
+          <div className="flex justify-between">
+            <span>{t('name')}</span>
+            <span className="font-medium">{booking.first_name} {booking.last_name}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>{t('motorcycle')}</span>
+            <span className="font-medium">{booking.motorcycle_model}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>{t('dates')}</span>
+            <span className="font-medium">{booking.start_date} → {booking.end_date}</span>
+          </div>
           <div className="flex justify-between border-t pt-2 mt-2">
             <span className="font-semibold">{t('depositAmount')}</span>
             <span className="font-bold text-lg">$1,000.00</span>

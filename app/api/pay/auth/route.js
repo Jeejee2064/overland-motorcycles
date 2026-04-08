@@ -24,12 +24,13 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 
-    if (booking.auth_status === 'authorized') {
-      return NextResponse.json({ error: 'Deposit already authorized' }, { status: 400 });
+    // Bloque seulement si ce dépôt spécifique a déjà été autorisé
+    if ((booking.auth_count || 0) > index) {
+      return NextResponse.json({ error: 'Deposit already authorized for this bike' }, { status: 400 });
     }
 
-    const returnUrlPlain = `${process.env.NEXT_PUBLIC_BASE_URL}/en/pay/auth-success?bookingId=${bookingId}&index=${index}`;
-    const returnUrlHex = Buffer.from(returnUrlPlain).toString('hex');
+    const returnUrlPlain  = `${process.env.NEXT_PUBLIC_BASE_URL}/en/pay/auth-success?bookingId=${bookingId}&index=${index}`;
+    const returnUrlHex    = Buffer.from(returnUrlPlain).toString('hex');
 
     const customFields = [
       { id: 'bookingId',   nameOrLabel: 'Booking ID',   value: bookingId },
@@ -42,7 +43,7 @@ export async function POST(request) {
       CCLW:       process.env.PAGUELOFACIL_CCLW,
       TX_TYPE:    'AUTH',
       CMTN:       '1000.00',
-      CDSC:       `Security Deposit ${booking.bike_quantity > 1 ? `#${index + 1}` : ''} - ${booking.first_name} ${booking.last_name}`,
+      CDSC:       `Security Deposit${booking.bike_quantity > 1 ? ` #${index + 1}` : ''} - ${booking.first_name} ${booking.last_name}`,
       RETURN_URL: returnUrlHex,
       PF_CF:      customFieldsHex,
       PARM_1:     bookingId,
@@ -58,9 +59,9 @@ export async function POST(request) {
       .join('&');
 
     const response = await fetch(linkDeamonUrl, {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: '*/*' },
-      body: formBody,
+      body:    formBody,
     });
 
     const data = await response.json();
