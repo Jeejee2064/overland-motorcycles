@@ -14,6 +14,7 @@ import MotorcyclesTab from '@/components/admin/MotorcyclesTab';
 import BookingDetailModal from '@/components/admin/BookingDetailModal';
 import AddBookingModal from '@/components/admin/AddBookingModal';
 import BookingLinkGeneratorTab from '@/components/admin/BookingLinkGeneratorTab';
+import RevenueTab from '@/components/admin/RevenueTab';
 import { supabase } from '@/lib/supabase/client';
 
 const HIMALAYAN_PRICING = [
@@ -371,6 +372,7 @@ const AdminDashboard = () => {
         )}
         {activeTab === 'calendar'       && <CalendarTab />}
         {activeTab === 'motorcycles'    && <MotorcyclesTab />}
+        {activeTab === 'revenue'        && <RevenueTab bookings={bookings} />}
         {activeTab === 'link-generator' && <BookingLinkGeneratorTab />}
       </main>
 

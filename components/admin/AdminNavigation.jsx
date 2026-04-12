@@ -13,7 +13,7 @@ const AdminNavigation = ({ activeTab, setActiveTab, stats = {} }) => {
     { id: 'messages', label: 'Messages', icon: MessageSquare, badge: unread },
     { id: 'calendar', label: 'Calendar', icon: Calendar },
     { id: 'motorcycles', label: 'Motorcycles', icon: Bike },
-    { id: 'link-generator', label: 'Link Generator', icon: LinkIcon } // NEW
+    { id: 'revenue', label: 'Revenue', icon: TrendingUp } // NEW
   ];
 
   return (
