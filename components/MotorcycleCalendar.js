@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, ExternalLink } from 'lucide-react';
 import { getMotorcycleCalendarWithPhone, getAllMotorcycles } from '@/lib/supabase/bookings';
 import {
   startOfMonth,
@@ -22,10 +22,9 @@ const MOTORCYCLE_COLORS = [
 const CELL_WIDTH = 40;
 const LEFT_COLUMN_WIDTH = 200;
 
-// Helper to parse "YYYY-MM-DD" safely in local time
 const parseLocalDate = (dateStr) => {
   const [y, m, d] = dateStr.split('-').map(Number);
-  return new Date(y, m - 1, d, 12, 0, 0); // noon to avoid timezone drift
+  return new Date(y, m - 1, d, 12, 0, 0);
 };
 
 export default function MotorcycleCalendar() {
@@ -45,14 +44,11 @@ export default function MotorcycleCalendar() {
     try {
       const monthStart = startOfMonth(currentDate);
       const monthEnd = endOfMonth(currentDate);
-
-      // format YYYY-MM-DD for Supabase
       const startStr = format(monthStart, 'yyyy-MM-dd');
       const endStr = format(monthEnd, 'yyyy-MM-dd');
 
       const [bikes, bookings] = await Promise.all([
         getAllMotorcycles(),
-        // Fetch bookings that overlap the month (not just inside)
         getMotorcycleCalendarWithPhone(startStr, endStr),
       ]);
 
@@ -143,7 +139,6 @@ export default function MotorcycleCalendar() {
                 if (b.motorcycle_id !== bike.id) return false;
                 const start = parseLocalDate(b.start_date);
                 const end = parseLocalDate(b.end_date);
-                // Show if booking overlaps current month
                 return (
                   isWithinInterval(start, { start: monthStart, end: monthEnd }) ||
                   isWithinInterval(end, { start: monthStart, end: monthEnd }) ||
@@ -183,25 +178,17 @@ export default function MotorcycleCalendar() {
                         const visibleStart = bookingStart < monthStart ? monthStart : bookingStart;
                         const visibleEnd = bookingEnd > monthEnd ? monthEnd : bookingEnd;
 
-                        const startIdx = daysInMonth.findIndex((d) =>
-                          isSameDay(d, visibleStart)
-                        );
-                        const endIdx = daysInMonth.findIndex((d) =>
-                          isSameDay(d, visibleEnd)
-                        );
+                        const startIdx = daysInMonth.findIndex((d) => isSameDay(d, visibleStart));
+                        const endIdx = daysInMonth.findIndex((d) => isSameDay(d, visibleEnd));
 
-                        const leftPos =
-                          (startIdx === -1 ? 0 : startIdx) * CELL_WIDTH + 2;
+                        const leftPos = (startIdx === -1 ? 0 : startIdx) * CELL_WIDTH + 2;
                         const width =
                           ((endIdx === -1 ? daysInMonth.length - 1 : endIdx) -
-                            (startIdx === -1 ? 0 : startIdx) +
-                            1) *
-                            CELL_WIDTH -
-                          4;
+                            (startIdx === -1 ? 0 : startIdx) + 1) * CELL_WIDTH - 4;
 
                         return (
                           <div
-key={`${b.id ?? b.booking_id}-${b.motorcycle_id}-${b.start_date}`}
+                            key={`${b.id ?? b.booking_id}-${b.motorcycle_id}-${b.start_date}`}
                             className={`absolute top-2 rounded-md px-2 flex items-center justify-center ${color.bar} text-white text-xs font-medium shadow-md hover:shadow-lg hover:scale-105 transition-all cursor-pointer pointer-events-auto`}
                             style={{ left: `${leftPos}px`, width: `${width}px`, height: '40px' }}
                             onClick={() => setSelectedBooking({ ...b, motorcycle_name: bike.name })}
@@ -273,7 +260,12 @@ key={`${b.id ?? b.booking_id}-${b.motorcycle_id}-${b.start_date}`}
               </div>
               <div>
                 <span className="font-semibold text-gray-600">Phone:</span>{' '}
-                <a href={`tel:${selectedBooking.phone}`} className="text-blue-600 hover:underline">
+                <a
+                  href={`https://wa.me/${(selectedBooking.phone || '').replace(/\D/g, '')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-green-600 hover:underline"
+                >
                   {selectedBooking.phone || '—'}
                 </a>
               </div>
@@ -297,6 +289,19 @@ key={`${b.id ?? b.booking_id}-${b.motorcycle_id}-${b.start_date}`}
                   {selectedBooking.status}
                 </span>
               </div>
+            </div>
+
+            {/* View Details button */}
+            <div className="mt-5 pt-4 border-t border-gray-100">
+              <a
+                href={`/admin/ok/bookings/${selectedBooking.id ?? selectedBooking.booking_id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold rounded-lg transition-colors text-sm"
+              >
+                <ExternalLink size={16} />
+                View Full Details
+              </a>
             </div>
           </div>
         </div>
