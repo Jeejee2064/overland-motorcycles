@@ -175,6 +175,13 @@ export async function POST(request) {
     const modelLabel       = MODEL_LABELS[motorcycleModel] || motorcycleModel;
     const shortageWarning  = assigned.length < updatedBooking.bike_quantity;
 
+    // Fetch additional riders
+    const { data: additionalRiders } = await supabase
+      .from('booking_riders')
+      .select('*')
+      .eq('booking_id', bookingId)
+      .order('rider_index');
+
     try {
       await resend.emails.send({
         from:    process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
@@ -184,6 +191,26 @@ export async function POST(request) {
       });
     } catch (e) {
       console.error('❌ Customer email failed', e);
+    }
+
+    // Send confirmation to each additional rider
+    for (const rider of (additionalRiders || [])) {
+      if (!rider.email) continue;
+      try {
+        await resend.emails.send({
+          from:    process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+          to:      [rider.email],
+          subject: `🏍️ Booking Confirmed — ${modelLabel}`,
+          html:    generateCustomerEmailHTML(
+            { ...updatedBooking, first_name: rider.first_name, last_name: rider.last_name, email: rider.email },
+            assigned,
+            remainingPayment,
+            modelLabel
+          ),
+        });
+      } catch (e) {
+        console.error(`❌ Rider email failed for ${rider.email}`, e);
+      }
     }
 
     try {

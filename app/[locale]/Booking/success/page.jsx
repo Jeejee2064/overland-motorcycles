@@ -10,6 +10,11 @@ import Navigation from '../../../../components/Navigation';
 import Footer from '../../../../components/Footer';
 import { createClient } from '@supabase/supabase-js';
 
+const MODEL_LABELS = {
+  Himalayan: 'Royal Enfield Himalayan 450',
+  CFMoto700: 'CF Moto 700 CL-X',
+};
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -230,6 +235,10 @@ const fetchBooking = async () => {
                     <span className="text-gray-900">
                       {bookingDetails.booking.start_date} {t('details.to')} {bookingDetails.booking.end_date}
                     </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">{t('details.motorcycle')}:</span>
+                    <span className="text-gray-900">{MODEL_LABELS[bookingDetails.booking.motorcycle_model] || bookingDetails.booking.motorcycle_model}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">{t('details.motorcycles')}:</span>

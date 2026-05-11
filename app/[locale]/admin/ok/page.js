@@ -86,6 +86,15 @@ const AdminDashboard = () => {
   const [filterStatus, setFilterStatus]       = useState('all');
   const [showAddBooking, setShowAddBooking]   = useState(false);
   const [newBooking, setNewBooking]           = useState(EMPTY_BOOKING);
+  const [newBookingRiders, setNewBookingRiders] = useState([]);
+  const [toast, setToast]                     = useState(null);
+  const [confirmModal, setConfirmModal]       = useState(null);
+
+  const notify = (msg, type = 'success') => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+  const withConfirm = (msg, onConfirm) => setConfirmModal({ msg, onConfirm });
 
   useEffect(() => {
     const authenticated = localStorage.getItem('admin_authenticated');
@@ -105,7 +114,7 @@ const AdminDashboard = () => {
       localStorage.setItem('admin_authenticated', 'true');
       loadData();
     } else {
-      alert('Incorrect password');
+      notify('Incorrect password', 'error');
       setPassword('');
     }
   };
@@ -127,7 +136,7 @@ const AdminDashboard = () => {
       return { bookings: bookingsData, messages: messagesData };
     } catch (error) {
       console.error('Error loading data:', error);
-      alert('Error loading data. Make sure you are using the service_role key for admin access.');
+      notify('Error loading data. Check the service role key.', 'error');
     } finally {
       setLoading(false);
     }
@@ -155,9 +164,9 @@ const AdminDashboard = () => {
       if (newPaidStatus) await updateBookingStatus(bookingId, 'fully paid');
       await refreshSelectedBooking(bookingId);
       await loadData();
-      alert('Payment marked as fully paid!');
+      notify('Payment marked as fully paid!');
     } catch (error) {
-      alert('Error updating payment status: ' + error.message);
+      notify('Error updating payment: ' + error.message, 'error');
     }
   };
 
@@ -177,28 +186,40 @@ const AdminDashboard = () => {
       await updateBookingStatus(bookingId, newStatus);
       await refreshSelectedBooking(bookingId);
       await loadData();
-      alert('Booking status updated successfully!');
+      notify('Status updated successfully!');
     } catch (error) {
-      alert('Error updating status: ' + error.message);
+      notify('Error updating status: ' + error.message, 'error');
     }
   };
 
   const handleDeleteBooking = async (bookingId) => {
-    if (confirm('Are you sure you want to delete this booking?')) {
+    withConfirm('Delete this booking? This cannot be undone.', async () => {
       try {
         await deleteBooking(bookingId);
         await loadData();
         setSelectedBooking(null);
-        alert('Booking deleted successfully!');
+        notify('Booking deleted.');
       } catch (error) {
-        alert('Error deleting booking: ' + error.message);
+        notify('Error deleting booking: ' + error.message, 'error');
       }
-    }
+    });
   };
 
-  const handleMarkMessageRead    = async (messageId) => { try { await markMessageAsRead(messageId); await loadData(); } catch (e) { alert('Error: ' + e.message); } };
-  const handleMarkMessageReplied = async (messageId, notes) => { try { await markMessageAsReplied(messageId, notes); await loadData(); setSelectedMessage(null); alert('Message marked as replied!'); } catch (e) { alert('Error: ' + e.message); } };
-  const handleDeleteMessage      = async (messageId) => { if (confirm('Delete this message?')) { try { await deleteMessage(messageId); await loadData(); setSelectedMessage(null); alert('Message deleted!'); } catch (e) { alert('Error: ' + e.message); } } };
+  const handleMarkMessageRead = async (messageId) => {
+    setMessages(prev => prev.map(m => m.id === messageId ? { ...m, status: 'read' } : m));
+    try { await markMessageAsRead(messageId); }
+    catch (e) { notify('Error: ' + e.message, 'error'); await loadData(); }
+  };
+  const handleMarkMessageReplied = async (messageId, notes) => {
+    try { await markMessageAsReplied(messageId, notes); await loadData(); setSelectedMessage(null); notify('Message marked as replied!'); }
+    catch (e) { notify('Error: ' + e.message, 'error'); }
+  };
+  const handleDeleteMessage = async (messageId) => {
+    withConfirm('Delete this message?', async () => {
+      try { await deleteMessage(messageId); await loadData(); setSelectedMessage(null); notify('Message deleted.'); }
+      catch (e) { notify('Error: ' + e.message, 'error'); }
+    });
+  };
 
   const handleAddBooking = async (e) => {
     e.preventDefault();
@@ -238,10 +259,7 @@ const AdminDashboard = () => {
 
       if (available.length < needed) {
         const modelLabel = newBooking.motorcycle_model === 'CFMoto700' ? 'CF Moto 700' : 'Himalayan';
-        alert(
-          `Not enough ${modelLabel} bikes available for ${newBooking.start_date} → ${newBooking.end_date}.\n` +
-          `Needed: ${needed}  |  Available: ${available.length}\n\nNo booking was created.`
-        );
+        notify(`Not enough ${modelLabel} bikes available (needed ${needed}, available ${available.length}).`, 'error');
         return;
       }
 
@@ -265,13 +283,30 @@ const AdminDashboard = () => {
         }
       }
 
+      // 4. Insert additional riders
+      const validRiders = newBookingRiders.filter(r => r.first_name && r.last_name);
+      if (validRiders.length > 0) {
+        const { error: ridersError } = await supabase
+          .from('booking_riders')
+          .insert(validRiders.map((r, i) => ({
+            booking_id:  booking.id,
+            rider_index: i + 2,
+            first_name:  r.first_name,
+            last_name:   r.last_name,
+            email:       r.email || null,
+            phone:       r.phone || null,
+          })));
+        if (ridersError) console.error('Error inserting riders:', ridersError);
+      }
+
       await loadData();
       setShowAddBooking(false);
       setNewBooking(EMPTY_BOOKING);
-      alert('Booking added successfully!');
+      setNewBookingRiders([]);
+      notify('Booking added successfully!');
     } catch (error) {
       console.error('Error adding booking:', error);
-      alert('Error adding booking: ' + error.message);
+      notify('Error adding booking: ' + error.message, 'error');
     }
   };
 
@@ -300,6 +335,16 @@ const AdminDashboard = () => {
       }));
     }
   }, [newBooking.start_date, newBooking.end_date, newBooking.bike_quantity, newBooking.motorcycle_model]);
+
+  useEffect(() => {
+    const qty = newBooking.motorcycle_model === 'CFMoto700' ? 1 : newBooking.bike_quantity;
+    const riderCount = Math.max(0, qty - 1);
+    setNewBookingRiders(prev =>
+      Array.from({ length: riderCount }, (_, i) =>
+        prev[i] || { first_name: '', last_name: '', email: '', phone: '' }
+      )
+    );
+  }, [newBooking.bike_quantity, newBooking.motorcycle_model]);
 
   const handleMessageClick = (msg) => {
     setSelectedMessage(msg);
@@ -366,6 +411,7 @@ const AdminDashboard = () => {
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             onMessageClick={handleMessageClick}
+            onMarkRead={handleMarkMessageRead}
             onMarkReplied={handleMarkMessageReplied}
             onDeleteMessage={handleDeleteMessage}
           />
@@ -383,17 +429,52 @@ const AdminDashboard = () => {
         onDelete={handleDeleteBooking}
         onPaymentToggle={handlePaymentToggle}
         onUpdate={handleBookingUpdate}
+        notify={notify}
       />
 
       <AddBookingModal
         show={showAddBooking}
-        onClose={() => setShowAddBooking(false)}
+        onClose={() => { setShowAddBooking(false); setNewBooking(EMPTY_BOOKING); setNewBookingRiders([]); }}
         newBooking={newBooking}
         setNewBooking={setNewBooking}
         onSubmit={handleAddBooking}
         calculateDays={calculateDays}
         calculatePrice={calculatePrice}
+        riders={newBookingRiders}
+        setRiders={setNewBookingRiders}
       />
+
+      {/* Toast */}
+      {toast && (
+        <div className={`fixed bottom-6 right-6 z-[200] flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-2xl text-white text-sm font-semibold transition-all ${
+          toast.type === 'error' ? 'bg-red-500' : 'bg-green-500'
+        }`}>
+          {toast.type === 'error' ? '❌' : '✅'} {toast.msg}
+        </div>
+      )}
+
+      {/* Confirm Modal */}
+      {confirmModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[200] p-4">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl">
+            <p className="text-gray-800 font-semibold mb-6 text-center">{confirmModal.msg}</p>
+            <div className="flex gap-3">
+              <button
+                onClick={async () => { const fn = confirmModal.onConfirm; setConfirmModal(null); await fn(); }}
+                className="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition"
+              >
+                Confirm
+              </button>
+              <button
+                onClick={() => setConfirmModal(null)}
+                className="flex-1 py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

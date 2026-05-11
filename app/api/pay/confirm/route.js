@@ -51,8 +51,8 @@ if (type === 'initial') {
     await resend.emails.send({
       from:    process.env.RESEND_FROM_EMAIL,
       to:      [booking.email],
-      subject: '✅ Initial Payment Received',
-      html:    `<p>Hi ${booking.first_name}, your initial payment of $${parseFloat(booking.down_payment).toFixed(2)} has been received. Your booking is now confirmed!</p>`,
+      subject: `✅ Initial Payment Received — ${modelLabel}`,
+      html:    `<p>Hi ${booking.first_name}, your initial payment of $${parseFloat(booking.down_payment).toFixed(2)} has been received. Your <strong>${modelLabel}</strong> booking is now confirmed!</p>`,
     });
   } catch (e) { console.error('Initial client email error', e); }
 
@@ -107,7 +107,11 @@ if (type === 'initial') {
 
     /* ── AUTH ── */
     if (type === 'auth') {
-      const newAuthCount = (booking.auth_count || 0) + 1;
+      const currentCount = booking.auth_count || 0;
+      if (currentCount >= booking.bike_quantity) {
+        return NextResponse.json({ success: true });
+      }
+      const newAuthCount = currentCount + 1;
       const allAuthsDone = newAuthCount >= booking.bike_quantity;
 
       await supabase
@@ -124,8 +128,8 @@ if (type === 'initial') {
         await resend.emails.send({
           from:    process.env.RESEND_FROM_EMAIL,
           to:      [booking.email],
-          subject: allAuthsDone ? '✅ Security Deposit(s) Authorized' : `✅ Security Deposit #${newAuthCount} Authorized`,
-          html:    `<p>Hi ${booking.first_name}, your $1,000 security deposit${booking.bike_quantity > 1 ? ` #${newAuthCount}` : ''} has been authorized.${allAuthsDone && booking.bike_quantity > 1 ? ' All deposits are now authorized!' : ''}</p>`,
+          subject: allAuthsDone ? `✅ Security Deposit(s) Authorized — ${modelLabel}` : `✅ Security Deposit #${newAuthCount} Authorized`,
+          html:    `<p>Hi ${booking.first_name}, your $1,000 security deposit${booking.bike_quantity > 1 ? ` #${newAuthCount}` : ''} for your <strong>${modelLabel}</strong> has been authorized.${allAuthsDone && booking.bike_quantity > 1 ? ' All deposits are now authorized!' : ''}</p>`,
         });
       } catch (e) { console.error('Auth client email error', e); }
 

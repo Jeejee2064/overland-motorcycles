@@ -31,6 +31,7 @@ export async function POST(request) {
       bikeQuantity,
       motorcycleModel,   // ← new field from booking page
       calculatedDays,
+      additionalRiders = [],
     } = body;
 
     // Validate required fields
@@ -85,6 +86,20 @@ export async function POST(request) {
       return NextResponse.json(
         { error: 'Failed to create booking' },
         { status: 500 }
+      );
+    }
+
+    // 1b. Save additional riders
+    if (additionalRiders.length > 0) {
+      await supabase.from('booking_riders').insert(
+        additionalRiders.map((r, i) => ({
+          booking_id:  booking.id,
+          rider_index: i + 2,
+          first_name:  r.first_name,
+          last_name:   r.last_name,
+          email:       r.email || null,
+          phone:       r.phone || null,
+        }))
       );
     }
 

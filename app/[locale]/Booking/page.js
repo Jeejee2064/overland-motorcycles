@@ -248,6 +248,7 @@ const BookingPage = () => {
   const [isSubmitting, setIsSubmitting]           = useState(false);
   const [acceptedTerms, setAcceptedTerms]         = useState(false);
   const [appliedPromo, setAppliedPromo]           = useState(null);
+  const [additionalRiders, setAdditionalRiders]   = useState([]);
   const [modal, setModal] = useState({ isOpen: false, type: 'info', message: '', onConfirm: null });
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '',
@@ -264,7 +265,11 @@ const BookingPage = () => {
 
     if (model && MODELS[model]) {
       setSelectedModel(model);
-      setCurrentStep(2);
+      if (start && end) {
+        setCurrentStep(3);
+      } else {
+        setCurrentStep(2);
+      }
     }
     if (start) setStartDate(start);
     if (end)   setEndDate(end);
@@ -412,6 +417,12 @@ const BookingPage = () => {
           calculatedDays:  calculateDays(),
           promoCode:       appliedPromo?.code ?? null,
           promoDiscount:   promoDiscount > 0 ? promoDiscount : null,
+          additionalRiders: additionalRiders.map(r => ({
+            first_name: r.firstName,
+            last_name:  r.lastName,
+            email:      r.email,
+            phone:      r.phone,
+          })),
         }),
       });
       const { url, error } = await response.json();
@@ -426,9 +437,21 @@ const BookingPage = () => {
 
   const canProceedStep2 = selectedModel !== null;
   const canProceedStep3 = startDate && endDate && !validationError && !availabilityError;
-  const canProceedStep4 = formData.firstName.trim() && formData.lastName.trim() && formData.email.trim() && formData.phone.trim() && formData.country.trim();
+  const canProceedStep4 =
+    formData.firstName.trim() && formData.lastName.trim() && formData.email.trim() && formData.phone.trim() && formData.country.trim() &&
+    additionalRiders.every(r => r.firstName.trim() && r.lastName.trim() && r.email.trim() && r.phone.trim());
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [currentStep]);
+
+  useEffect(() => {
+    if (selectedModel === 'CFMoto700') { setAdditionalRiders([]); return; }
+    const count = Math.max(0, (parseInt(formData.bikeQuantity) || 1) - 1);
+    setAdditionalRiders(prev =>
+      Array.from({ length: count }, (_, i) =>
+        prev[i] || { firstName: '', lastName: '', email: '', phone: '' }
+      )
+    );
+  }, [formData.bikeQuantity, selectedModel]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-black text-white">
@@ -645,6 +668,55 @@ const BookingPage = () => {
                   </div>
                 </div>
 
+                {/* Additional riders */}
+                {additionalRiders.length > 0 && (
+                  <div className="mt-4">
+                    <h3 className="text-sm font-bold text-yellow-400 mb-3">{t('additionalRidersTitle')}</h3>
+                    {additionalRiders.map((rider, idx) => (
+                      <div key={idx} className="mb-5 p-4 rounded-xl border border-gray-700 bg-gray-800/40">
+                        <p className="text-xs font-semibold text-gray-400 mb-3">{t('riderLabel')} {idx + 2}</p>
+                        <div className="grid md:grid-cols-2 gap-3">
+                          {[
+                            { label: t('firstName'), field: 'firstName', type: 'text',  placeholder: 'Jane' },
+                            { label: t('lastName'),  field: 'lastName',  type: 'text',  placeholder: 'Doe' },
+                            { label: t('email'),     field: 'email',     type: 'email', placeholder: 'jane@example.com' },
+                          ].map(({ label, field, type, placeholder }) => (
+                            <div key={field}>
+                              <label className="block text-xs font-semibold text-gray-300 mb-1">{label} *</label>
+                              <input
+                                type={type}
+                                value={rider[field]}
+                                onChange={(e) => {
+                                  const updated = [...additionalRiders];
+                                  updated[idx] = { ...updated[idx], [field]: e.target.value };
+                                  setAdditionalRiders(updated);
+                                }}
+                                required
+                                className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition-all text-base"
+                                placeholder={placeholder}
+                              />
+                            </div>
+                          ))}
+                          <div>
+                            <label className="block text-xs font-semibold text-gray-300 mb-1">{t('phone')} *</label>
+                            <PhoneInput
+                              international
+                              defaultCountry="US"
+                              value={rider.phone}
+                              onChange={(value) => {
+                                const updated = [...additionalRiders];
+                                updated[idx] = { ...updated[idx], phone: value || '' };
+                                setAdditionalRiders(updated);
+                              }}
+                              className="phone-input-dark"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <div className="flex gap-4">
                   <motion.button onClick={() => setCurrentStep(2)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
@@ -708,12 +780,23 @@ const BookingPage = () => {
                       <Edit2 size={14} /><span className="hidden sm:inline">{t('stepChange')}</span>
                     </button>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 text-xs mb-4 pb-4 border-b border-gray-700">
+                  <div className={`grid grid-cols-2 gap-2 text-xs ${additionalRiders.length === 0 ? 'mb-4 pb-4 border-b border-gray-700' : 'mb-2'}`}>
                     <div><span className="text-gray-400">{t('firstName')}: </span><span className="text-white font-semibold">{formData.firstName} {formData.lastName}</span></div>
                     <div><span className="text-gray-400">{t('email')}: </span><span className="text-white font-semibold truncate">{formData.email}</span></div>
                     <div><span className="text-gray-400">{t('phone')}: </span><span className="text-white font-semibold">{formData.phone}</span></div>
                     <div><span className="text-gray-400">{t('country')}: </span><span className="text-white font-semibold">{formData.country}</span></div>
                   </div>
+                  {additionalRiders.length > 0 && (
+                    <div className="mt-1 mb-4 pb-4 border-b border-gray-700 space-y-1 text-xs">
+                      {additionalRiders.map((rider, idx) => (
+                        <div key={idx}>
+                          <span className="text-gray-400">{t('riderLabel')} {idx + 2}: </span>
+                          <span className="text-white font-semibold">{rider.firstName} {rider.lastName}</span>
+                          <span className="text-gray-500 ml-2">{rider.email}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
                   {/* ── Promo Code ── */}
                   <div className="mb-4 pb-4 border-b border-gray-700">

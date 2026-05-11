@@ -2,18 +2,20 @@
 import React from 'react';
 import { Calendar, MessageSquare, Bike, TrendingUp, Link as LinkIcon } from 'lucide-react';
 
+
 const AdminNavigation = ({ activeTab, setActiveTab, stats = {} }) => {
   // Defensive default for stats badges
   const pending = stats.pendingBookings || 0;
   const unread = stats.unreadMessages || 0;
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: TrendingUp },
-    { id: 'bookings', label: 'Bookings', icon: Calendar, badge: pending },
-    { id: 'messages', label: 'Messages', icon: MessageSquare, badge: unread },
-    { id: 'calendar', label: 'Calendar', icon: Calendar },
-    { id: 'motorcycles', label: 'Motorcycles', icon: Bike },
-    { id: 'revenue', label: 'Revenue', icon: TrendingUp } // NEW
+    { id: 'calendar',       label: 'Calendar',    icon: Calendar },
+    { id: 'bookings',       label: 'Bookings',    icon: Calendar, badge: pending },
+    { id: 'messages',       label: 'Messages',    icon: MessageSquare, badge: unread },
+    { id: 'overview',       label: 'Overview',    icon: TrendingUp },
+    { id: 'motorcycles',    label: 'Motorcycles', icon: Bike },
+    { id: 'revenue',        label: 'Revenue',     icon: TrendingUp },
+    { id: 'link-generator', label: 'Links',       icon: LinkIcon },
   ];
 
   return (

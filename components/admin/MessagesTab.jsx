@@ -2,7 +2,7 @@
 import React from 'react';
 import { Search } from 'lucide-react';
 
-const MessagesTab = ({ messages, searchTerm, setSearchTerm, onMessageClick, onMarkReplied, onDeleteMessage }) => {
+const MessagesTab = ({ messages, searchTerm, setSearchTerm, onMessageClick, onMarkRead, onMarkReplied, onDeleteMessage }) => {
   const filteredMessages = messages.filter(msg =>
     msg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     msg.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -50,6 +50,14 @@ const MessagesTab = ({ messages, searchTerm, setSearchTerm, onMessageClick, onMa
             </div>
             <p className="text-gray-700 mb-3">{msg.message}</p>
             <div className="flex gap-2">
+              {msg.status === 'unread' && (
+                <button
+                  onClick={(e) => { e.stopPropagation(); onMarkRead(msg.id); }}
+                  className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-semibold hover:bg-blue-200"
+                >
+                  Mark as Read
+                </button>
+              )}
               <button
                 onClick={(e) => {
                   e.stopPropagation();

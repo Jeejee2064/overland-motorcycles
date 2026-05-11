@@ -348,6 +348,8 @@
     "step2Subtitle": "Select your rental period (minimum 2 days)",
     "step3Title": "Your information",
     "step3Subtitle": "We need a few details to finalize your booking",
+    "additionalRidersTitle": "Additional Riders",
+    "riderLabel": "Rider",
 
     "modelHimalayanLabel": "Royal Enfield Himalayan",
     "modelHimalayanShort": "Himalayan 450",
@@ -585,6 +587,7 @@
       "email": "Email",
       "rentalPeriod": "Rental Period",
       "to": "to",
+      "motorcycle": "Motorcycle",
       "motorcycles": "Motorcycles",
       "bikes": "bike(s)",
       "downPayment": "Down Payment",

@@ -16,7 +16,16 @@ const BookingsTab = ({
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [bikes, setBikes] = useState(1);
+  const [linkModel, setLinkModel] = useState('Himalayan');
+  const [linkLocale, setLinkLocale] = useState('en');
   const [sendingMail, setSendingMail] = useState(null);
+
+  const LOCALES = [
+    { value: 'en', label: '🇺🇸 EN', prefix: '' },
+    { value: 'es', label: '🇪🇸 ES', prefix: '/es' },
+    { value: 'fr', label: '🇫🇷 FR', prefix: '/fr' },
+    { value: 'pt', label: '🇧🇷 PT', prefix: '/pt' },
+  ];
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
@@ -26,8 +35,9 @@ const BookingsTab = ({
 
   const generateLink = () => {
     if (!startDate || !endDate) return '';
-    const params = new URLSearchParams({ start: startDate, end: endDate, bikes: bikes.toString() });
-    return 'https://overland-motorcycles.com/Booking?' + params.toString();
+    const prefix = LOCALES.find(l => l.value === linkLocale)?.prefix ?? '';
+    const params = new URLSearchParams({ model: linkModel, start: startDate, end: endDate, bikes: bikes.toString() });
+    return `https://overland-motorcycles.com${prefix}/Booking?${params.toString()}`;
   };
 
   const copyLink = () => {
@@ -61,10 +71,16 @@ const BookingsTab = ({
     (booking.auth_status !== 'authorized' || booking.balance_status !== 'captured');
 
   const filteredBookings = bookings.filter(booking => {
+    const term = searchTerm.toLowerCase();
     const matchesSearch =
-      booking.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.email.toLowerCase().includes(searchTerm.toLowerCase());
+      booking.first_name.toLowerCase().includes(term) ||
+      booking.last_name.toLowerCase().includes(term) ||
+      booking.email.toLowerCase().includes(term) ||
+      (booking.booking_riders || []).some(r =>
+        `${r.first_name} ${r.last_name}`.toLowerCase().includes(term) ||
+        (r.email || '').toLowerCase().includes(term) ||
+        (r.phone || '').toLowerCase().includes(term)
+      );
     const matchesFilter = filterStatus === 'all' || booking.status === filterStatus;
     return matchesSearch && matchesFilter;
   });
@@ -242,6 +258,27 @@ const BookingsTab = ({
             <h2 className="text-xl font-bold mb-4">Booking Link Generator</h2>
             <div className="space-y-4 mb-6">
               <div>
+                <label className="block text-sm font-medium mb-1">Model</label>
+                <select value={linkModel} onChange={(e) => { setLinkModel(e.target.value); if (e.target.value === 'CFMoto700') setBikes(1); }}
+                  className="w-full px-3 py-2 border rounded-lg">
+                  <option value="Himalayan">Royal Enfield Himalayan 450</option>
+                  <option value="CFMoto700">CF Moto 700 CL-X</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Language</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {LOCALES.map(l => (
+                    <button key={l.value} type="button" onClick={() => setLinkLocale(l.value)}
+                      className={`py-2 rounded-lg border-2 text-sm font-semibold transition-all ${
+                        linkLocale === l.value ? 'border-yellow-400 bg-yellow-50 text-gray-900' : 'border-gray-200 text-gray-600 hover:border-gray-400'
+                      }`}>
+                      {l.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div>
                 <label className="block text-sm font-medium mb-1">Start Date</label>
                 <input type="date" autoFocus value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
@@ -253,12 +290,14 @@ const BookingsTab = ({
                   onChange={(e) => setEndDate(e.target.value)}
                   className="w-full px-3 py-2 border rounded-lg" />
               </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Number of Bikes</label>
-                <input type="number" min="1" value={bikes}
-                  onChange={(e) => setBikes(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-lg" />
-              </div>
+              {linkModel !== 'CFMoto700' && (
+                <div>
+                  <label className="block text-sm font-medium mb-1">Number of Bikes</label>
+                  <input type="number" min="1" max="6" value={bikes}
+                    onChange={(e) => setBikes(e.target.value)}
+                    className="w-full px-3 py-2 border rounded-lg" />
+                </div>
+              )}
             </div>
             <div className="bg-gray-100 p-3 rounded-lg text-sm break-all mb-4 border border-gray-200">
               {generateLink() || <span className="text-gray-400">Fill in all fields to generate a link</span>}

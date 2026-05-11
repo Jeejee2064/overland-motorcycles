@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, X, ExternalLink } from 'lucide-react';
 import { getMotorcycleCalendarWithPhone, getAllMotorcycles } from '@/lib/supabase/bookings';
 import {
@@ -19,8 +19,8 @@ const MOTORCYCLE_COLORS = [
   { bg: 'bg-orange-50', border: 'border-orange-200', bar: 'bg-orange-500', text: 'text-orange-800' },
 ];
 
-const CELL_WIDTH = 40;
 const LEFT_COLUMN_WIDTH = 200;
+const MIN_CELL_WIDTH = 28;
 
 const parseLocalDate = (dateStr) => {
   const [y, m, d] = dateStr.split('-').map(Number);
@@ -34,6 +34,21 @@ export default function MotorcycleCalendar() {
   const [loading, setLoading] = useState(true);
   const [colorMap, setColorMap] = useState({});
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [cellWidth, setCellWidth] = useState(40);
+  const containerRef = useRef(null);
+
+  const recalcCellWidth = useCallback(() => {
+    if (!containerRef.current) return;
+    const available = containerRef.current.offsetWidth - LEFT_COLUMN_WIDTH;
+    const days = eachDayOfInterval({ start: startOfMonth(currentDate), end: endOfMonth(currentDate) }).length;
+    setCellWidth(Math.max(MIN_CELL_WIDTH, Math.floor(available / days)));
+  }, [currentDate]);
+
+  useEffect(() => {
+    recalcCellWidth();
+    window.addEventListener('resize', recalcCellWidth);
+    return () => window.removeEventListener('resize', recalcCellWidth);
+  }, [recalcCellWidth]);
 
   useEffect(() => {
     loadData();
@@ -83,7 +98,7 @@ export default function MotorcycleCalendar() {
     );
   }
 
-  const gridColumns = `${LEFT_COLUMN_WIDTH}px repeat(${daysInMonth.length}, minmax(${CELL_WIDTH}px, 1fr))`;
+  const gridColumns = `${LEFT_COLUMN_WIDTH}px repeat(${daysInMonth.length}, ${cellWidth}px)`;
 
   return (
     <div className="space-y-6">
@@ -107,8 +122,8 @@ export default function MotorcycleCalendar() {
       </div>
 
       {/* Calendar Grid */}
-      <div className="overflow-x-auto border border-gray-200 rounded-lg bg-white shadow-sm">
-        <div className="min-w-fit" style={{ display: 'grid', gridTemplateColumns: gridColumns }}>
+      <div ref={containerRef} className="overflow-x-auto border border-gray-200 rounded-lg bg-white shadow-sm">
+        <div style={{ display: 'grid', gridTemplateColumns: gridColumns }}>
           {/* Header Row */}
           <div className="sticky left-0 bg-gray-50 border-r border-b-2 border-gray-300 font-semibold text-sm py-3 px-3 z-20">
             Motorcycle
@@ -165,7 +180,7 @@ export default function MotorcycleCalendar() {
                     <div
                       key={format(day, 'yyyy-MM-dd')}
                       className="h-14 border-b border-r border-gray-100"
-                      style={{ width: CELL_WIDTH }}
+                      style={{ width: cellWidth }}
                     />
                   ))}
 
@@ -181,10 +196,10 @@ export default function MotorcycleCalendar() {
                         const startIdx = daysInMonth.findIndex((d) => isSameDay(d, visibleStart));
                         const endIdx = daysInMonth.findIndex((d) => isSameDay(d, visibleEnd));
 
-                        const leftPos = (startIdx === -1 ? 0 : startIdx) * CELL_WIDTH + 2;
+                        const leftPos = (startIdx === -1 ? 0 : startIdx) * cellWidth + 2;
                         const width =
                           ((endIdx === -1 ? daysInMonth.length - 1 : endIdx) -
-                            (startIdx === -1 ? 0 : startIdx) + 1) * CELL_WIDTH - 4;
+                            (startIdx === -1 ? 0 : startIdx) + 1) * cellWidth - 4;
 
                         return (
                           <div
@@ -193,7 +208,7 @@ export default function MotorcycleCalendar() {
                             style={{ left: `${leftPos}px`, width: `${width}px`, height: '40px' }}
                             onClick={() => setSelectedBooking({ ...b, motorcycle_name: bike.name })}
                           >
-                            <span className="truncate">{b.customer_name}</span>
+                            <span className="truncate">{b.display_name || b.customer_name}</span>
                           </div>
                         );
                       })}
@@ -238,8 +253,8 @@ export default function MotorcycleCalendar() {
             </h3>
             <div className="space-y-3 text-sm">
               <div>
-                <span className="font-semibold text-gray-600">Customer:</span>{' '}
-                <span className="font-medium text-gray-900">{selectedBooking.customer_name}</span>
+                <span className="font-semibold text-gray-600">Rider:</span>{' '}
+                <span className="font-medium text-gray-900">{selectedBooking.display_name || selectedBooking.customer_name}</span>
               </div>
               <div>
                 <span className="font-semibold text-gray-600">Motorcycle:</span>{' '}
@@ -271,8 +286,8 @@ export default function MotorcycleCalendar() {
               </div>
               <div>
                 <span className="font-semibold text-gray-600">Email:</span>{' '}
-                <a href={`mailto:${selectedBooking.email}`} className="text-blue-600 hover:underline">
-                  {selectedBooking.email}
+                <a href={`mailto:${selectedBooking.display_email}`} className="text-blue-600 hover:underline">
+                  {selectedBooking.display_email}
                 </a>
               </div>
               <div>

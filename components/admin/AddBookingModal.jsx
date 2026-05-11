@@ -7,7 +7,7 @@ const MODEL_OPTIONS = [
   { value: 'CFMoto700', label: 'CF Moto 700 CL-X',           maxBikes: 1 },
 ];
 
-const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, calculateDays, calculatePrice }) => {
+const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, calculateDays, calculatePrice, riders, setRiders }) => {
   if (!show) return null;
 
   const selectedModelConfig = MODEL_OPTIONS.find(m => m.value === newBooking.motorcycle_model) || MODEL_OPTIONS[0];
@@ -255,6 +255,44 @@ const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, c
 
             </div>
           </div>
+
+          {/* Additional Riders */}
+          {riders && riders.length > 0 && (
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Additional Riders</h3>
+              <div className="space-y-4">
+                {riders.map((rider, idx) => (
+                  <div key={idx} className="p-4 border border-blue-200 rounded-lg bg-blue-50">
+                    <p className="text-sm font-bold text-blue-700 mb-3">Rider {idx + 2}</p>
+                    <div className="grid md:grid-cols-2 gap-3">
+                      {[
+                        { label: 'First Name', field: 'first_name', placeholder: 'Jane' },
+                        { label: 'Last Name',  field: 'last_name',  placeholder: 'Doe' },
+                        { label: 'Email',      field: 'email',      placeholder: 'jane@example.com' },
+                        { label: 'Phone',      field: 'phone',      placeholder: '+1 234 567 8900' },
+                      ].map(({ label, field, placeholder }) => (
+                        <div key={field}>
+                          <label className="block text-sm font-semibold text-gray-700 mb-1">{label} *</label>
+                          <input
+                            type={field === 'email' ? 'email' : 'text'}
+                            required
+                            value={rider[field]}
+                            onChange={(e) => {
+                              const updated = [...riders];
+                              updated[idx] = { ...updated[idx], [field]: e.target.value };
+                              setRiders(updated);
+                            }}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                            placeholder={placeholder}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Special Requests */}
           <div>

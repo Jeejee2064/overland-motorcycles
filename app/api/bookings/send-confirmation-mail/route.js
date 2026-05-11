@@ -40,12 +40,19 @@ export async function POST(request) {
     }
 
     /* -------------------------------------------------
-       2️⃣ Fetch assigned motorcycles
+       2️⃣ Fetch assigned motorcycles + additional riders
     --------------------------------------------------*/
-    const { data: bookingMotorcycles } = await supabase
-      .from('booking_motorcycles')
-      .select('motorcycle_id, motorcycles ( id, name, model )')
-      .eq('booking_id', bookingId);
+    const [{ data: bookingMotorcycles }, { data: bookingRiders }] = await Promise.all([
+      supabase
+        .from('booking_motorcycles')
+        .select('motorcycle_id, motorcycles ( id, name, model )')
+        .eq('booking_id', bookingId),
+      supabase
+        .from('booking_riders')
+        .select('first_name, last_name, email')
+        .eq('booking_id', bookingId)
+        .order('rider_index'),
+    ]);
 
     const assigned = (bookingMotorcycles || []).map(bm => bm.motorcycles).filter(Boolean);
 
@@ -67,7 +74,25 @@ export async function POST(request) {
     });
 
     /* -------------------------------------------------
-       5️⃣ Send admin notification email
+       5️⃣ Send confirmation to additional riders
+    --------------------------------------------------*/
+    for (const rider of (bookingRiders || [])) {
+      if (!rider.email) continue;
+      await resend.emails.send({
+        from:    process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+        to:      [rider.email],
+        subject: `🏍️ Booking Confirmed — ${modelLabel}`,
+        html:    generateCustomerEmailHTML(
+          { ...booking, first_name: rider.first_name, last_name: rider.last_name },
+          assigned,
+          remainingPayment,
+          modelLabel
+        ),
+      });
+    }
+
+    /* -------------------------------------------------
+       6️⃣ Send admin notification email
     --------------------------------------------------*/
     await resend.emails.send({
       from:    process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',

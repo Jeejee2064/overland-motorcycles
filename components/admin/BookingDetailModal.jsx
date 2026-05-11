@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { XCircle, Edit2, Save, X, Bike, Mail, Share2, Check } from 'lucide-react';
+import { XCircle, Edit2, Save, X, Bike, Mail, Share2 } from 'lucide-react';
 import {
   getBookingMotorcycles,
   updateBookingDetails,
@@ -9,7 +9,7 @@ import {
 } from '@/lib/supabase/bookings-admin-helpers';
 import { getAllMotorcycles } from '@/lib/supabase/bookings';
 
-function PaymentMailGenerator({ booking, onSent }) {
+function PaymentMailGenerator({ booking, onSent, notify }) {
   const bikeCount = booking.bike_quantity || 1;
   const authCount = booking.auth_count || 0;
   const authDone  = booking.auth_status === 'authorized';
@@ -94,10 +94,10 @@ function PaymentMailGenerator({ booking, onSent }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      alert('Payment mail sent!');
+      notify('Payment mail sent!');
       if (onSent) await onSent();
     } catch (e) {
-      alert('Error: ' + e.message);
+      notify('Error: ' + e.message, 'error');
     } finally {
       setSending(false);
     }
@@ -135,40 +135,12 @@ function PaymentMailGenerator({ booking, onSent }) {
   );
 }
 
-// ─── Share button — copies link to /admin/ok/bookings/[id] ───
-function ShareButton({ bookingId }) {
-  const [copied, setCopied] = useState(false);
-
-  const handleCopy = () => {
-    const url = `${window.location.origin}/admin/ok/bookings/${bookingId}`;
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  return (
-    <button
-      onClick={handleCopy}
-      className={
-        'flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm transition ' +
-        (copied
-          ? 'bg-green-100 text-green-700 border border-green-300'
-          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200')
-      }
-    >
-      {copied ? <Check size={16} /> : <Share2 size={16} />}
-      {copied ? 'Link copied!' : 'Share'}
-    </button>
-  );
-}
-
 // ─── New component: sends the same booking confirmation the customer gets online ───
-function SendConfirmationMailButton({ booking }) {
+function SendConfirmationMailButton({ booking, notify }) {
   const [sending, setSending] = useState(false);
   const [sent, setSent]       = useState(false);
 
   const handleSend = async () => {
-    if (!confirm(`Send booking confirmation email to ${booking.email}?`)) return;
     setSending(true);
     try {
       const res = await fetch('/api/bookings/send-confirmation-mail', {
@@ -179,9 +151,11 @@ function SendConfirmationMailButton({ booking }) {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setSent(true);
-      alert('Confirmation email sent to ' + booking.email);
+      const riderCount = (booking.booking_riders || []).filter(r => r.email).length;
+      const total = 1 + riderCount;
+      notify(`Confirmation email sent to ${total} rider${total > 1 ? 's' : ''}`);
     } catch (e) {
-      alert('Error: ' + e.message);
+      notify('Error: ' + e.message, 'error');
     } finally {
       setSending(false);
     }
@@ -209,7 +183,8 @@ const MODEL_LABELS = {
   CFMoto700: 'CF Moto 700 CL-X',
 };
 
-const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaymentToggle, onUpdate }) => {
+const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaymentToggle, onUpdate, notify: notifyProp }) => {
+  const notify = notifyProp || ((msg, type) => type === 'error' ? alert('Error: ' + msg) : alert(msg));
   const [isEditing, setIsEditing]                       = useState(false);
   const [editedBooking, setEditedBooking]               = useState(null);
   const [assignedMotorcycles, setAssignedMotorcycles]   = useState([]);
@@ -315,24 +290,24 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
       });
       setIsEditing(false);
       if (onUpdate) await onUpdate();
-      alert('Booking updated successfully!');
+      notify('Booking updated successfully!');
     } catch (error) {
       console.error('Error saving booking:', error);
-      alert('Error saving booking: ' + error.message);
+      notify('Error saving booking: ' + error.message, 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleMotorcycleChange = async (slotIndex, newMotorcycleId, oldAssignmentId) => {
+  const handleMotorcycleChange = async (_slotIndex, newMotorcycleId, oldAssignmentId) => {
     setSavingMotorcycle(true);
     try {
       await updateSingleMotorcycleAssignment(booking.id, oldAssignmentId, newMotorcycleId);
       await loadMotorcycleData();
-      alert('Motorcycle updated successfully!');
+      notify('Motorcycle updated successfully!');
     } catch (error) {
       console.error('Error updating motorcycle:', error);
-      alert('Error updating motorcycle: ' + error.message);
+      notify('Error updating motorcycle: ' + error.message, 'error');
     } finally {
       setSavingMotorcycle(false);
     }
@@ -375,7 +350,15 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             <div className="flex items-center gap-2">
               {!isEditing ? (
                 <>
-                  <ShareButton bookingId={booking.id} />
+                  <a
+                    href={`/admin/ok/bookings/${booking.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 transition"
+                  >
+                    <Share2 size={16} />
+                    Open page
+                  </a>
                   <button onClick={() => { setIsEditing(true); loadAvailableMotorcycles(); }}
                     className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                     <Edit2 size={18} /> Edit
@@ -408,7 +391,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
               <h3 className="text-lg font-bold text-gray-900">Customer Information</h3>
               {/* Confirmation mail button — only shown in view mode */}
               {!isEditing && (
-                <SendConfirmationMailButton booking={editedBooking} />
+                <SendConfirmationMailButton booking={editedBooking} notify={notify} />
               )}
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -449,6 +432,26 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
               </div>
             </div>
           </div>
+
+          {/* Additional Riders */}
+          {booking.booking_riders?.length > 0 && (
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Additional Riders</h3>
+              <div className="space-y-3">
+                {booking.booking_riders.map((rider) => (
+                  <div key={rider.id} className="p-3 bg-blue-50 border border-blue-100 rounded-lg">
+                    <p className="text-xs font-bold text-blue-600 mb-2">Rider {rider.rider_index}</p>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                      <div><span className="text-gray-500">Name: </span><span className="font-semibold">{rider.first_name} {rider.last_name}</span></div>
+                      <div><span className="text-gray-500">Email: </span><a href={`mailto:${rider.email}`} className="text-blue-600 hover:underline font-semibold">{rider.email || '—'}</a></div>
+                      <div><span className="text-gray-500">Phone: </span><a href={`https://wa.me/${(rider.phone || '').replace(/\D/g,'')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline font-semibold">{rider.phone || '—'}</a></div>
+                      <div><span className="text-gray-500">Country: </span><span className="font-semibold">{rider.country || '—'}</span></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Trip Details */}
           <div>
@@ -751,7 +754,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             </div>
 
             {/* Mail generator */}
-            <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} />
+            <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} notify={notify} />
 
             {editedBooking.payment_mail_sent_at && (
               <p className="text-xs text-gray-400 text-center mt-2">
