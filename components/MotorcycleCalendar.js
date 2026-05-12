@@ -51,6 +51,10 @@ export default function MotorcycleCalendar() {
   }, [recalcCellWidth]);
 
   useEffect(() => {
+    if (!loading) recalcCellWidth();
+  }, [loading, recalcCellWidth]);
+
+  useEffect(() => {
     loadData();
   }, [currentDate]);
 
