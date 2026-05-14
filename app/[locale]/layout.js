@@ -175,14 +175,9 @@ export default async function RootLayout({ children, params }) {
         {
           '@type': 'Offer',
           itemOffered: {
-            '@type': 'Product',
+            '@type': 'Service',
             name: 'Royal Enfield Himalayan 450cc Rental',
-            description: 'Premium adventure motorcycle rental for exploring Panama',
-            brand: {
-              '@type': 'Brand',
-              name: 'Royal Enfield'
-            },
-            model: 'Himalayan 450cc'
+            description: 'Premium adventure motorcycle rental for exploring Panama'
           }
         }
       ]
