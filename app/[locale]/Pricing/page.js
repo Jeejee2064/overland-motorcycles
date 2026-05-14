@@ -315,7 +315,7 @@ const PricingPage = () => {
           </motion.div>
 
           <div className="space-y-6">
-            {[1, 3, 4].map((num) => (
+            {[1, 3, 4, 5].map((num) => (
               <motion.div
                 key={num}
                 initial={{ opacity: 0, y: 20 }}
@@ -324,7 +324,22 @@ const PricingPage = () => {
                 className="bg-gray-800/30 border border-gray-700/50 rounded-2xl p-6 backdrop-blur-sm"
               >
                 <h3 className="text-xl font-bold text-white mb-3">{t(`faq${num}Q`)}</h3>
-                <p className="text-gray-300 leading-relaxed">{t(`faq${num}A`)}</p>
+                <p className="text-gray-300 leading-relaxed">
+                  {num === 5
+                    ? t.rich(`faq${num}A`, {
+                        link: (chunks) => (
+                          <a
+                            href="https://www.panama-contact.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-yellow-400 underline hover:text-yellow-300 transition-colors"
+                          >
+                            {chunks}
+                          </a>
+                        ),
+                      })
+                    : t(`faq${num}A`)}
+                </p>
               </motion.div>
             ))}
           </div>

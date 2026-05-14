@@ -1,5 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /es/admin
+Disallow: /fr/admin
+Disallow: /pt/admin
 
-# Note: Update this with your actual domain when you deploy
-Sitemap: http://overland-motorcycles.con/sitemap.xml
+Sitemap: https://overland-motorcycles.com/sitemap.xml

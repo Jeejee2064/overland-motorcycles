@@ -80,6 +80,32 @@ function getAlternateLocales(currentLocale) {
   return allLocales.filter(loc => loc !== getOpenGraphLocale(currentLocale)).join(', ');
 }
 
-export default function PricingLayout({ children }) {
-  return children;
+export default async function PricingLayout({ children, params }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'PricingPage' });
+
+  const stripTags = (str) => str.replace(/<[^>]+>/g, '');
+
+  const faqSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [1, 3, 4, 5].map(num => ({
+      '@type': 'Question',
+      name: t(`faq${num}Q`),
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: stripTags(t(`faq${num}A`)),
+      },
+    })),
+  };
+
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      {children}
+    </>
+  );
 }

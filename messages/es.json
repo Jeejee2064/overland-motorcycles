@@ -29,7 +29,7 @@
     "bridge": "País Seguro",
     "bridgeDesc": "Estable, acogedor y uno de los destinos más seguros de Centroamérica.",
     "rentalInfoTitle": "Alquiler de Motocicletas en Ciudad de Panamá",
-    "rentalInfoDesc": "Con sede en Ciudad de Panamá, ofrecemos alquiler de motocicletas Royal Enfield Himalayan 450cc premium con un período mínimo de alquiler de 2 días. Nuestra flota de 4 modelos 2024 meticulosamente mantenidos garantiza que obtengas una moto confiable para tu aventura. Recoge tu motocicleta en Ciudad de Panamá y explora todo el país a tu propio ritmo.",
+    "rentalInfoDesc": "Con sede en Ciudad de Panamá, ofrecemos alquiler de motocicletas Royal Enfield Himalayan 450cc premium con un período mínimo de alquiler de 2 días. Nuestra flota de 7 modelos 2024 meticulosamente mantenidos garantiza que obtengas una moto confiable para tu aventura. Recoge tu motocicleta en Ciudad de Panamá y explora todo el país a tu propio ritmo.",
     "rentalFeatures": "Qué Incluye",
     "rentalFeature1": "Período mínimo de alquiler de 2 días",
     "rentalFeature2": "Todo el equipo de seguridad incluido",
@@ -67,11 +67,11 @@
     "followUs": "Síguenos"
   },
     "ContactMetadata": {
-    "title": "Contáctanos | Alquiler Motos Royal Enfield Ciudad de Panamá",
-    "description": "Contacta a Overland Motorcycles en Ciudad de Panamá. Alquila Royal Enfield Himalayan 450. Ubicados en Santa Ana, Ciudad de Panamá. Abierto Lun-Vie 10AM-6PM. Llama +507 6805-1100 o escribe a overlandmotorcycles@gmail.com",
-    "keywords": "contacto alquiler motos Panamá, Ciudad de Panamá alquiler motos, contacto alquiler Royal Enfield, Santa Ana Panamá motos, horario alquiler motos Panamá, reservar moto Panamá, contacto overland motorcycles",
-    "ogTitle": "Contáctanos | Alquiler Motos Royal Enfield Ciudad de Panamá",
-    "ogDescription": "Comunícate con Overland Motorcycles. Alquiler Royal Enfield Himalayan 450 en Santa Ana, Ciudad de Panamá. Abierto Lun-Vie 10AM-6PM.",
+    "title": "Overland Motorcycles | Contacto — Alquiler de Motos de Aventura Panamá",
+    "description": "¿Preguntas antes de salir a rodar? Llama o WhatsApp +507 6805-1100. Abierto Lun-Vie 10-18h en Santa Ana, Panama City. También somos riders — respondemos rápido.",
+    "keywords": "contacto alquiler motos Panamá, Ciudad de Panamá alquiler motos, contacto Overland Motorcycles, Santa Ana Panamá motos, horario alquiler motos Panamá, reservar moto Panamá, contacto overland motorcycles",
+    "ogTitle": "Overland Motorcycles | Contacto — Alquiler de Motos de Aventura Panamá",
+    "ogDescription": "¿Preguntas antes de salir a rodar? Llama o WhatsApp +507 6805-1100. Abierto Lun-Vie 10-18h en Santa Ana, Panama City.",
     "twitterTitle": "Contacto Overland Motorcycles | Ciudad de Panamá",
     "twitterDescription": "Alquila Royal Enfield Himalayan 450 en Ciudad de Panamá. Ubicados en Santa Ana. ¡Contáctanos hoy!",
     "siteName": "Overland Motorcycles Panamá"
@@ -97,8 +97,8 @@
     "fr": "Français"
   },
 "Metadata": {
-    "title": "Overland Motorcycles Panamá | Alquiler de Motos de Aventura en Panama City",
-    "description": "Alquila motocicletas de aventura premium en Panamá y descubre el país a tu manera. Alquiler diario y semanal en Panama City, Chiriquí. Motos de calidad. Rutas inolvidables.",
+    "title": "Overland Motorcycles | Alquiler de Motos de Aventura en Panama City",
+    "description": "Alquila una Royal Enfield Himalayan 450 o una CF Moto 700 en Panama City. Cascos, maletas y GPS incluidos. 7 motos listas para rodar — reserva online, confirmación inmediata.",
     "keywords": [
       "alquiler de motos Panamá",
       "rentar moto Panamá",
@@ -192,11 +192,11 @@
     "contactUs": "Contáctanos"
   },
       "PanamaMetadata": {
-    "title": "Explora Panamá en Moto | Guía del Destino Definitivo para Motociclistas",
-    "description": "Descubre por qué Panamá es el destino perfecto en moto. Explora increíble biodiversidad, playas vírgenes, bosques nublados, costas Caribe y Pacífico, y caminos de montaña en tu Royal Enfield Himalayan 450.",
+    "title": "Overland Motorcycles | Rodar por Panamá — Rutas de Aventura, Dos Océanos",
+    "description": "Panamá está hecho para el riding de aventura. Del Caribe al Pacífico, bosques nubosos y picos volcánicos — alquila una moto de aventura en Panama City y conquista la carretera.",
     "keywords": "Panamá en moto, viaje moto Panamá, destino motociclista Panamá, road trip Panamá, San Blas moto, rutas montaña Panamá, ruta Caribe Pacífico moto, aventura moto Panamá, moto Centroamérica, biodiversidad Panamá, Boquete moto, rutas Panamá",
-    "ogTitle": "Explora Panamá en Moto | Donde Dos Océanos Se Encuentran",
-    "ogDescription": "Descubre la biodiversidad única de Panamá, dos costas oceánicas, bosques nublados y cultura indígena. El destino definitivo para motociclistas en Centroamérica.",
+    "ogTitle": "Overland Motorcycles | Rodar por Panamá — Rutas de Aventura, Dos Océanos",
+    "ogDescription": "Panamá está hecho para el riding de aventura. Del Caribe al Pacífico, bosques nubosos y picos volcánicos — alquila una moto de aventura en Panama City y conquista la carretera.",
     "ogImageAlt": "Viaje en moto por las montañas y paisajes tropicales de Panamá",
     "twitterTitle": "Explora Panamá en Moto | Rueda Donde Comienza la Aventura",
     "twitterDescription": "Experimenta las costas Caribe y Pacífico de Panamá, bosques nublados y rutas infinitas sobre dos ruedas.",
@@ -307,14 +307,14 @@
     "ctaAlt": "Aventura en moto por Panamá"
   },
   "FleetMetadata": {
-    "title": "Flota Royal Enfield Himalayan 450 | Alquiler Motos Premium Panamá",
-    "description": "Alquila la Royal Enfield Himalayan 450 en Panamá. Motor 450cc refrigerado por líquido, 40HP, suspensión avanzada, capacidad dual-sport. Incluye maletas, cascos, GPS. Perfecta para el terreno diverso de Panamá del Caribe al Pacífico.",
-    "keywords": "alquiler Royal Enfield Himalayan 450, moto aventura Panamá, alquiler moto dual-sport, moto 450cc Panamá, Royal Enfield Panamá, alquiler moto off-road, especificaciones Himalayan, flota motos aventura Panamá, alquiler moto premium",
-    "ogTitle": "Flota Royal Enfield Himalayan 450 | Alquiler Moto Aventura Panamá",
-    "ogDescription": "Experimenta Panamá en nuestra Royal Enfield Himalayan 450 premium. 40HP, 450cc, suspensión avanzada, totalmente equipada con maletas y equipo de seguridad. Hecha para la aventura.",
+    "title": "Overland Motorcycles | Nuestra Flota de Motos de Aventura en Panama City",
+    "description": "Flota de motos de aventura seleccionada para las carreteras de Panamá. Royal Enfield Himalayan 450 para el trail, CF Moto 700 CL-X para la ruta. Maletas, cascos y GPS incluidos. Elige tu moto.",
+    "keywords": "alquiler Royal Enfield Himalayan 450, moto aventura Panamá, CF Moto 700 Panamá, moto 450cc Panamá, Royal Enfield Panamá, alquiler moto off-road, especificaciones Himalayan, flota motos aventura Panamá, alquiler moto premium",
+    "ogTitle": "Overland Motorcycles | Nuestra Flota de Motos de Aventura en Panama City",
+    "ogDescription": "Flota de motos de aventura seleccionada para las carreteras de Panamá. Royal Enfield Himalayan 450 para el trail, CF Moto 700 CL-X para la ruta. Maletas, cascos y GPS incluidos.",
     "ogImageAlt": "Flota de motocicletas Royal Enfield Himalayan 450 disponibles para alquilar en Panamá",
     "twitterTitle": "Flota Royal Enfield Himalayan 450 | Alquiler en Panamá",
-    "twitterDescription": "Motos de aventura premium. 40HP, capacidad dual-sport, totalmente equipadas. Perfectas para explorar Panamá.",
+    "twitterDescription": "Motos de aventura premium para las carreteras de Panamá. Royal Enfield Himalayan 450 y CF Moto 700 CL-X, totalmente equipadas.",
     "siteName": "Alquiler de Motos Panamá"
   },
 
@@ -427,11 +427,11 @@
   }
 },
  "BookingMetadata": {
-    "title": "Reservar Royal Enfield Himalayan 450 | Alquiler Motos Ciudad de Panamá",
-    "description": "Alquila una Royal Enfield Himalayan 450cc en Ciudad de Panamá, Panamá. Renta de motos de aventura premium con reserva flexible, seguro completo y soporte 24/7. Reserva tu aventura en moto por Panamá hoy.",
-    "keywords": "alquiler Royal Enfield Himalayan Panamá, renta motos Ciudad de Panamá, alquiler moto aventura Panamá, Royal Enfield 450cc alquiler, tours en moto Panamá, renta motos Panamá, moto dual-sport Panamá",
-    "ogTitle": "Reservar Alquiler Royal Enfield Himalayan 450 en Ciudad de Panamá",
-    "ogDescription": "Reserva tu moto de aventura Royal Enfield Himalayan 450cc en Ciudad de Panamá. Explora Panamá en la mejor moto dual-sport con servicio de alquiler premium.",
+    "title": "Overland Motorcycles | Reserva Tu Moto — Alquiler de Motos de Aventura Panamá",
+    "description": "Elige tu moto — Royal Enfield Himalayan 450 o CF Moto 700. Reserva en línea — 50% de anticipo, confirmación inmediata. Recogida lista para rodar en Panama City.",
+    "keywords": "reservar alquiler moto Panamá, renta motos Ciudad de Panamá, alquiler moto aventura Panamá, Royal Enfield 450cc alquiler, CF Moto 700 Panamá, renta motos Panamá, reserva moto Panamá",
+    "ogTitle": "Overland Motorcycles | Reserva Tu Moto — Alquiler de Motos de Aventura Panamá",
+    "ogDescription": "Equípate y sal a rodar. Reserva tu moto de aventura en Panamá online — 50% de anticipo, confirmación inmediata. Recogida lista para rodar en Panama City.",
     "ogImageAlt": "Motocicleta Royal Enfield Himalayan 450 disponible para alquilar en Ciudad de Panamá",
     "twitterTitle": "Reservar Royal Enfield Himalayan 450 | Alquiler Motos Ciudad de Panamá",
     "twitterDescription": "Alquila la legendaria Royal Enfield Himalayan 450cc en Ciudad de Panamá. ¡La aventura te espera!",
@@ -488,14 +488,16 @@
     "faq3Q": "¿Puedo viajar a otros países?",
     "faq3A": "Nuestras motocicletas están registradas solo para uso dentro de Panamá. Los viajes transfronterizos requieren arreglos especiales y documentación adicional.",
     "faq4Q": "¿Qué pasa si daño la motocicleta?",
-    "faq4A": "Nuestro seguro completo cubre la mayoría de los daños. Tu depósito de seguridad puede usarse para deducibles. Proporcionaremos un informe completo de daños y un desglose de costos."
+    "faq4A": "Nuestro seguro completo cubre la mayoría de los daños. Tu depósito de seguridad puede usarse para deducibles. Proporcionaremos un informe completo de daños y un desglose de costos.",
+    "faq5Q": "¿Se puede alquilar una moto con visa de turista?",
+    "faq5A": "Sí — una visa de turista estándar es suficiente para alquilar una moto en Panamá. Si planea quedarse más tiempo — permiso de residencia, cuenta bancaria, seguro — <link>regularice su situación en Panamá</link> con Panama Contact, nuestro socio de confianza para expatriados."
   },
   "PricingMetadata": {
-    "title": "Precios y Tarifas | Alquiler Royal Enfield Himalayan 450 Panamá",
-    "description": "Tarifas transparentes de alquiler Royal Enfield Himalayan 450 en Panamá. Precio todo incluido con cascos, maletas, GPS, seguro y soporte 24/7. Tarifas diarias y semanales disponibles. Depósito de $1000.",
-    "keywords": "precios alquiler Royal Enfield Panamá, tarifas alquiler motos Ciudad de Panamá, costo alquiler Himalayan 450, precios alquiler motos Panamá, alquiler moto diario Panamá, alquiler moto semanal Panamá, tarifas moto aventura, seguro moto Panamá",
-    "ogTitle": "Precios Alquiler Royal Enfield Himalayan 450 | Ciudad de Panamá",
-    "ogDescription": "Tarifas todo incluido para alquiler Royal Enfield Himalayan 450. Incluye cascos, maletas, GPS, seguro y asistencia en carretera. Precios transparentes sin costos ocultos.",
+    "title": "Overland Motorcycles | Precios Alquiler de Motos de Aventura Panamá — Sin Sorpresas",
+    "description": "Tarifas transparentes en nuestra flota de motos de aventura — Royal Enfield Himalayan 450 y CF Moto 700 CL-X. Cascos, maletas y GPS siempre incluidos. Sin costos ocultos. Depósito reembolsable de $1.000.",
+    "keywords": "precios alquiler motos Panamá, tarifas alquiler motos Ciudad de Panamá, costo alquiler Himalayan 450, precios alquiler motos Panamá, alquiler moto diario Panamá, alquiler moto semanal Panamá, CF Moto 700 Panamá, tarifas moto aventura",
+    "ogTitle": "Overland Motorcycles | Precios Alquiler de Motos de Aventura Panamá — Sin Sorpresas",
+    "ogDescription": "Tarifas transparentes en nuestra flota de motos de aventura — Royal Enfield Himalayan 450 y CF Moto 700 CL-X. Cascos, maletas y GPS siempre incluidos. Sin costos ocultos.",
     "twitterTitle": "Precios Alquiler | Royal Enfield Himalayan 450 Panamá",
     "twitterDescription": "Tarifas transparentes todo incluido para alquiler Royal Enfield Himalayan 450 en Panamá. Opciones diarias y semanales disponibles.",
     "siteName": "Overland Motorcycles Panamá"

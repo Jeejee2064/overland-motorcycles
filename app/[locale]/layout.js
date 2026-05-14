@@ -49,7 +49,7 @@ export async function generateMetadata({ params }) {
       type: 'website',
       images: [
         {
-          url: '/og-image.jpg',
+          url: '/og-image.png',
           width: 1200,
           height: 630,
           alt: 'Overland Motorcycles - Royal Enfield Himalayan Rentals in Panama',
@@ -60,7 +60,7 @@ export async function generateMetadata({ params }) {
       card: 'summary_large_image',
       title: t('title'),
       description: t('description'),
-      images: ['/og-image.jpg'],
+      images: ['/og-image.png'],
     },
     robots: {
       index: true,
@@ -74,7 +74,7 @@ export async function generateMetadata({ params }) {
       },
     },
     verification: {
-      google: 'your-google-verification-code',
+      google: 'google4931abe352f7fd07',
     },
     category: 'motorcycle rentals',
     other: {
@@ -122,7 +122,7 @@ export default async function RootLayout({ children, params }) {
       width: 512,
       height: 512
     },
-    image: `${baseUrl}/og-image.jpg`,
+    image: `${baseUrl}/og-image.png`,
     telephone: '+507-6805-1100',
     email: 'overlandmotorcycles@gmail.com',
     address: {
@@ -176,13 +176,13 @@ export default async function RootLayout({ children, params }) {
           '@type': 'Offer',
           itemOffered: {
             '@type': 'Product',
-            name: 'Royal Enfield Himalayan 411cc Rental',
+            name: 'Royal Enfield Himalayan 450cc Rental',
             description: 'Premium adventure motorcycle rental for exploring Panama',
             brand: {
               '@type': 'Brand',
               name: 'Royal Enfield'
             },
-            model: 'Himalayan 411cc'
+            model: 'Himalayan 450cc'
           }
         }
       ]

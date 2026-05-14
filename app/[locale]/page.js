@@ -134,23 +134,23 @@ const HomePage = () => {
           <div className="relative px-6 py-8">
             <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.55)_0%,rgba(0,0,0,0.35)_40%,rgba(0,0,0,0)_100%)] pointer-events-none" />
 
-            <motion.h2
+            <motion.h1
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
               className="relative text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-br from-yellow-500 to-yellow-400 bg-clip-text text-transparent"
             >
               {t('hero')}
-            </motion.h2>
+            </motion.h1>
 
-            <motion.h1
+            <motion.p
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
               className="relative text-lg md:text-xl lg:text-2xl text-gray-200 drop-shadow-md mb-12 max-w-4xl mx-auto"
             >
               {t('heroSubtitle')}
-            </motion.h1>
+            </motion.p>
           </div>
 
           <motion.div
