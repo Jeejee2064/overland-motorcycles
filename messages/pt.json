@@ -529,20 +529,17 @@
   },
   "PrivacyPage": {
     "heroTitle": "Política de Privacidade",
-    "heroSubtitle": "Como protegemos suas informações pessoais.",
-    "intro": "Levamos sua privacidade a sério. Coletamos e usamos dados apenas para processar reservas e melhorar sua experiência.",
-    "infoCollectedTitle": "Informações Coletadas",
-    "infoCollectedDesc": "Nome, email, telefone, país, detalhes da reserva, preferências e dados de navegação para otimizar nossos serviços.",
-    "useOfDataTitle": "Uso dos Dados",
-    "useOfDataDesc": "Usamos suas informações para processar reservas, comunicação, melhorias de serviço e marketing com consentimento.",
-    "sharingDataTitle": "Compartilhamento de Dados",
-    "sharingDataDesc": "Não vendemos dados. Compartilhamos apenas com prestadores de serviço para execução da reserva.",
-    "cookiesTitle": "Cookies",
-    "cookiesDesc": "Usamos cookies para funcionalidade do site, análises e personalização de marketing.",
-    "rightsTitle": "Seus Direitos",
-    "rightsDesc": "Você pode acessar, corrigir ou excluir seus dados a qualquer momento, e optar por não receber comunicações de marketing.",
-    "contactTitle": "Contato",
-    "contactDesc": "Para dúvidas ou solicitações de privacidade, entre em contato conosco via email ou formulário do site."
+    "heroSubtitle": "Sua informação importa. Saiba como a coletamos e protegemos.",
+    "lastUpdated": "Última atualização: 1 de outubro de 2025",
+    "section1Title": "1. Informações que coletamos",
+    "section1Content": "Coletamos informações pessoais necessárias para o processo de aluguel, incluindo nome, endereço, telefone, e-mail, cópia da carteira de habilitação e dados de pagamento. Essas informações são essenciais para processar a reserva e cumprir os requisitos legais.",
+    "section2Title": "2. Uso das informações",
+    "section2Content": "Usamos suas informações para: (a) Processar e confirmar sua reserva de moto. (b) Gerenciar o depósito e o processo de devolução. (c) Cumprir obrigações legais e de seguros. (d) Comunicar sobre seu aluguel ou futuras promoções (se você tiver dado seu consentimento).",
+    "section3Title": "3. Segurança e armazenamento",
+    "section3Content": "Adotamos medidas técnicas e organizacionais razoáveis para proteger suas informações pessoais contra acesso não autorizado, divulgação, alteração ou destruição. Suas informações são armazenadas com segurança.",
+    "section4Title": "4. Contato",
+    "section4Content": "Se tiver dúvidas sobre esta política de privacidade, entre em contato conosco pelo nosso e-mail oficial.",
+    "termsLink": "Termos e Condições"
   },
   "SuccessPage": {
     "loading": {
