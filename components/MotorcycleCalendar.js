@@ -36,6 +36,8 @@ export default function MotorcycleCalendar() {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [cellWidth, setCellWidth] = useState(40);
   const containerRef = useRef(null);
+  const [monthOffset, setMonthOffset] = useState({ x: 0, y: 0 });
+  const monthSelectRef = useRef(null);
 
   const recalcCellWidth = useCallback(() => {
     if (!containerRef.current) return;
@@ -86,6 +88,27 @@ export default function MotorcycleCalendar() {
     }
   };
 
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!monthSelectRef.current) return;
+      const rect = monthSelectRef.current.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      const dx = e.clientX - cx;
+      const dy = e.clientY - cy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < 100) {
+        const angle = Math.atan2(dy, dx);
+        setMonthOffset((prev) => ({
+          x: Math.max(-window.innerWidth * 0.4, Math.min(window.innerWidth * 0.4, prev.x - Math.cos(angle) * 35)),
+          y: Math.max(-window.innerHeight * 0.4, Math.min(window.innerHeight * 0.4, prev.y - Math.sin(angle) * 35)),
+        }));
+      }
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   const prevMonth = () => setCurrentDate(addMonths(currentDate, -1));
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
 
@@ -111,12 +134,14 @@ export default function MotorcycleCalendar() {
         <h2 className="text-2xl font-bold text-gray-900">{monthName}</h2>
         <div className="flex items-center gap-2">
           <select
+            ref={monthSelectRef}
             value={currentDate.getMonth()}
             onChange={(e) => {
               const d = new Date(currentDate);
               d.setMonth(parseInt(e.target.value));
               setCurrentDate(d);
             }}
+            style={{ transform: `translate(${monthOffset.x}px, ${monthOffset.y}px)` }}
             className="px-2 py-1.5 border border-gray-200 rounded-lg text-sm font-medium bg-white hover:bg-gray-50 cursor-pointer"
           >
             {['January','February','March','April','May','June','July','August','September','October','November','December'].map((m, i) => (
