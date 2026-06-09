@@ -109,7 +109,33 @@ export default function MotorcycleCalendar() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">{monthName}</h2>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <select
+            value={currentDate.getMonth()}
+            onChange={(e) => {
+              const d = new Date(currentDate);
+              d.setMonth(parseInt(e.target.value));
+              setCurrentDate(d);
+            }}
+            className="px-2 py-1.5 border border-gray-200 rounded-lg text-sm font-medium bg-white hover:bg-gray-50 cursor-pointer"
+          >
+            {['January','February','March','April','May','June','July','August','September','October','November','December'].map((m, i) => (
+              <option key={i} value={i}>{m}</option>
+            ))}
+          </select>
+          <select
+            value={currentDate.getFullYear()}
+            onChange={(e) => {
+              const d = new Date(currentDate);
+              d.setFullYear(parseInt(e.target.value));
+              setCurrentDate(d);
+            }}
+            className="px-2 py-1.5 border border-gray-200 rounded-lg text-sm font-medium bg-white hover:bg-gray-50 cursor-pointer"
+          >
+            {Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - 1 + i).map((y) => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
           <button onClick={prevMonth} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <ChevronLeft size={22} />
           </button>
