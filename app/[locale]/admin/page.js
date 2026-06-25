@@ -7,16 +7,29 @@ export default function AdminPage() {
   const router = useRouter();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const correctPassword = 'RoyaleMotoPanama!'; // 🔒 change this
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    if (password === correctPassword) {
-      router.push('/admin/ok');
-    } else {
-      setError('Incorrect password');
+    try {
+      const res = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      if (res.ok) {
+        router.push('/admin/ok');
+      } else {
+        setError('Incorrect password');
+      }
+    } catch {
+      setError('Something went wrong');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -40,9 +53,10 @@ export default function AdminPage() {
 
         <button
           type="submit"
-          className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 rounded-lg"
+          disabled={loading}
+          className="w-full bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-2 rounded-lg disabled:opacity-60"
         >
-          Submit
+          {loading ? 'Checking...' : 'Submit'}
         </button>
       </form>
     </main>
