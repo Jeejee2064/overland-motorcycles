@@ -7,7 +7,7 @@ const MODEL_OPTIONS = [
   { value: 'CFMoto700', label: 'CF Moto 700 CL-X',           maxBikes: 1 },
 ];
 
-const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, calculateDays, calculatePrice, riders, setRiders }) => {
+const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, calculateDays, calculatePrice, riders, setRiders, isSubmitting }) => {
   if (!show) return null;
 
   const selectedModelConfig = MODEL_OPTIONS.find(m => m.value === newBooking.motorcycle_model) || MODEL_OPTIONS[0];
@@ -310,8 +310,9 @@ const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, c
               Cancel
             </button>
             <button type="submit"
-              className="flex-1 px-6 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-500">
-              Add Booking
+              disabled={isSubmitting}
+              className="flex-1 px-6 py-3 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-500 disabled:opacity-60 disabled:cursor-not-allowed">
+              {isSubmitting ? 'Adding...' : 'Add Booking'}
             </button>
           </div>
         </form>

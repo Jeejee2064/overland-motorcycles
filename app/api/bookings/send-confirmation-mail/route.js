@@ -61,7 +61,8 @@ export async function POST(request) {
     --------------------------------------------------*/
     const motorcycleModel  = booking.motorcycle_model || 'Himalayan';
     const modelLabel       = MODEL_LABELS[motorcycleModel] || motorcycleModel;
-    const remainingPayment = booking.total_price - booking.down_payment;
+    const amountPaid       = booking.paid ? (booking.down_payment || 0) : 0;
+    const remainingPayment = booking.total_price - amountPaid;
 
     /* -------------------------------------------------
        4️⃣ Send customer confirmation email

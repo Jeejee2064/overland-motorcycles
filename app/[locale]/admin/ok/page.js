@@ -87,6 +87,7 @@ const AdminDashboard = () => {
   const [showAddBooking, setShowAddBooking]   = useState(false);
   const [newBooking, setNewBooking]           = useState(EMPTY_BOOKING);
   const [newBookingRiders, setNewBookingRiders] = useState([]);
+  const [isSubmitting, setIsSubmitting]       = useState(false);
   const [toast, setToast]                     = useState(null);
   const [confirmModal, setConfirmModal]       = useState(null);
 
@@ -223,6 +224,8 @@ const AdminDashboard = () => {
 
   const handleAddBooking = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       const startDate = new Date(newBooking.start_date);
       const endDate   = new Date(newBooking.end_date);
@@ -307,6 +310,8 @@ const AdminDashboard = () => {
     } catch (error) {
       console.error('Error adding booking:', error);
       notify('Error adding booking: ' + error.message, 'error');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -442,6 +447,7 @@ const AdminDashboard = () => {
         calculatePrice={calculatePrice}
         riders={newBookingRiders}
         setRiders={setNewBookingRiders}
+        isSubmitting={isSubmitting}
       />
 
       {/* Toast */}
