@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
-import { generateCustomerEmailHTML } from '@/lib/emails/customerEmail';
+import { generateManualBookingEmailHTML } from '@/lib/emails/manualBookingEmail';
 import { generateCompanyEmailHTML } from '@/lib/emails/companyEmail';
 
 export const runtime = 'nodejs';
@@ -57,12 +57,11 @@ export async function POST(request) {
     const assigned = (bookingMotorcycles || []).map(bm => bm.motorcycles).filter(Boolean);
 
     /* -------------------------------------------------
-       3️⃣ Build email variables (same as webhook)
+       3️⃣ Build email variables
     --------------------------------------------------*/
     const motorcycleModel  = booking.motorcycle_model || 'Himalayan';
     const modelLabel       = MODEL_LABELS[motorcycleModel] || motorcycleModel;
-    const amountPaid       = booking.paid ? (booking.down_payment || 0) : 0;
-    const remainingPayment = booking.total_price - amountPaid;
+    const remainingPayment = booking.total_price - booking.down_payment;
 
     /* -------------------------------------------------
        4️⃣ Send customer confirmation email
@@ -71,7 +70,7 @@ export async function POST(request) {
       from:    process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
       to:      [booking.email],
       subject: `🏍️ Booking Confirmed — ${modelLabel}`,
-      html:    generateCustomerEmailHTML(booking, assigned, remainingPayment, modelLabel),
+      html:    generateManualBookingEmailHTML(booking, assigned, modelLabel),
     });
 
     /* -------------------------------------------------
@@ -83,10 +82,9 @@ export async function POST(request) {
         from:    process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
         to:      [rider.email],
         subject: `🏍️ Booking Confirmed — ${modelLabel}`,
-        html:    generateCustomerEmailHTML(
+        html:    generateManualBookingEmailHTML(
           { ...booking, first_name: rider.first_name, last_name: rider.last_name },
           assigned,
-          remainingPayment,
           modelLabel
         ),
       });
