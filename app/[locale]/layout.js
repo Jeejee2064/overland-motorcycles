@@ -127,15 +127,15 @@ export default async function RootLayout({ children, params }) {
     email: 'overlandmotorcycles@gmail.com',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: 'Local 1 - Edificio Antigua Domingo, Plaza Santa Ana',
+      streetAddress: 'Ph Jeronimo, Avenida B y calle 10 este, planta baja, San Felipe',
       addressLocality: 'Panama City',
       addressRegion: 'Panama',
       addressCountry: 'PA'
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 8.9823792,
-      longitude: -79.5198696
+      latitude: 8.954117091104239,
+      longitude: -79.541778524982
     },
     openingHoursSpecification: [
       {
@@ -163,8 +163,8 @@ export default async function RootLayout({ children, params }) {
       '@type': 'GeoCircle',
       geoMidpoint: {
         '@type': 'GeoCoordinates',
-        latitude: 8.9823792,
-        longitude: -79.5198696
+        latitude: 8.954117091104239,
+        longitude: -79.541778524982
       },
       geoRadius: '500000'
     },
@@ -272,8 +272,8 @@ export default async function RootLayout({ children, params }) {
         <meta name="format-detection" content="telephone=yes" />
         <meta name="geo.region" content="PA" />
         <meta name="geo.placename" content="Panama City" />
-        <meta name="geo.position" content="8.9823792;-79.5198696" />
-        <meta name="ICBM" content="8.9823792, -79.5198696" />
+        <meta name="geo.position" content="8.954117091104239;-79.541778524982" />
+        <meta name="ICBM" content="8.954117091104239, -79.541778524982" />
         
         {/* Favicons and Icons */}
         <link rel="icon" href="/favicon.ico" sizes="any" />

@@ -110,8 +110,8 @@ const ContactPage = () => {
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{t('location')}</h3>
                   <p className="text-gray-600 whitespace-pre-line">
-                    Local 1 - Edificio Antigua Domingo{'\n'}
-                    Plaza Santa Ana{'\n'}
+                    Ph Jeronimo, Avenida B y calle 10 este, planta baja{'\n'}
+                    San Felipe{'\n'}
                     Panama City, Panama
                   </p>
                 </div>

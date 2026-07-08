@@ -422,8 +422,8 @@ function generateCustomerEmailHTML(booking, motorcycles, remainingPayment) {
               <strong style="color: #FCD34D;">Get in Touch</strong>
             </p>
             <p style="margin: 10px 0; font-size: 14px; line-height: 1.8;">
-              📍 Local 1 - Edificio Antigua Domingo<br>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Plaza Santa Ana<br>
+              📍 Ph Jeronimo, Avenida B y calle 10 este, planta baja<br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;San Felipe<br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Panama City, Panama
             </p>
             <p style="margin: 15px 0; font-size: 14px; line-height: 1.8;">

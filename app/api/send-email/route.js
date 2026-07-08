@@ -95,7 +95,7 @@ export async function POST(request) {
                   <strong>Contact Us:</strong><br>
                   📧 overlandmotorcycles@gmail.com<br>
                   📞 +507 6805-1100<br>
-                  📍 Local 1 - Edificio Antigua Domingo, Plaza Santa Ana, Panama City, Panama
+                  📍 Ph Jeronimo, Avenida B y calle 10 este, planta baja, San Felipe, Panama City, Panama
                 </div>
               </div>
               
