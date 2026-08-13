@@ -13,7 +13,7 @@
     "feature3": "Support téléphone",
     "feature4": "Moteur 450cc",
     "destinationsTitle": "Découvrez le Panama sur Deux Roues",
-    "destinationsIntro": "Louez une moto à Panama City et explorez l'incroyable diversité du pays. Des plages caribéennes aux côtes pacifiques, forêts de nuages aux hauts plateaux volcaniques, le Panama offre des expériences de conduite inoubliables.",
+    "destinationsIntro": "Louez une moto à Panama City ou à Playa Coronado et explorez l'incroyable diversité du pays. Des plages caribéennes aux côtes pacifiques, forêts de nuages aux hauts plateaux volcaniques, le Panama offre des expériences de conduite inoubliables.",
     "sanBlas": "Côtes Paradisiaques",
     "sanBlasDesc": "Paradis caribéen aux eaux cristallines.",
     "mountains": "Aventures en Montagne",
@@ -28,17 +28,17 @@
     "adventureDesc": "Routes parfaites pour le tourisme moto à travers des paysages magnifiques.",
     "bridge": "Pays Sûr",
     "bridgeDesc": "Stable, accueillant et l'une des destinations les plus sûres d'Amérique Centrale.",
-    "rentalInfoTitle": "Location de Motos à Panama City",
-    "rentalInfoDesc": "Basés à Panama City, nous proposons la location de motos Royal Enfield Himalayan 450cc premium avec une période de location minimale de 2 jours. Notre flotte de 7 modèles 2024 méticuleusement entretenus garantit que vous obtenez une moto fiable pour votre aventure. Récupérez votre moto à Panama City et explorez tout le pays à votre rythme.",
+    "rentalInfoTitle": "Location de Motos à Panama City et Playa Coronado",
+    "rentalInfoDesc": "Avec des points de retrait à Panama City et à Playa Coronado, nous proposons la location de motos Royal Enfield Himalayan 450cc premium avec une période de location minimale de 2 jours. Nos modèles 2024 méticuleusement entretenus garantissent que vous obtenez une moto fiable pour votre aventure. Récupérez votre moto à l'un ou l'autre point et explorez tout le pays à votre rythme.",
     "rentalFeatures": "Ce Qui Est Inclus",
     "rentalFeature1": "Période de location minimale de 2 jours",
     "rentalFeature2": "Tout l'équipement de sécurité inclus",
     "rentalFeature3": "Système de bagages pour le tourisme",
     "rentalFeature4": "Assistance routière 24/7",
     "whyChooseUs": "Pourquoi Choisir Notre Location de Motos?",
-    "whyChooseUsDesc": "Nous sommes spécialisés dans la location de motos d'aventure au Panama. Nos motos Royal Enfield Himalayan 450cc sont parfaites pour les pilotes expérimentés et ceux qui débutent dans le tourisme d'aventure. Avec un retrait pratique à Panama City et des périodes de location flexibles à partir de 2 jours, vous pouvez planifier le voyage parfait en moto au Panama.",
+    "whyChooseUsDesc": "Nous sommes spécialisés dans la location de motos d'aventure au Panama. Nos motos Royal Enfield Himalayan 450cc sont parfaites pour les pilotes expérimentés et ceux qui débutent dans le tourisme d'aventure. Avec un retrait pratique à Panama City ou à Playa Coronado et des périodes de location flexibles à partir de 2 jours, vous pouvez planifier le voyage parfait en moto au Panama.",
     "contactTitle": "Prêt pour l'Aventure?",
-    "contactDesc": "Rejoignez-nous pour des aventures moto inoubliables. Louez votre Royal Enfield Himalayan à Panama City aujourd'hui.",
+    "contactDesc": "Rejoignez-nous pour des aventures moto inoubliables. Louez votre Royal Enfield Himalayan à Panama City ou à Playa Coronado aujourd'hui.",
     "bookNow": "Réserver Maintenant",
     "contact": "Contactez-nous",
     "LearnMore": "En Savoir Plus"
@@ -69,12 +69,12 @@
 
   "ContactMetadata": {
     "title": "Overland Motorcycles | Contact — Location de Motos d'Aventure Panama",
-    "description": "Des questions avant de partir en route ? Appelez ou WhatsApp +507 6805-1100. Ouvert Lun-Ven 10h-18h à Santa Ana, Panama City. On est riders aussi — réponse rapide garantie.",
-    "keywords": "contact location motos Panama, Panama City location motos, contact Overland Motorcycles, Santa Ana Panama motos, horaires location motos Panama, réserver moto Panama, contact overland motorcycles",
+    "description": "Des questions avant de partir en route ? Appelez ou WhatsApp +507 6805-1100. Ouvert Lun-Ven 10h-18h à San Felipe, Panama City — aussi à Playa Coronado. On est riders aussi — réponse rapide garantie.",
+    "keywords": "contact location motos Panama, Panama City location motos, Playa Coronado location motos, contact Overland Motorcycles, San Felipe Panama motos, horaires location motos Panama, réserver moto Panama, contact overland motorcycles",
     "ogTitle": "Overland Motorcycles | Contact — Location de Motos d'Aventure Panama",
-    "ogDescription": "Des questions avant de partir en route ? Appelez ou WhatsApp +507 6805-1100. Ouvert Lun-Ven 10h-18h à Santa Ana, Panama City.",
-    "twitterTitle": "Contact Overland Motorcycles | Panama City",
-    "twitterDescription": "Louez Royal Enfield Himalayan 450 à Panama City. Situé à Santa Ana. Contactez-nous aujourd'hui!",
+    "ogDescription": "Des questions avant de partir en route ? Appelez ou WhatsApp +507 6805-1100. Ouvert Lun-Ven 10h-18h à San Felipe, Panama City — aussi à Playa Coronado.",
+    "twitterTitle": "Contact Overland Motorcycles | Panama City et Playa Coronado",
+    "twitterDescription": "Louez Royal Enfield Himalayan 450 à Panama City ou Playa Coronado. Situé à San Felipe. Contactez-nous aujourd'hui!",
     "siteName": "Overland Motorcycles Panama"
   },
   "Navigation": {
@@ -323,12 +323,16 @@
   "heroTitle": "Réservez votre Aventure",
   "heroSubtitle": "Commencez à planifier votre inoubliable voyage à moto au Panama",
 
-  "step1Title": "Choisissez votre Moto",
-  "step1Subtitle": "Sélectionnez le modèle que vous souhaitez louer. Les deux sont disponibles pour des aventures de plusieurs jours à travers le Panama.",
-  "step2Title": "Choisissez vos dates",
-  "step2Subtitle": "Sélectionnez votre période de location (minimum 2 jours)",
-  "step3Title": "Vos informations",
-  "step3Subtitle": "Nous avons besoin de quelques informations pour finaliser votre réservation",
+  "step1Title": "Choisissez votre lieu de prise en charge",
+  "step1Subtitle": "Sélectionnez où vous souhaitez récupérer votre moto.",
+  "locationPanamaCityLabel": "Ville de Panama",
+  "locationCoronadoLabel": "Playa Coronado",
+  "step2Title": "Choisissez votre Moto",
+  "step2Subtitle": "Sélectionnez le modèle que vous souhaitez louer. Les deux sont disponibles pour des aventures de plusieurs jours à travers le Panama.",
+  "step3Title": "Choisissez vos dates",
+  "step3Subtitle": "Sélectionnez votre période de location (minimum 2 jours)",
+  "step4Title": "Vos informations",
+  "step4Subtitle": "Nous avons besoin de quelques informations pour finaliser votre réservation",
   "additionalRidersTitle": "Riders supplémentaires",
   "riderLabel": "Rider",
 
@@ -367,6 +371,7 @@
   "modalClose": "Fermer",
   "modalGoBack": "Retour",
 
+  "summaryLocation": "Lieu de prise en charge",
   "summaryModel": "Modèle",
   "summaryTitle": "Vérifier & Payer",
   "summarySubtitle": "Confirmez les détails de votre réservation et sécurisez votre aventure",
@@ -430,13 +435,13 @@
 
   "BookingMetadata": {
     "title": "Overland Motorcycles | Réservez Votre Moto — Location de Motos d'Aventure Panama",
-    "description": "Choisissez votre moto — Royal Enfield Himalayan 450 ou CF Moto 700. Réservez en ligne — 50% d'acompte, confirmation immédiate. Retrait prêt-à-rouler à Panama City.",
-    "keywords": "réserver location moto Panama, location motos Panama City, location moto aventure Panama, Royal Enfield 450cc location, CF Moto 700 Panama, location motos Panama, réservation moto Panama",
+    "description": "Choisissez votre moto — Royal Enfield Himalayan 450 ou CF Moto 700. Réservez en ligne — 50% d'acompte, confirmation immédiate. Retrait prêt-à-rouler à Panama City ou Playa Coronado.",
+    "keywords": "réserver location moto Panama, location motos Panama City, location motos Playa Coronado, location moto aventure Panama, Royal Enfield 450cc location, CF Moto 700 Panama, location motos Panama, réservation moto Panama",
     "ogTitle": "Overland Motorcycles | Réservez Votre Moto — Location de Motos d'Aventure Panama",
-    "ogDescription": "Équipez-vous et prenez la route. Réservez votre moto d'aventure au Panama en ligne — 50% d'acompte, confirmation immédiate. Retrait prêt-à-rouler à Panama City.",
-    "ogImageAlt": "Motocyclette Royal Enfield Himalayan 450 disponible à louer à Panama City",
-    "twitterTitle": "Réserver Royal Enfield Himalayan 450 | Location Motos Panama City",
-    "twitterDescription": "Louez la légendaire Royal Enfield Himalayan 450cc à Panama City. L'aventure vous attend!",
+    "ogDescription": "Équipez-vous et prenez la route. Réservez votre moto d'aventure au Panama en ligne — 50% d'acompte, confirmation immédiate. Retrait prêt-à-rouler à Panama City ou Playa Coronado.",
+    "ogImageAlt": "Motocyclette Royal Enfield Himalayan 450 disponible à louer au Panama",
+    "twitterTitle": "Réserver Royal Enfield Himalayan 450 | Location de Motos au Panama",
+    "twitterDescription": "Louez la légendaire Royal Enfield Himalayan 450cc à Panama City ou Playa Coronado. L'aventure vous attend!",
     "siteName": "Location de Motos Panama"
   },
  "calendar": {
@@ -559,6 +564,7 @@
       "email": "Email",
       "rentalPeriod": "Période de Location",
       "to": "au",
+      "pickupLocation": "Lieu de prise en charge",
       "motorcycle": "Moto",
       "motorcycles": "Motos",
       "bikes": "moto(s)",
@@ -602,6 +608,20 @@
       "contactUs": "Nous Contacter"
     }
   },
+
+  "auth": {
+    "notFound": "Réservation introuvable.",
+    "alreadyPaid": "Déjà payé. Merci !",
+    "subtitle": "Autorisez votre caution remboursable pour finaliser votre réservation.",
+    "name": "Nom",
+    "motorcycle": "Moto",
+    "pickupLocation": "Lieu de prise en charge",
+    "dates": "Dates",
+    "depositAmount": "Montant de la caution",
+    "button": "Autoriser la caution",
+    "loading": "Traitement en cours..."
+  },
+
   "Footer": {
     "description": "Votre partenaire de confiance pour des aventures moto au Panama. Vivez la liberté de la route avec notre flotte premium Royal Enfield Himalayan.",
     "followUs": "Suivez-nous",

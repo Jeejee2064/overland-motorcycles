@@ -258,6 +258,13 @@ export default function BookingSharePage() {
               border: '1px solid rgba(255,255,255,0.12)',
               borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 600,
             }}>
+              📍 {booking.pickup_location || 'Panama City'}
+            </span>
+            <span style={{
+              background: 'rgba(255,255,255,0.08)', color: '#e8d5b0',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: 20, padding: '4px 12px', fontSize: 12, fontWeight: 600,
+            }}>
               {booking.bike_quantity} bike{booking.bike_quantity > 1 ? 's' : ''}
             </span>
             <span style={{
@@ -291,6 +298,7 @@ export default function BookingSharePage() {
           <Row label="Duration"   value={`${d} day${d !== 1 ? 's' : ''}`} />
           <Row label="Bikes"      value={booking.bike_quantity} />
           <Row label="Model"      value={modelLabel} />
+          <Row label="Pickup Location" value={booking.pickup_location || 'Panama City'} />
           {booking.special_requests && (
             <div style={{
               marginTop: 12, padding: '12px 14px',

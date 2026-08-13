@@ -3,12 +3,14 @@ import React from 'react';
 import { Calendar, MessageSquare, Bike, TrendingUp, Link as LinkIcon } from 'lucide-react';
 
 
-const AdminNavigation = ({ activeTab, setActiveTab, stats = {} }) => {
+const CORONADO_VISIBLE_TABS = ['calendar', 'bookings'];
+
+const AdminNavigation = ({ activeTab, setActiveTab, stats = {}, role }) => {
   // Defensive default for stats badges
   const pending = stats.pendingBookings || 0;
   const unread = stats.unreadMessages || 0;
 
-  const tabs = [
+  const allTabs = [
     { id: 'calendar',       label: 'Calendar',    icon: Calendar },
     { id: 'bookings',       label: 'Bookings',    icon: Calendar, badge: pending },
     { id: 'messages',       label: 'Messages',    icon: MessageSquare, badge: unread },
@@ -17,6 +19,10 @@ const AdminNavigation = ({ activeTab, setActiveTab, stats = {} }) => {
     { id: 'revenue',        label: 'Revenue',     icon: TrendingUp },
     { id: 'link-generator', label: 'Links',       icon: LinkIcon },
   ];
+
+  const tabs = role === 'coronado'
+    ? allTabs.filter(t => CORONADO_VISIBLE_TABS.includes(t.id))
+    : allTabs;
 
   return (
     <div className="bg-white border-b border-gray-200">

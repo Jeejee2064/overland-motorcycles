@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { generateManualBookingEmailHTML } from '@/lib/emails/manualBookingEmail';
 import { generateCompanyEmailHTML } from '@/lib/emails/companyEmail';
+import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
 
@@ -20,6 +21,14 @@ const MODEL_LABELS = {
 
 export async function POST(request) {
   try {
+    // Admin-only action — this resends a full booking confirmation email on demand,
+    // which shouldn't be triggerable by anyone who just knows/guesses a bookingId.
+    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+    const { valid, role } = await verifyAdminSessionToken(token);
+    if (!valid) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { bookingId } = await request.json();
 
     if (!bookingId) {
@@ -36,6 +45,10 @@ export async function POST(request) {
       .single();
 
     if (bookingError || !booking) {
+      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    if (role === 'coronado' && (booking.pickup_location || 'Panama City') !== 'Playa Coronado') {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 

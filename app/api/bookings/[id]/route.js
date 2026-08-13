@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from '@/lib/admin-auth';
 
 export const runtime = 'nodejs';
 
@@ -16,6 +17,12 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: 'Missing booking ID' }, { status: 400 });
     }
 
+    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+    const { valid, role } = await verifyAdminSessionToken(token);
+    if (!valid) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { data: booking, error } = await supabase
       .from('bookings')
       .select('*')
@@ -23,6 +30,10 @@ export async function GET(request, { params }) {
       .single();
 
     if (error || !booking) {
+      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    if (role === 'coronado' && (booking.pickup_location || 'Panama City') !== 'Playa Coronado') {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
     }
 

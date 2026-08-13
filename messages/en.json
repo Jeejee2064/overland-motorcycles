@@ -13,7 +13,7 @@
     "feature3": "Phone Mount",
     "feature4": "450cc Engine",
     "destinationsTitle": "Discover Panama on Two Wheels",
-    "destinationsIntro": "Rent a motorcycle in Panama City and explore the country's incredible diversity. From Caribbean beaches to Pacific coasts, cloud forests to volcanic highlands, Panama offers unforgettable riding experiences.",
+    "destinationsIntro": "Rent a motorcycle in Panama City or Playa Coronado and explore the country's incredible diversity. From Caribbean beaches to Pacific coasts, cloud forests to volcanic highlands, Panama offers unforgettable riding experiences.",
     "sanBlas": "Paradisiac Coastlines",
     "sanBlasDesc": "Caribbean paradise with crystal waters.",
     "mountains": "Mountain Adventures",
@@ -28,17 +28,17 @@
     "adventureDesc": "Perfect roads for motorcycle touring through stunning scenery.",
     "bridge": "Safe Country",
     "bridgeDesc": "Stable, welcoming, and one of Central America's safest destinations.",
-    "rentalInfoTitle": "Motorcycle Rentals in Panama City",
-    "rentalInfoDesc": "Based in Panama City, we offer premium Royal Enfield Himalayan 450cc motorcycle rentals with a minimum rental period of 2 days. Our fleet of 7 meticulously maintained 2024 models ensures you get a reliable bike for your adventure. Pick up your motorcycle in Panama City and explore the entire country at your own pace.",
+    "rentalInfoTitle": "Motorcycle Rentals in Panama City & Playa Coronado",
+    "rentalInfoDesc": "With pickup locations in Panama City and Playa Coronado, we offer premium Royal Enfield Himalayan 450cc motorcycle rentals with a minimum rental period of 2 days. Our meticulously maintained 2024 models ensure you get a reliable bike for your adventure. Pick up your motorcycle at either location and explore the entire country at your own pace.",
     "rentalFeatures": "What's Included",
     "rentalFeature1": "Minimum 2-day rental period",
     "rentalFeature2": "Helmets included",
     "rentalFeature3": "Side & top cases included",
     "rentalFeature4": "Phone mount included",
     "whyChooseUs": "Why Choose Our Motorcycle Rentals?",
-    "whyChooseUsDesc": "We specialize in adventure motorcycle rentals in Panama. Our Royal Enfield Himalayan 450cc bikes are perfect for both experienced riders and those new to adventure touring. With convenient pickup in Panama City and flexible rental periods starting from 2 days, you can plan the perfect Panama motorcycle trip.",
+    "whyChooseUsDesc": "We specialize in adventure motorcycle rentals in Panama. Our Royal Enfield Himalayan 450cc bikes are perfect for both experienced riders and those new to adventure touring. With convenient pickup in Panama City or Playa Coronado and flexible rental periods starting from 2 days, you can plan the perfect Panama motorcycle trip.",
     "contactTitle": "Ready for Adventure?",
-    "contactDesc": "Join us for unforgettable motorcycle adventures. Rent your Royal Enfield Himalayan in Panama City today.",
+    "contactDesc": "Join us for unforgettable motorcycle adventures. Rent your Royal Enfield Himalayan in Panama City or Playa Coronado today.",
     "bookNow": "Book Now",
     "contact": "Contact Us",
     "LearnMore": "Learn More"
@@ -68,12 +68,12 @@
   },
     "ContactMetadata": {
     "title": "Overland Motorcycles | Contact — Adventure Motorcycle Rental Panama",
-    "description": "Questions before you ride? Call or WhatsApp +507 6805-1100. Open Mon-Fri 10AM-6PM in Santa Ana, Panama City. We ride too — we'll get back to you fast.",
-    "keywords": "contact motorcycle rental Panama, Panama City motorcycle rental, Overland Motorcycles contact, Santa Ana Panama motorcycles, motorcycle rental hours Panama, book motorcycle Panama, overland motorcycles contact",
+    "description": "Questions before you ride? Call or WhatsApp +507 6805-1100. Open Mon-Fri 10AM-6PM in San Felipe, Panama City — also serving Playa Coronado. We ride too — we'll get back to you fast.",
+    "keywords": "contact motorcycle rental Panama, Panama City motorcycle rental, Playa Coronado motorcycle rental, Overland Motorcycles contact, San Felipe Panama motorcycles, motorcycle rental hours Panama, book motorcycle Panama, overland motorcycles contact",
     "ogTitle": "Overland Motorcycles | Contact — Adventure Motorcycle Rental Panama",
-    "ogDescription": "Questions before you ride? Call or WhatsApp +507 6805-1100. Open Mon-Fri 10AM-6PM in Santa Ana, Panama City.",
-    "twitterTitle": "Contact Overland Motorcycles | Panama City",
-    "twitterDescription": "Rent Royal Enfield Himalayan 450 in Panama City. Located in Santa Ana. Contact us today!",
+    "ogDescription": "Questions before you ride? Call or WhatsApp +507 6805-1100. Open Mon-Fri 10AM-6PM in San Felipe, Panama City — also serving Playa Coronado.",
+    "twitterTitle": "Contact Overland Motorcycles | Panama City & Playa Coronado",
+    "twitterDescription": "Rent Royal Enfield Himalayan 450 in Panama City or Playa Coronado. Located in San Felipe. Contact us today!",
     "siteName": "Overland Motorcycles Panama"
   },
   "Navigation": {
@@ -342,12 +342,16 @@
     "heroTitle": "Book Your Adventure",
     "heroSubtitle": "Start planning your unforgettable Panama motorcycle journey",
 
-    "step1Title": "Choose Your Motorcycle",
-    "step1Subtitle": "Select the model you'd like to rent. Both are available for multi-day adventures across Panama.",
-    "step2Title": "Choose your dates",
-    "step2Subtitle": "Select your rental period (minimum 2 days)",
-    "step3Title": "Your information",
-    "step3Subtitle": "We need a few details to finalize your booking",
+    "step1Title": "Choose Your Pickup Location",
+    "step1Subtitle": "Select where you'd like to pick up your motorcycle.",
+    "locationPanamaCityLabel": "Panama City",
+    "locationCoronadoLabel": "Playa Coronado",
+    "step2Title": "Choose Your Motorcycle",
+    "step2Subtitle": "Select the model you'd like to rent. Both are available for multi-day adventures across Panama.",
+    "step3Title": "Choose your dates",
+    "step3Subtitle": "Select your rental period (minimum 2 days)",
+    "step4Title": "Your information",
+    "step4Subtitle": "We need a few details to finalize your booking",
     "additionalRidersTitle": "Additional Riders",
     "riderLabel": "Rider",
 
@@ -386,6 +390,7 @@
     "modalClose": "Close",
     "modalGoBack": "Go Back",
 
+    "summaryLocation": "Pickup Location",
     "summaryModel": "Model",
     "summaryTitle": "Review & Pay",
     "summarySubtitle": "Confirm your booking details and secure your adventure",
@@ -448,13 +453,13 @@
   },
    "BookingMetadata": {
     "title": "Overland Motorcycles | Book Your Ride — Adventure Motorcycle Rental Panama",
-    "description": "Choose your bike — Royal Enfield Himalayan 450 or CF Moto 700. Book your adventure motorcycle rental in Panama online — 50% deposit, instant confirmation. Pick up in Panama City.",
-    "keywords": "book motorcycle rental Panama, motorcycle rental Panama City, adventure bike rental Panama, Royal Enfield 450cc rent, Panama motorcycle tours, bike rental Panama, CF Moto 700 Panama",
+    "description": "Choose your bike — Royal Enfield Himalayan 450 or CF Moto 700. Book your adventure motorcycle rental in Panama online — 50% deposit, instant confirmation. Pick up in Panama City or Playa Coronado.",
+    "keywords": "book motorcycle rental Panama, motorcycle rental Panama City, motorcycle rental Playa Coronado, adventure bike rental Panama, Royal Enfield 450cc rent, Panama motorcycle tours, bike rental Panama, CF Moto 700 Panama",
     "ogTitle": "Overland Motorcycles | Book Your Ride — Adventure Motorcycle Rental Panama",
-    "ogDescription": "Gear up and hit the road. Book your adventure motorcycle rental in Panama online — 50% deposit, instant confirmation. Pick up ready-to-ride in Panama City.",
-    "ogImageAlt": "Royal Enfield Himalayan 450 motorcycle available for rent in Panama City",
-    "twitterTitle": "Book Royal Enfield Himalayan 450 | Panama City Motorcycle Rental",
-    "twitterDescription": "Rent the legendary Royal Enfield Himalayan 450cc in Panama City. Adventure awaits!",
+    "ogDescription": "Gear up and hit the road. Book your adventure motorcycle rental in Panama online — 50% deposit, instant confirmation. Pick up ready-to-ride in Panama City or Playa Coronado.",
+    "ogImageAlt": "Royal Enfield Himalayan 450 motorcycle available for rent in Panama",
+    "twitterTitle": "Book Royal Enfield Himalayan 450 | Panama Motorcycle Rental",
+    "twitterDescription": "Rent the legendary Royal Enfield Himalayan 450cc in Panama City or Playa Coronado. Adventure awaits!",
     "siteName": "Panama Motorcycle Rentals"
   },
  "calendar": {
@@ -589,6 +594,7 @@
       "email": "Email",
       "rentalPeriod": "Rental Period",
       "to": "to",
+      "pickupLocation": "Pickup Location",
       "motorcycle": "Motorcycle",
       "motorcycles": "Motorcycles",
       "bikes": "bike(s)",
@@ -632,6 +638,19 @@
                   "tryAgain": "Try Booking Again"
 
     }
+  },
+
+  "auth": {
+    "notFound": "Booking not found.",
+    "alreadyPaid": "Already paid. Thank you!",
+    "subtitle": "Authorize your refundable security deposit to complete your booking.",
+    "name": "Name",
+    "motorcycle": "Motorcycle",
+    "pickupLocation": "Pickup Location",
+    "dates": "Dates",
+    "depositAmount": "Deposit Amount",
+    "button": "Authorize Deposit",
+    "loading": "Processing..."
   },
 
   "Footer": {

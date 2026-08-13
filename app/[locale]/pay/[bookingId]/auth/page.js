@@ -60,6 +60,10 @@ export default async function AuthPage({ params, searchParams }) {
             <span className="font-medium">{booking.motorcycle_model}</span>
           </div>
           <div className="flex justify-between">
+            <span>{t('pickupLocation')}</span>
+            <span className="font-medium">{booking.pickup_location || 'Panama City'}</span>
+          </div>
+          <div className="flex justify-between">
             <span>{t('dates')}</span>
             <span className="font-medium">{booking.start_date} → {booking.end_date}</span>
           </div>

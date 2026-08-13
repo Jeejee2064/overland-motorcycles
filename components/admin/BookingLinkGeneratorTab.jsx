@@ -3,6 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { Copy, CheckCircle } from 'lucide-react';
 
+const LOCATION_OPTIONS = [
+  { value: 'Panama City', label: 'Panama City', models: ['Himalayan', 'CFMoto700'] },
+  { value: 'Playa Coronado', label: 'Playa Coronado', models: ['Himalayan'] },
+];
+
 const MODEL_OPTIONS = [
   { value: 'Himalayan', label: 'Royal Enfield Himalayan 450', maxBikes: 6 },
   { value: 'CFMoto700', label: 'CF Moto 700 CL-X',           maxBikes: 1 },
@@ -16,6 +21,7 @@ const LOCALES = [
 ];
 
 const BookingLinkGeneratorTab = () => {
+  const [location, setLocation] = useState('Panama City');
   const [model, setModel]     = useState('Himalayan');
   const [locale, setLocale]   = useState('en');
   const [start, setStart]     = useState('');
@@ -24,6 +30,8 @@ const BookingLinkGeneratorTab = () => {
   const [generated, setGenerated] = useState('');
   const [copied, setCopied]   = useState(false);
 
+  const selectedLocation = LOCATION_OPTIONS.find(l => l.value === location) || LOCATION_OPTIONS[0];
+  const availableModels  = MODEL_OPTIONS.filter(m => selectedLocation.models.includes(m.value));
   const selectedModel  = MODEL_OPTIONS.find(m => m.value === model) || MODEL_OPTIONS[0];
   const selectedLocale = LOCALES.find(l => l.value === locale) || LOCALES[0];
   const bikeOptions    = Array.from({ length: selectedModel.maxBikes }, (_, i) => i + 1);
@@ -31,13 +39,17 @@ const BookingLinkGeneratorTab = () => {
   useEffect(() => {
     if (!start || !end) { setGenerated(''); return; }
     const base = `https://overland-motorcycles.com${selectedLocale.prefix}/Booking`;
-    const params = new URLSearchParams({ model, start, end, bikes });
+    const params = new URLSearchParams({ location, model, start, end, bikes });
     setGenerated(`${base}?${params.toString()}`);
-  }, [model, locale, start, end, bikes]);
+  }, [location, model, locale, start, end, bikes]);
 
   useEffect(() => {
     if (model === 'CFMoto700') setBikes('1');
   }, [model]);
+
+  useEffect(() => {
+    if (location === 'Playa Coronado' && model === 'CFMoto700') setModel('Himalayan');
+  }, [location]);
 
   const copyToClipboard = () => {
     if (!generated) return;
@@ -53,11 +65,26 @@ const BookingLinkGeneratorTab = () => {
 
       <div className="space-y-5">
 
+        {/* Location */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-900 mb-2">Pickup Location</label>
+          <div className="grid grid-cols-2 gap-3">
+            {LOCATION_OPTIONS.map(l => (
+              <button key={l.value} type="button" onClick={() => setLocation(l.value)}
+                className={`p-3 rounded-xl border-2 text-left transition-all ${
+                  location === l.value ? 'border-yellow-400 bg-yellow-50' : 'border-gray-200 hover:border-gray-400'
+                }`}>
+                <div className="font-bold text-sm text-gray-900">{l.label}</div>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Model */}
         <div>
           <label className="block text-sm font-semibold text-gray-900 mb-2">Motorcycle Model</label>
           <div className="grid grid-cols-2 gap-3">
-            {MODEL_OPTIONS.map(m => (
+            {availableModels.map(m => (
               <button key={m.value} type="button" onClick={() => setModel(m.value)}
                 className={`p-3 rounded-xl border-2 text-left transition-all ${
                   model === m.value ? 'border-yellow-400 bg-yellow-50' : 'border-gray-200 hover:border-gray-400'

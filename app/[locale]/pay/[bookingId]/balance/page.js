@@ -72,6 +72,7 @@ export default async function BalancePage({ params, searchParams }) {
         <div className="bg-gray-50 rounded-xl p-4 mb-6 space-y-2 text-sm text-gray-700">
           <div className="flex justify-between"><span>Name</span><span className="font-medium">{booking.first_name} {booking.last_name}</span></div>
           <div className="flex justify-between"><span>Motorcycle</span><span className="font-medium">{booking.motorcycle_model}</span></div>
+          <div className="flex justify-between"><span>Pickup Location</span><span className="font-medium">{booking.pickup_location || 'Panama City'}</span></div>
           <div className="flex justify-between"><span>Dates</span><span className="font-medium">{booking.start_date} → {booking.end_date}</span></div>
           <div className="flex justify-between"><span>Total Price</span><span className="font-medium">${fullAmount}</span></div>
           {mode === 'balance' && (

@@ -1,13 +1,18 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { Bike, Power, AlertTriangle, Pencil, Check, X } from 'lucide-react';
-import { getAllMotorcycles, updateMotorcycleAvailability } from '@/lib/supabase/bookings';
-import { createClient } from '@supabase/supabase-js';
+import { getAllMotorcycles } from '@/lib/supabase/bookings';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+async function patchMotorcycle(motorcycleId, updates) {
+  const res = await fetch(`/api/admin/motorcycles/${motorcycleId}`, {
+    method:  'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(updates),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || 'Failed to update motorcycle');
+  return data.motorcycle;
+}
 
 const MotorcyclesTab = () => {
   const [motorcycles, setMotorcycles]   = useState([]);
@@ -33,12 +38,22 @@ const MotorcyclesTab = () => {
     }
   };
 
+  const handleLocationChange = async (motorcycleId, newLocation) => {
+    try {
+      await patchMotorcycle(motorcycleId, { location: newLocation });
+      await loadMotorcycles();
+    } catch (error) {
+      console.error('Error updating motorcycle location:', error);
+      alert('Error updating location: ' + error.message);
+    }
+  };
+
   const handleToggleAvailability = async (motorcycleId, currentStatus) => {
     const newStatus = !currentStatus;
     const action = newStatus ? 'enable' : 'disable';
     if (confirm(`Are you sure you want to ${action} this motorcycle?`)) {
       try {
-        await updateMotorcycleAvailability(motorcycleId, newStatus);
+        await patchMotorcycle(motorcycleId, { is_available: newStatus });
         await loadMotorcycles();
         alert(`Motorcycle ${newStatus ? 'enabled' : 'disabled'} successfully!`);
       } catch (error) {
@@ -66,11 +81,7 @@ const MotorcyclesTab = () => {
     }
     setSavingKm(true);
     try {
-      const { error } = await supabase
-        .from('motorcycles')
-        .update({ km: value })
-        .eq('id', motorcycleId);
-      if (error) throw error;
+      await patchMotorcycle(motorcycleId, { km: value });
       await loadMotorcycles();
       setEditingKm(null);
       setKmDraft('');
@@ -181,6 +192,19 @@ const MotorcyclesTab = () => {
                     <Pencil size={12} className="text-gray-400 group-hover:text-gray-600 transition-colors flex-shrink-0" />
                   </button>
                 )}
+              </div>
+
+              {/* Location selector */}
+              <div className="mb-4">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">Location</p>
+                <select
+                  value={motorcycle.location || 'Panama City'}
+                  onChange={(e) => handleLocationChange(motorcycle.id, e.target.value)}
+                  className="w-full px-3 py-1.5 text-sm border border-gray-300 rounded-lg bg-white/70 focus:ring-2 focus:ring-yellow-400 focus:outline-none"
+                >
+                  <option value="Panama City">Panama City</option>
+                  <option value="Playa Coronado">Playa Coronado</option>
+                </select>
               </div>
 
               {/* Toggle button */}

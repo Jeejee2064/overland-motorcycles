@@ -9,16 +9,20 @@ const BookingsTab = ({
   filterStatus,
   setFilterStatus,
   onViewDetails,
-  onAddBooking
+  onAddBooking,
+  role
 }) => {
+  const isCoronado = role === 'coronado';
 
   const [showLinkModal, setShowLinkModal] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [bikes, setBikes] = useState(1);
   const [linkModel, setLinkModel] = useState('Himalayan');
+  const [linkLocation, setLinkLocation] = useState('Panama City');
   const [linkLocale, setLinkLocale] = useState('en');
   const [sendingMail, setSendingMail] = useState(null);
+  const [filterLocation, setFilterLocation] = useState('all');
 
   const LOCALES = [
     { value: 'en', label: '🇺🇸 EN', prefix: '' },
@@ -36,7 +40,7 @@ const BookingsTab = ({
   const generateLink = () => {
     if (!startDate || !endDate) return '';
     const prefix = LOCALES.find(l => l.value === linkLocale)?.prefix ?? '';
-    const params = new URLSearchParams({ model: linkModel, start: startDate, end: endDate, bikes: bikes.toString() });
+    const params = new URLSearchParams({ location: linkLocation, model: linkModel, start: startDate, end: endDate, bikes: bikes.toString() });
     return `https://overland-motorcycles.com${prefix}/Booking?${params.toString()}`;
   };
 
@@ -82,7 +86,8 @@ const BookingsTab = ({
         (r.phone || '').toLowerCase().includes(term)
       );
     const matchesFilter = filterStatus === 'all' || booking.status === filterStatus;
-    return matchesSearch && matchesFilter;
+    const matchesLocation = filterLocation === 'all' || (booking.pickup_location || 'Panama City') === filterLocation;
+    return matchesSearch && matchesFilter && matchesLocation;
   });
 
   return (
@@ -113,6 +118,18 @@ const BookingsTab = ({
             <option value="completed">Completed</option>
           </select>
 
+          {!isCoronado && (
+            <select
+              value={filterLocation}
+              onChange={(e) => setFilterLocation(e.target.value)}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400"
+            >
+              <option value="all">All Locations</option>
+              <option value="Panama City">Panama City</option>
+              <option value="Playa Coronado">Playa Coronado</option>
+            </select>
+          )}
+
           <button
             onClick={onAddBooking}
             className="px-6 py-2 bg-yellow-400 text-gray-900 font-semibold rounded-lg hover:bg-yellow-500 transition-colors flex items-center gap-2"
@@ -137,6 +154,7 @@ const BookingsTab = ({
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Customer</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Dates</th>
+                  <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Location</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Bikes</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
                   <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Payments</th>
@@ -177,6 +195,17 @@ const BookingsTab = ({
                     {/* Dates */}
                     <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
                       {formatDate(booking.start_date)} → {formatDate(booking.end_date)}
+                    </td>
+
+                    {/* Location */}
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      <span className={'px-2 py-0.5 rounded-full text-xs font-semibold ' + (
+                        (booking.pickup_location || 'Panama City') === 'Playa Coronado'
+                          ? 'bg-purple-100 text-purple-700'
+                          : 'bg-gray-100 text-gray-700'
+                      )}>
+                        {booking.pickup_location || 'Panama City'}
+                      </span>
                     </td>
 
                     {/* Bikes */}
@@ -228,6 +257,11 @@ const BookingsTab = ({
                       )}>
                         {booking.status}
                       </span>
+                      {booking.assignment_shortage && (
+                        <span className="ml-2 px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700" title="Not enough motorcycles could be assigned automatically — needs manual reassignment">
+                          ⚠ Needs Review
+                        </span>
+                      )}
                     </td>
 
                     {/* Actions */}
@@ -258,11 +292,25 @@ const BookingsTab = ({
             <h2 className="text-xl font-bold mb-4">Booking Link Generator</h2>
             <div className="space-y-4 mb-6">
               <div>
+                <label className="block text-sm font-medium mb-1">Location</label>
+                <select value={linkLocation} onChange={(e) => {
+                  const location = e.target.value;
+                  setLinkLocation(location);
+                  if (location === 'Playa Coronado' && linkModel === 'CFMoto700') { setLinkModel('Himalayan'); setBikes(1); }
+                }}
+                  className="w-full px-3 py-2 border rounded-lg">
+                  <option value="Panama City">Panama City</option>
+                  <option value="Playa Coronado">Playa Coronado</option>
+                </select>
+              </div>
+              <div>
                 <label className="block text-sm font-medium mb-1">Model</label>
                 <select value={linkModel} onChange={(e) => { setLinkModel(e.target.value); if (e.target.value === 'CFMoto700') setBikes(1); }}
                   className="w-full px-3 py-2 border rounded-lg">
                   <option value="Himalayan">Royal Enfield Himalayan 450</option>
-                  <option value="CFMoto700">CF Moto 700 CL-X</option>
+                  {linkLocation !== 'Playa Coronado' && (
+                    <option value="CFMoto700">CF Moto 700 CL-X</option>
+                  )}
                 </select>
               </div>
               <div>

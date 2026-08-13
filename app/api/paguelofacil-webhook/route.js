@@ -124,7 +124,7 @@ export async function POST(request) {
         end_date,
         booking_motorcycles ( motorcycle_id )
       `)
-      .in('status', ['confirmed', 'paid']);
+      .in('status', ['confirmed', 'paid', 'fully paid']);
 
     const bookedMotorcycleIds = new Set();
 
@@ -151,14 +151,32 @@ export async function POST(request) {
       m => !bookedMotorcycleIds.has(m.id)
     );
 
-    const assigned = available.slice(0, updatedBooking.bike_quantity);
+    // Coronado: hard location filter, never falls back to a Panama-stationed bike.
+    // Panama City: soft priority — tries Panama-stationed bikes first, falls back to
+    // Coronado-stationed bikes if needed, never the other way around.
+    const pickupLocation = updatedBooking.pickup_location || 'Panama City';
+    const isCoronado = pickupLocation === 'Playa Coronado';
+    const candidatePool = isCoronado
+      ? available.filter(m => m.location === pickupLocation)
+      : [...available].sort((a, b) => {
+          const aMatch = a.location === pickupLocation ? 0 : 1;
+          const bMatch = b.location === pickupLocation ? 0 : 1;
+          return aMatch - bMatch;
+        });
 
-    if (assigned.length < updatedBooking.bike_quantity) {
+    const assigned = candidatePool.slice(0, updatedBooking.bike_quantity);
+    const hasShortage = assigned.length < updatedBooking.bike_quantity;
+
+    if (hasShortage) {
       // Log the shortage but don't fail the webhook — payment already went through.
-      // Admin email will flag this.
+      // Flag the booking so it surfaces in the admin dashboard, and admin email will warn too.
       console.error(
-        `⚠️ Only ${assigned.length} of ${updatedBooking.bike_quantity} ${motorcycleModel} bikes could be assigned for booking ${bookingId}`
+        `⚠️ Only ${assigned.length} of ${updatedBooking.bike_quantity} ${motorcycleModel} bikes could be assigned for booking ${bookingId} (location: ${pickupLocation})`
       );
+      await supabase
+        .from('bookings')
+        .update({ assignment_shortage: true })
+        .eq('id', bookingId);
     }
 
     for (const moto of assigned) {
@@ -173,7 +191,7 @@ export async function POST(request) {
     --------------------------------------------------*/
     const remainingPayment = updatedBooking.total_price - updatedBooking.down_payment;
     const modelLabel       = MODEL_LABELS[motorcycleModel] || motorcycleModel;
-    const shortageWarning  = assigned.length < updatedBooking.bike_quantity;
+    const shortageWarning  = hasShortage;
 
     // Fetch additional riders
     const { data: additionalRiders } = await supabase

@@ -3,13 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { XCircle, Edit2, Save, X, Bike, Mail, Share2 } from 'lucide-react';
 import {
   getBookingMotorcycles,
-  updateBookingDetails,
   getAvailableMotorcyclesForEdit,
-  updateSingleMotorcycleAssignment,
 } from '@/lib/supabase/bookings-admin-helpers';
-import { getAllMotorcycles } from '@/lib/supabase/bookings';
 
-function PaymentMailGenerator({ booking, onSent, notify }) {
+function PaymentMailGenerator({ booking, onSent, notify, role }) {
+  const isCoronado = role === 'coronado';
   const bikeCount = booking.bike_quantity || 1;
   const authCount = booking.auth_count || 0;
   const authDone  = booking.auth_status === 'authorized';
@@ -39,15 +37,17 @@ function PaymentMailGenerator({ booking, onSent, notify }) {
     });
   }
 
-  for (let i = 0; i < bikeCount; i++) {
-    const done = authDone && authCount > i;
-    options.push({
-      id:    `auth_${i}`,
-      label: bikeCount > 1 ? `Security Deposit #${i + 1} — $1,000` : 'Security Deposit — $1,000',
-      done,
-      type:  'auth',
-      index: i,
-    });
+  if (!isCoronado) {
+    for (let i = 0; i < bikeCount; i++) {
+      const done = authDone && authCount > i;
+      options.push({
+        id:    `auth_${i}`,
+        label: bikeCount > 1 ? `Security Deposit #${i + 1} — $1,000` : 'Security Deposit — $1,000',
+        done,
+        type:  'auth',
+        index: i,
+      });
+    }
   }
 
   options.push({
@@ -183,13 +183,13 @@ const MODEL_LABELS = {
   CFMoto700: 'CF Moto 700 CL-X',
 };
 
-const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaymentToggle, onUpdate, notify: notifyProp }) => {
+const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaymentToggle, onUpdate, notify: notifyProp, role }) => {
   const notify = notifyProp || ((msg, type) => type === 'error' ? alert('Error: ' + msg) : alert(msg));
+  const isCoronado = role === 'coronado';
   const [isEditing, setIsEditing]                       = useState(false);
   const [editedBooking, setEditedBooking]               = useState(null);
   const [assignedMotorcycles, setAssignedMotorcycles]   = useState([]);
   const [availableMotorcycles, setAvailableMotorcycles] = useState([]);
-  const [allMotorcycles, setAllMotorcycles]             = useState([]);
   const [motorcycleSelections, setMotorcycleSelections] = useState([]);
   const [loading, setLoading]                           = useState(false);
   const [savingMotorcycle, setSavingMotorcycle]         = useState(false);
@@ -203,7 +203,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
 
   useEffect(() => {
     if (editedBooking && isEditing) loadAvailableMotorcycles();
-  }, [editedBooking?.start_date, editedBooking?.end_date, editedBooking?.motorcycle_model, isEditing]);
+  }, [editedBooking?.start_date, editedBooking?.end_date, editedBooking?.motorcycle_model, editedBooking?.pickup_location, isEditing]);
 
   useEffect(() => {
     if (booking && assignedMotorcycles) initializeMotorcycleSelections();
@@ -213,12 +213,8 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
     if (!booking) return;
     setLoading(true);
     try {
-      const [assigned, all] = await Promise.all([
-        getBookingMotorcycles(booking.id),
-        getAllMotorcycles(),
-      ]);
+      const assigned = await getBookingMotorcycles(booking.id);
       setAssignedMotorcycles(assigned);
-      setAllMotorcycles(all);
     } catch (error) {
       console.error('Error loading motorcycle data:', error);
     } finally {
@@ -247,7 +243,9 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
       const available = await getAvailableMotorcyclesForEdit(
         editedBooking.start_date,
         editedBooking.end_date,
-        booking.id
+        booking.id,
+        editedBooking.pickup_location || booking.pickup_location,
+        isCoronado
       );
       console.log('From DB (before model filter):', available.map(m => ({ id: m.id, name: m.name, model: m.model })));
 
@@ -264,30 +262,37 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
   const handleSave = async () => {
     setLoading(true);
     try {
-      await updateBookingDetails(booking.id, {
-        first_name:       editedBooking.first_name,
-        last_name:        editedBooking.last_name,
-        email:            editedBooking.email,
-        phone:            editedBooking.phone,
-        country:          editedBooking.country,
-        start_date:       editedBooking.start_date,
-        end_date:         editedBooking.end_date,
-        bike_quantity:    editedBooking.bike_quantity,
-        motorcycle_model: editedBooking.motorcycle_model,
-        total_price:      editedBooking.total_price,
-        down_payment:     editedBooking.down_payment,
-        deposit:          editedBooking.deposit,
-        special_requests: editedBooking.special_requests,
-        hear_about_us:    editedBooking.hear_about_us,
-        // payment statuses
-        payment_status:   editedBooking.payment_status,
-        webhook_received: editedBooking.webhook_received,
-        auth_status:      editedBooking.auth_status,
-        auth_count:       editedBooking.auth_count,
-        balance_status:   editedBooking.balance_status,
-        balance_paid_at:  editedBooking.balance_paid_at,
-        paid:             editedBooking.paid,
+      const res = await fetch(`/api/admin/bookings/${booking.id}`, {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({
+          first_name:       editedBooking.first_name,
+          last_name:        editedBooking.last_name,
+          email:            editedBooking.email,
+          phone:            editedBooking.phone,
+          country:          editedBooking.country,
+          start_date:       editedBooking.start_date,
+          end_date:         editedBooking.end_date,
+          bike_quantity:    editedBooking.bike_quantity,
+          motorcycle_model: editedBooking.motorcycle_model,
+          pickup_location:  isCoronado ? 'Playa Coronado' : editedBooking.pickup_location,
+          total_price:      editedBooking.total_price,
+          down_payment:     editedBooking.down_payment,
+          deposit:          editedBooking.deposit,
+          special_requests: editedBooking.special_requests,
+          hear_about_us:    editedBooking.hear_about_us,
+          // payment statuses
+          payment_status:   editedBooking.payment_status,
+          webhook_received: editedBooking.webhook_received,
+          auth_status:      editedBooking.auth_status,
+          auth_count:       editedBooking.auth_count,
+          balance_status:   editedBooking.balance_status,
+          balance_paid_at:  editedBooking.balance_paid_at,
+          paid:             editedBooking.paid,
+        }),
       });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to save booking');
       setIsEditing(false);
       if (onUpdate) await onUpdate();
       notify('Booking updated successfully!');
@@ -302,7 +307,13 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
   const handleMotorcycleChange = async (_slotIndex, newMotorcycleId, oldAssignmentId) => {
     setSavingMotorcycle(true);
     try {
-      await updateSingleMotorcycleAssignment(booking.id, oldAssignmentId, newMotorcycleId);
+      const res = await fetch(`/api/admin/bookings/${booking.id}/motorcycles`, {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ oldAssignmentId, newMotorcycleId }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update motorcycle');
       await loadMotorcycleData();
       notify('Motorcycle updated successfully!');
     } catch (error) {
@@ -343,9 +354,14 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Booking Details</h2>
-              <span className="inline-block mt-1 text-xs font-bold px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 border border-yellow-300">
-                {modelLabel}
-              </span>
+              <div className="flex gap-2 mt-1">
+                <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 border border-yellow-300">
+                  {modelLabel}
+                </span>
+                <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-800 border border-blue-300">
+                  📍 {editedBooking.pickup_location || 'Panama City'}
+                </span>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               {!isEditing ? (
@@ -485,14 +501,35 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                 <p className="text-sm text-gray-500 mb-1">Bike Quantity</p>
                 <p className="font-semibold">{editedBooking.bike_quantity}</p>
               </div>
-              <div className="col-span-2">
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Pickup Location</p>
+                {isEditing && !isCoronado ? (
+                  <select value={editedBooking.pickup_location || 'Panama City'}
+                    onChange={(e) => {
+                      const location = e.target.value;
+                      handleFieldChange('pickup_location', location);
+                      if (location === 'Playa Coronado' && editedBooking.motorcycle_model === 'CFMoto700') {
+                        handleFieldChange('motorcycle_model', 'Himalayan');
+                      }
+                    }}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400">
+                    <option value="Panama City">Panama City</option>
+                    <option value="Playa Coronado">Playa Coronado</option>
+                  </select>
+                ) : (
+                  <p className="font-semibold">{editedBooking.pickup_location || 'Panama City'}</p>
+                )}
+              </div>
+              <div>
                 <p className="text-sm text-gray-500 mb-1">Motorcycle Model</p>
                 {isEditing ? (
                   <select value={editedBooking.motorcycle_model || 'Himalayan'}
                     onChange={(e) => handleFieldChange('motorcycle_model', e.target.value)}
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400">
                     <option value="Himalayan">Royal Enfield Himalayan 450</option>
-                    <option value="CFMoto700">CF Moto 700 CL-X</option>
+                    {editedBooking.pickup_location !== 'Playa Coronado' && (
+                      <option value="CFMoto700">CF Moto 700 CL-X</option>
+                    )}
                   </select>
                 ) : (
                   <p className="font-semibold">{modelLabel}</p>
@@ -531,7 +568,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                         {availableMotorcycles
                           .filter(m => m.id !== slot.motorcycleId)
                           .map((moto) => (
-                            <option key={moto.id} value={moto.id}>{moto.name}</option>
+                            <option key={moto.id} value={moto.id}>{moto.name} ({moto.location || 'Panama City'})</option>
                           ))}
                       </select>
                     ) : (
@@ -754,7 +791,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             </div>
 
             {/* Mail generator */}
-            <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} notify={notify} />
+            <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} notify={notify} role={role} />
 
             {editedBooking.payment_mail_sent_at && (
               <p className="text-xs text-gray-400 text-center mt-2">

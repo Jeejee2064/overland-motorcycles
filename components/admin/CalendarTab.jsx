@@ -2,10 +2,10 @@
 import React from 'react';
 import MotorcycleCalendar from '@/components/MotorcycleCalendar';
 
-const CalendarTab = () => {
+const CalendarTab = ({ restrictedLocation = null }) => {
   return (
     <div className="space-y-6">
-      <MotorcycleCalendar />
+      <MotorcycleCalendar restrictedLocation={restrictedLocation} />
     </div>
   );
 };

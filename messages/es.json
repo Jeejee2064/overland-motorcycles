@@ -13,7 +13,7 @@
     "feature3": "Soporte para teléfono",
     "feature4": "Motor 450cc",
     "destinationsTitle": "Descubre Panamá en Dos Ruedas",
-    "destinationsIntro": "Alquila una motocicleta en Ciudad de Panamá y explora la increíble diversidad del país. Desde playas caribeñas hasta costas pacíficas, bosques nubosos hasta tierras altas volcánicas, Panamá ofrece experiencias de conducción inolvidables.",
+    "destinationsIntro": "Alquila una motocicleta en Ciudad de Panamá o Playa Coronado y explora la increíble diversidad del país. Desde playas caribeñas hasta costas pacíficas, bosques nubosos hasta tierras altas volcánicas, Panamá ofrece experiencias de conducción inolvidables.",
     "sanBlas": "Costas Paradisíacas",
     "sanBlasDesc": "Paraíso caribeño con aguas cristalinas.",
     "mountains": "Aventuras de Montaña",
@@ -28,17 +28,17 @@
     "adventureDesc": "Carreteras perfectas para turismo en moto a través de paisajes impresionantes.",
     "bridge": "País Seguro",
     "bridgeDesc": "Estable, acogedor y uno de los destinos más seguros de Centroamérica.",
-    "rentalInfoTitle": "Alquiler de Motocicletas en Ciudad de Panamá",
-    "rentalInfoDesc": "Con sede en Ciudad de Panamá, ofrecemos alquiler de motocicletas Royal Enfield Himalayan 450cc premium con un período mínimo de alquiler de 2 días. Nuestra flota de 7 modelos 2024 meticulosamente mantenidos garantiza que obtengas una moto confiable para tu aventura. Recoge tu motocicleta en Ciudad de Panamá y explora todo el país a tu propio ritmo.",
+    "rentalInfoTitle": "Alquiler de Motocicletas en Ciudad de Panamá y Playa Coronado",
+    "rentalInfoDesc": "Con puntos de recogida en Ciudad de Panamá y Playa Coronado, ofrecemos alquiler de motocicletas Royal Enfield Himalayan 450cc premium con un período mínimo de alquiler de 2 días. Nuestros modelos 2024 meticulosamente mantenidos garantizan que obtengas una moto confiable para tu aventura. Recoge tu motocicleta en cualquiera de los dos puntos y explora todo el país a tu propio ritmo.",
     "rentalFeatures": "Qué Incluye",
     "rentalFeature1": "Período mínimo de alquiler de 2 días",
     "rentalFeature2": "Todo el equipo de seguridad incluido",
     "rentalFeature3": "Sistema de equipaje para turismo",
     "rentalFeature4": "Asistencia en carretera 24/7",
     "whyChooseUs": "¿Por qué Elegir Nuestro Alquiler de Motocicletas?",
-    "whyChooseUsDesc": "Nos especializamos en alquiler de motocicletas de aventura en Panamá. Nuestras motos Royal Enfield Himalayan 450cc son perfectas tanto para conductores experimentados como para aquellos nuevos en el turismo de aventura. Con recogida conveniente en Ciudad de Panamá y períodos de alquiler flexibles desde 2 días, puedes planificar el viaje perfecto en moto por Panamá.",
+    "whyChooseUsDesc": "Nos especializamos en alquiler de motocicletas de aventura en Panamá. Nuestras motos Royal Enfield Himalayan 450cc son perfectas tanto para conductores experimentados como para aquellos nuevos en el turismo de aventura. Con recogida conveniente en Ciudad de Panamá o Playa Coronado y períodos de alquiler flexibles desde 2 días, puedes planificar el viaje perfecto en moto por Panamá.",
     "contactTitle": "¿Listo para la Aventura?",
-    "contactDesc": "Únete a nosotros para aventuras inolvidables en motocicleta. Alquila tu Royal Enfield Himalayan en Ciudad de Panamá hoy.",
+    "contactDesc": "Únete a nosotros para aventuras inolvidables en motocicleta. Alquila tu Royal Enfield Himalayan en Ciudad de Panamá o Playa Coronado hoy.",
     "bookNow": "Reservar Ahora",
     "contact": "Contáctanos",
     "LearnMore": "Más Información"
@@ -68,12 +68,12 @@
   },
     "ContactMetadata": {
     "title": "Overland Motorcycles | Contacto — Alquiler de Motos de Aventura Panamá",
-    "description": "¿Preguntas antes de salir a rodar? Llama o WhatsApp +507 6805-1100. Abierto Lun-Vie 10-18h en Santa Ana, Panama City. También somos riders — respondemos rápido.",
-    "keywords": "contacto alquiler motos Panamá, Ciudad de Panamá alquiler motos, contacto Overland Motorcycles, Santa Ana Panamá motos, horario alquiler motos Panamá, reservar moto Panamá, contacto overland motorcycles",
+    "description": "¿Preguntas antes de salir a rodar? Llama o WhatsApp +507 6805-1100. Abierto Lun-Vie 10-18h en San Felipe, Panama City — también en Playa Coronado. También somos riders — respondemos rápido.",
+    "keywords": "contacto alquiler motos Panamá, Ciudad de Panamá alquiler motos, Playa Coronado alquiler motos, contacto Overland Motorcycles, San Felipe Panamá motos, horario alquiler motos Panamá, reservar moto Panamá, contacto overland motorcycles",
     "ogTitle": "Overland Motorcycles | Contacto — Alquiler de Motos de Aventura Panamá",
-    "ogDescription": "¿Preguntas antes de salir a rodar? Llama o WhatsApp +507 6805-1100. Abierto Lun-Vie 10-18h en Santa Ana, Panama City.",
-    "twitterTitle": "Contacto Overland Motorcycles | Ciudad de Panamá",
-    "twitterDescription": "Alquila Royal Enfield Himalayan 450 en Ciudad de Panamá. Ubicados en Santa Ana. ¡Contáctanos hoy!",
+    "ogDescription": "¿Preguntas antes de salir a rodar? Llama o WhatsApp +507 6805-1100. Abierto Lun-Vie 10-18h en San Felipe, Panama City — también en Playa Coronado.",
+    "twitterTitle": "Contacto Overland Motorcycles | Ciudad de Panamá y Playa Coronado",
+    "twitterDescription": "Alquila Royal Enfield Himalayan 450 en Ciudad de Panamá o Playa Coronado. Ubicados en San Felipe. ¡Contáctanos hoy!",
     "siteName": "Overland Motorcycles Panamá"
   },
   "Navigation": {
@@ -322,12 +322,16 @@
   "heroTitle": "Reserva tu Aventura",
   "heroSubtitle": "Comienza a planear tu inolvidable viaje en moto por Panamá",
 
-  "step1Title": "Elige tu Motocicleta",
-  "step1Subtitle": "Selecciona el modelo que deseas alquilar. Ambos están disponibles para aventuras de varios días por Panamá.",
-  "step2Title": "Elige tus fechas",
-  "step2Subtitle": "Selecciona tu período de alquiler (mínimo 2 días)",
-  "step3Title": "Tu información",
-  "step3Subtitle": "Necesitamos algunos datos para finalizar tu reserva",
+  "step1Title": "Elige tu lugar de recogida",
+  "step1Subtitle": "Selecciona dónde deseas recoger tu motocicleta.",
+  "locationPanamaCityLabel": "Ciudad de Panamá",
+  "locationCoronadoLabel": "Playa Coronado",
+  "step2Title": "Elige tu Motocicleta",
+  "step2Subtitle": "Selecciona el modelo que deseas alquilar. Ambos están disponibles para aventuras de varios días por Panamá.",
+  "step3Title": "Elige tus fechas",
+  "step3Subtitle": "Selecciona tu período de alquiler (mínimo 2 días)",
+  "step4Title": "Tu información",
+  "step4Subtitle": "Necesitamos algunos datos para finalizar tu reserva",
   "additionalRidersTitle": "Riders adicionales",
   "riderLabel": "Rider",
 
@@ -366,6 +370,7 @@
   "modalClose": "Cerrar",
   "modalGoBack": "Volver",
 
+  "summaryLocation": "Lugar de recogida",
   "summaryModel": "Modelo",
   "summaryTitle": "Revisar y Pagar",
   "summarySubtitle": "Confirma los detalles de tu reserva y asegura tu aventura",
@@ -428,13 +433,13 @@
 },
  "BookingMetadata": {
     "title": "Overland Motorcycles | Reserva Tu Moto — Alquiler de Motos de Aventura Panamá",
-    "description": "Elige tu moto — Royal Enfield Himalayan 450 o CF Moto 700. Reserva en línea — 50% de anticipo, confirmación inmediata. Recogida lista para rodar en Panama City.",
-    "keywords": "reservar alquiler moto Panamá, renta motos Ciudad de Panamá, alquiler moto aventura Panamá, Royal Enfield 450cc alquiler, CF Moto 700 Panamá, renta motos Panamá, reserva moto Panamá",
+    "description": "Elige tu moto — Royal Enfield Himalayan 450 o CF Moto 700. Reserva en línea — 50% de anticipo, confirmación inmediata. Recogida lista para rodar en Panama City o Playa Coronado.",
+    "keywords": "reservar alquiler moto Panamá, renta motos Ciudad de Panamá, renta motos Playa Coronado, alquiler moto aventura Panamá, Royal Enfield 450cc alquiler, CF Moto 700 Panamá, renta motos Panamá, reserva moto Panamá",
     "ogTitle": "Overland Motorcycles | Reserva Tu Moto — Alquiler de Motos de Aventura Panamá",
-    "ogDescription": "Equípate y sal a rodar. Reserva tu moto de aventura en Panamá online — 50% de anticipo, confirmación inmediata. Recogida lista para rodar en Panama City.",
-    "ogImageAlt": "Motocicleta Royal Enfield Himalayan 450 disponible para alquilar en Ciudad de Panamá",
-    "twitterTitle": "Reservar Royal Enfield Himalayan 450 | Alquiler Motos Ciudad de Panamá",
-    "twitterDescription": "Alquila la legendaria Royal Enfield Himalayan 450cc en Ciudad de Panamá. ¡La aventura te espera!",
+    "ogDescription": "Equípate y sal a rodar. Reserva tu moto de aventura en Panamá online — 50% de anticipo, confirmación inmediata. Recogida lista para rodar en Panama City o Playa Coronado.",
+    "ogImageAlt": "Motocicleta Royal Enfield Himalayan 450 disponible para alquilar en Panamá",
+    "twitterTitle": "Reservar Royal Enfield Himalayan 450 | Alquiler de Motos en Panamá",
+    "twitterDescription": "Alquila la legendaria Royal Enfield Himalayan 450cc en Ciudad de Panamá o Playa Coronado. ¡La aventura te espera!",
     "siteName": "Alquiler de Motos Panamá"
   },
 "calendar": {
@@ -558,6 +563,7 @@
       "email": "Correo",
       "rentalPeriod": "Período de Alquiler",
       "to": "hasta",
+      "pickupLocation": "Lugar de recogida",
       "motorcycle": "Motocicleta",
       "motorcycles": "Motocicletas",
       "bikes": "moto(s)",
@@ -601,6 +607,20 @@
       "contactUs": "Contáctenos"
     }
   },
+
+  "auth": {
+    "notFound": "Reserva no encontrada.",
+    "alreadyPaid": "Ya pagado. ¡Gracias!",
+    "subtitle": "Autoriza tu depósito de seguridad reembolsable para completar tu reserva.",
+    "name": "Nombre",
+    "motorcycle": "Motocicleta",
+    "pickupLocation": "Lugar de recogida",
+    "dates": "Fechas",
+    "depositAmount": "Monto del depósito",
+    "button": "Autorizar Depósito",
+    "loading": "Procesando..."
+  },
+
   "Footer": {
     "description": "Su socio de confianza para aventuras en moto en Panamá. Experimente la libertad de la carretera con nuestra flota premium Royal Enfield Himalayan.",
     "followUs": "Síguenos",

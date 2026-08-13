@@ -2,17 +2,37 @@
 import React from 'react';
 import { XCircle } from 'lucide-react';
 
+const LOCATION_OPTIONS = [
+  { value: 'Panama City', label: 'Panama City', models: ['Himalayan', 'CFMoto700'] },
+  { value: 'Playa Coronado', label: 'Playa Coronado', models: ['Himalayan'] },
+];
+
 const MODEL_OPTIONS = [
   { value: 'Himalayan', label: 'Royal Enfield Himalayan 450', maxBikes: 6 },
   { value: 'CFMoto700', label: 'CF Moto 700 CL-X',           maxBikes: 1 },
 ];
 
-const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, calculateDays, calculatePrice, riders, setRiders, isSubmitting }) => {
+const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, calculateDays, calculatePrice, riders, setRiders, isSubmitting, role }) => {
   if (!show) return null;
 
+  const isCoronado = role === 'coronado';
+  const locationOptions = isCoronado
+    ? LOCATION_OPTIONS.filter(l => l.value === 'Playa Coronado')
+    : LOCATION_OPTIONS;
+  const selectedLocationConfig = LOCATION_OPTIONS.find(l => l.value === newBooking.pickup_location) || LOCATION_OPTIONS[0];
+  const availableModelOptions  = MODEL_OPTIONS.filter(m => selectedLocationConfig.models.includes(m.value));
   const selectedModelConfig = MODEL_OPTIONS.find(m => m.value === newBooking.motorcycle_model) || MODEL_OPTIONS[0];
   const isCFMoto            = newBooking.motorcycle_model === 'CFMoto700';
   const bikeOptions         = Array.from({ length: selectedModelConfig.maxBikes }, (_, i) => i + 1);
+
+  const handleLocationChange = (location) => {
+    const config = LOCATION_OPTIONS.find(l => l.value === location);
+    setNewBooking(prev => ({
+      ...prev,
+      pickup_location: location,
+      motorcycle_model: config.models.includes(prev.motorcycle_model) ? prev.motorcycle_model : 'Himalayan',
+    }));
+  };
 
   const handleModelChange = (model) => {
     setNewBooking(prev => ({
@@ -84,11 +104,28 @@ const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, c
             </div>
           </div>
 
+          {/* Pickup Location */}
+          <div>
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Pickup Location</h3>
+            <div className="grid md:grid-cols-2 gap-3">
+              {locationOptions.map((location) => (
+                <button key={location.value} type="button" onClick={() => handleLocationChange(location.value)}
+                  className={`p-4 rounded-xl border-2 text-left transition-all ${
+                    newBooking.pickup_location === location.value
+                      ? 'border-yellow-400 bg-yellow-50'
+                      : 'border-gray-200 hover:border-gray-400'
+                  }`}>
+                  <div className="font-bold text-gray-900">{location.label}</div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Motorcycle Model */}
           <div>
             <h3 className="text-lg font-bold text-gray-900 mb-4">Motorcycle Model</h3>
             <div className="grid md:grid-cols-2 gap-3">
-              {MODEL_OPTIONS.map((model) => (
+              {availableModelOptions.map((model) => (
                 <button key={model.value} type="button" onClick={() => handleModelChange(model.value)}
                   className={`p-4 rounded-xl border-2 text-left transition-all ${
                     newBooking.motorcycle_model === model.value

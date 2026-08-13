@@ -15,7 +15,7 @@ const MODEL_LABELS = {
 
 export async function POST(request) {
   try {
-    const { bookingId, type, codOper, totalPaid } = await request.json();
+    const { bookingId, type, codOper, totalPaid, token } = await request.json();
 
     if (!bookingId || !type || !codOper) {
       return NextResponse.json({ error: 'Missing params' }, { status: 400 });
@@ -29,6 +29,14 @@ export async function POST(request) {
 
     if (error || !booking) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    // This endpoint is reachable purely from browser-controlled query params (the
+    // PaguéloFácil return URL), so it must not trust bookingId alone — require the
+    // per-booking token that /api/pay/auth and /api/pay/balance embed in that URL.
+    if (!token || !booking.paguelofacil_token || token !== booking.paguelofacil_token) {
+      console.error('❌ pay/confirm: missing or mismatched token for booking', bookingId);
+      return NextResponse.json({ error: 'Invalid or missing token' }, { status: 401 });
     }
 
     const modelLabel = MODEL_LABELS[booking.motorcycle_model] || booking.motorcycle_model;
@@ -52,7 +60,7 @@ if (type === 'initial') {
       from:    process.env.RESEND_FROM_EMAIL,
       to:      [booking.email],
       subject: `✅ Initial Payment Received — ${modelLabel}`,
-      html:    `<p>Hi ${booking.first_name}, your initial payment of $${parseFloat(booking.down_payment).toFixed(2)} has been received. Your <strong>${modelLabel}</strong> booking is now confirmed!</p>`,
+      html:    `<p>Hi ${booking.first_name}, your initial payment of $${parseFloat(booking.down_payment).toFixed(2)} has been received. Your <strong>${modelLabel}</strong> booking (pickup at <strong>${booking.pickup_location || 'Panama City'}</strong>) is now confirmed!</p>`,
     });
   } catch (e) { console.error('Initial client email error', e); }
 
@@ -61,7 +69,7 @@ if (type === 'initial') {
       from:    process.env.RESEND_FROM_EMAIL,
       to:      ['overlandmotorcycles@gmail.com'],
       subject: `💳 INITIAL PAID — ${booking.first_name} ${booking.last_name}`,
-      html:    `<p>Initial payment received.<br/>Booking: ${bookingId}<br/>Amount: $${parseFloat(booking.down_payment).toFixed(2)}<br/>Transaction: ${codOper}</p>`,
+      html:    `<p>Initial payment received.<br/>Booking: ${bookingId}<br/>Pickup: ${booking.pickup_location || 'Panama City'}<br/>Amount: $${parseFloat(booking.down_payment).toFixed(2)}<br/>Transaction: ${codOper}</p>`,
     });
   } catch (e) { console.error('Initial internal email error', e); }
 
@@ -98,7 +106,7 @@ if (type === 'initial') {
           from:    process.env.RESEND_FROM_EMAIL,
           to:      ['overlandmotorcycles@gmail.com'],
           subject: `💰 FULL PAYMENT — ${booking.first_name} ${booking.last_name}`,
-          html:    `<p>Full rental payment received.<br/>Booking: ${bookingId}<br/>Amount: $${totalPaid}<br/>Transaction: ${codOper}</p>`,
+          html:    `<p>Full rental payment received.<br/>Booking: ${bookingId}<br/>Pickup: ${booking.pickup_location || 'Panama City'}<br/>Amount: $${totalPaid}<br/>Transaction: ${codOper}</p>`,
         });
       } catch (e) { console.error('Full payment internal email error', e); }
 
@@ -129,7 +137,7 @@ if (type === 'initial') {
           from:    process.env.RESEND_FROM_EMAIL,
           to:      [booking.email],
           subject: allAuthsDone ? `✅ Security Deposit(s) Authorized — ${modelLabel}` : `✅ Security Deposit #${newAuthCount} Authorized`,
-          html:    `<p>Hi ${booking.first_name}, your $1,000 security deposit${booking.bike_quantity > 1 ? ` #${newAuthCount}` : ''} for your <strong>${modelLabel}</strong> has been authorized.${allAuthsDone && booking.bike_quantity > 1 ? ' All deposits are now authorized!' : ''}</p>`,
+          html:    `<p>Hi ${booking.first_name}, your $1,000 security deposit${booking.bike_quantity > 1 ? ` #${newAuthCount}` : ''} for your <strong>${modelLabel}</strong> (pickup at <strong>${booking.pickup_location || 'Panama City'}</strong>) has been authorized.${allAuthsDone && booking.bike_quantity > 1 ? ' All deposits are now authorized!' : ''}</p>`,
         });
       } catch (e) { console.error('Auth client email error', e); }
 
@@ -138,7 +146,7 @@ if (type === 'initial') {
           from:    process.env.RESEND_FROM_EMAIL,
           to:      ['overlandmotorcycles@gmail.com'],
           subject: `🔐 AUTH ${newAuthCount}/${booking.bike_quantity} — ${booking.first_name} ${booking.last_name}`,
-          html:    `<p>Auth ${newAuthCount}/${booking.bike_quantity} confirmed.<br/>Booking: ${bookingId}<br/>Transaction: ${codOper}</p>`,
+          html:    `<p>Auth ${newAuthCount}/${booking.bike_quantity} confirmed.<br/>Booking: ${bookingId}<br/>Pickup: ${booking.pickup_location || 'Panama City'}<br/>Transaction: ${codOper}</p>`,
         });
       } catch (e) { console.error('Auth internal email error', e); }
 
@@ -169,7 +177,7 @@ if (type === 'initial') {
           from:    process.env.RESEND_FROM_EMAIL,
           to:      [booking.email],
           subject: `✅ Full Payment Received — ${modelLabel}`,
-          html:    `<p>Hi ${booking.first_name}, we have received your full payment. Your booking is now complete. See you soon!</p>`,
+          html:    `<p>Hi ${booking.first_name}, we have received your full payment. Your booking is now complete. See you soon at <strong>${booking.pickup_location || 'Panama City'}</strong>!</p>`,
         });
       } catch (e) { console.error('Balance client email error', e); }
 
@@ -178,7 +186,7 @@ if (type === 'initial') {
           from:    process.env.RESEND_FROM_EMAIL,
           to:      ['overlandmotorcycles@gmail.com'],
           subject: `💰 BALANCE PAID — ${booking.first_name} ${booking.last_name}`,
-          html:    `<p>Remaining balance paid.<br/>Booking: ${bookingId}<br/>Amount: $${totalPaid}<br/>Transaction: ${codOper}</p>`,
+          html:    `<p>Remaining balance paid.<br/>Booking: ${bookingId}<br/>Pickup: ${booking.pickup_location || 'Panama City'}<br/>Amount: $${totalPaid}<br/>Transaction: ${codOper}</p>`,
         });
       } catch (e) { console.error('Balance internal email error', e); }
 
@@ -214,6 +222,7 @@ async function sendFullyPaidRecap(booking, modelLabel, authTransactionId, balanc
             <h2 style="color:#111827;margin:0 0 16px;">${booking.first_name} ${booking.last_name}</h2>
             <table style="width:100%;font-size:14px;border-collapse:collapse;">
               <tr><td style="color:#6b7280;padding:6px 0;">Motorcycle</td><td style="font-weight:600;text-align:right;">${modelLabel}</td></tr>
+              <tr><td style="color:#6b7280;padding:6px 0;">Pickup Location</td><td style="font-weight:600;text-align:right;">${booking.pickup_location || 'Panama City'}</td></tr>
               <tr><td style="color:#6b7280;padding:6px 0;">Bikes</td><td style="font-weight:600;text-align:right;">${booking.bike_quantity}</td></tr>
               <tr><td style="color:#6b7280;padding:6px 0;">Dates</td><td style="font-weight:600;text-align:right;">${booking.start_date} → ${booking.end_date}</td></tr>
               <tr><td style="color:#6b7280;padding:6px 0;">Email</td><td style="font-weight:600;text-align:right;">${booking.email}</td></tr>

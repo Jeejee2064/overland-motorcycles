@@ -10,6 +10,7 @@ function BalanceSuccessContent() {
   const codOper   = searchParams.get('Oper');
   const totalPaid = searchParams.get('TotalPagado');
   const mode      = searchParams.get('mode') || 'balance'; // 'balance' or 'full'
+  const token     = searchParams.get('token');
   const [status, setStatus] = useState('loading');
 
   useEffect(() => {
@@ -26,6 +27,7 @@ function BalanceSuccessContent() {
               type: mode, // 'balance' or 'full'
               codOper,
               totalPaid,
+              token,
             }),
           });
           const data = await res.json();
@@ -38,7 +40,7 @@ function BalanceSuccessContent() {
     };
 
     confirm();
-  }, [bookingId, estado, codOper, totalPaid, mode]);
+  }, [bookingId, estado, codOper, totalPaid, mode, token]);
 
   const isFull = mode === 'full';
 

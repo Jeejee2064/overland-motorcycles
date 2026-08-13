@@ -9,6 +9,7 @@ function AuthSuccessContent() {
   const estado    = searchParams.get('Estado');
   const codOper   = searchParams.get('Oper');
   const totalPaid = searchParams.get('TotalPagado');
+  const token     = searchParams.get('token');
   const [status, setStatus] = useState('loading');
 
   useEffect(() => {
@@ -20,7 +21,7 @@ function AuthSuccessContent() {
           const res = await fetch('/api/pay/confirm', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ bookingId, type: 'auth', codOper, totalPaid }),
+            body: JSON.stringify({ bookingId, type: 'auth', codOper, totalPaid, token }),
           });
           const data = await res.json();
           if (data.success) { setStatus('success'); return; }
@@ -32,7 +33,7 @@ function AuthSuccessContent() {
     };
 
     confirm();
-  }, [bookingId, estado, codOper, totalPaid]);
+  }, [bookingId, estado, codOper, totalPaid, token]);
 
   if (status === 'loading') return (
     <div className="bg-white rounded-2xl shadow-lg p-8 max-w-md w-full text-center">

@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import {
   Check, AlertCircle, MessageCircle, ChevronRight, ChevronLeft,
-  Edit2, CreditCard, Tag, X, Loader2,
+  Edit2, CreditCard, Tag, X, Loader2, MapPin,
 } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import Navigation from '../../../components/Navigation';
@@ -216,6 +216,19 @@ const PromoCodeInput = ({ appliedPromo, onApply, onRemove, totalBeforeDiscount }
 const BookingPage = () => {
   const t = useTranslations('BookingPage');
 
+  const LOCATIONS = {
+    'Panama City': {
+      id: 'Panama City',
+      label: t('locationPanamaCityLabel'),
+      models: ['Himalayan', 'CFMoto700'],
+    },
+    'Playa Coronado': {
+      id: 'Playa Coronado',
+      label: t('locationCoronadoLabel'),
+      models: ['Himalayan'],
+    },
+  };
+
   const MODELS = {
     Himalayan: {
       id: 'Himalayan',
@@ -240,6 +253,7 @@ const BookingPage = () => {
   };
 
   const [currentStep, setCurrentStep]             = useState(1);
+  const [selectedLocation, setSelectedLocation]   = useState(null);
   const [selectedModel, setSelectedModel]         = useState(null);
   const [startDate, setStartDate]                 = useState('');
   const [endDate, setEndDate]                     = useState('');
@@ -258,24 +272,45 @@ const BookingPage = () => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const start = searchParams.get('start');
-    const end   = searchParams.get('end');
-    const bikes = searchParams.get('bikes');
-    const model = searchParams.get('model');
+    const start    = searchParams.get('start');
+    const end      = searchParams.get('end');
+    const bikes    = searchParams.get('bikes');
+    const model    = searchParams.get('model');
+    const location = searchParams.get('location');
 
-    if (model && MODELS[model]) {
+    const hasLocation = location && LOCATIONS[location];
+    if (hasLocation) setSelectedLocation(location);
+
+    // Le modèle de l'URL n'est accepté que s'il est compatible avec le lieu
+    // (ex. ?location=Playa Coronado&model=CFMoto700 est une combinaison invalide —
+    // on ignore le modèle et on renvoie l'utilisateur choisir un modèle valide).
+    const modelValidForLocation = model && MODELS[model] && (!hasLocation || LOCATIONS[location].models.includes(model));
+
+    if (modelValidForLocation) {
       setSelectedModel(model);
-      if (start && end) {
-        setCurrentStep(3);
+      if (hasLocation) {
+        setCurrentStep(start && end ? 4 : 3);
       } else {
-        setCurrentStep(2);
+        setCurrentStep(1);
       }
+    } else if (hasLocation) {
+      setCurrentStep(2);
     }
     if (start) setStartDate(start);
     if (end)   setEndDate(end);
     if (bikes) setFormData(prev => ({ ...prev, bikeQuantity: bikes }));
     if (start && end) validateDates(start, end);
   }, [searchParams]);
+
+  // Si le lieu change pour un endroit qui n'offre pas le modèle déjà choisi
+  // (ex. Playa Coronado + CFMoto700), on réinitialise le modèle et on renvoie
+  // l'utilisateur à l'étape de sélection du modèle s'il était déjà plus loin.
+  useEffect(() => {
+    if (selectedLocation && selectedModel && !LOCATIONS[selectedLocation].models.includes(selectedModel)) {
+      setSelectedModel(null);
+      setCurrentStep(prev => (prev > 2 ? 2 : prev));
+    }
+  }, [selectedLocation]);
 
   const showModal  = (type, message, onConfirm = null) => setModal({ isOpen: true, type, message, onConfirm });
   const closeModal = () => setModal({ isOpen: false, type: 'info', message: '', onConfirm: null });
@@ -315,7 +350,10 @@ const BookingPage = () => {
 
   const checkAvailability = async (start, end, qty) => {
     try {
-      const available = await checkBikesAvailableByModel(start, end, selectedModel);
+      // Coronado is a hard location filter (only Coronado-stationed bikes count);
+      // Panama City stays pooled/soft across the whole fleet, matching today's behavior.
+      const locationFilter = selectedLocation === 'Playa Coronado' ? selectedLocation : null;
+      const available = await checkBikesAvailableByModel(start, end, selectedModel, locationFilter);
       const needed    = parseInt(qty);
       if (available < needed) {
         setAvailabilityError(t('availabilityError', { available, model: currentModelConfig?.shortLabel ?? '' }));
@@ -392,7 +430,8 @@ const BookingPage = () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      const available = await checkBikesAvailableByModel(startDate, endDate, selectedModel);
+      const locationFilter = selectedLocation === 'Playa Coronado' ? selectedLocation : null;
+      const available = await checkBikesAvailableByModel(startDate, endDate, selectedModel, locationFilter);
       if (available < numBikes) {
         showModal('error', t('availabilityErrorSubmit', { available, model: currentModelConfig?.shortLabel ?? '' }));
         setIsSubmitting(false);
@@ -414,6 +453,7 @@ const BookingPage = () => {
           endDate,
           bikeQuantity:    numBikes,
           motorcycleModel: selectedModel,
+          pickupLocation:  selectedLocation,
           calculatedDays:  calculateDays(),
           promoCode:       appliedPromo?.code ?? null,
           promoDiscount:   promoDiscount > 0 ? promoDiscount : null,
@@ -435,9 +475,10 @@ const BookingPage = () => {
     }
   };
 
-  const canProceedStep2 = selectedModel !== null;
-  const canProceedStep3 = startDate && endDate && !validationError && !availabilityError;
-  const canProceedStep4 =
+  const canProceedStep2 = selectedLocation !== null;
+  const canProceedStep3 = selectedModel !== null;
+  const canProceedStep4 = startDate && endDate && !validationError && !availabilityError;
+  const canProceedStep5 =
     formData.firstName.trim() && formData.lastName.trim() && formData.email.trim() && formData.phone.trim() && formData.country.trim() &&
     additionalRiders.every(r => r.firstName.trim() && r.lastName.trim() && r.email.trim() && r.phone.trim());
 
@@ -463,19 +504,65 @@ const BookingPage = () => {
 
       <div className="min-h-screen pt-24 pb-6 px-4 flex items-center justify-center">
         <div className="w-full max-w-4xl">
-          <ProgressDots currentStep={currentStep} totalSteps={4} />
+          <ProgressDots currentStep={currentStep} totalSteps={5} />
 
           <AnimatePresence mode="wait">
 
-            {/* ── STEP 1: Model Selection ── */}
+            {/* ── STEP 1: Pickup Location ── */}
             {currentStep === 1 && (
               <motion.div key="step1" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
                 <div className="text-center mb-6">
                   <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{t('step1Title')}</h2>
+                  <p className="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">{t('step1Subtitle')}</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4 mb-6">
-                  {Object.values(MODELS).map((model) => (
+                  {Object.values(LOCATIONS).map((location) => (
+                    <motion.button key={location.id}
+                      onClick={() => setSelectedLocation(location.id)}
+                      whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }}
+                      className={`relative rounded-2xl border-2 p-6 text-left transition-all ${
+                        selectedLocation === location.id ? 'border-yellow-400 bg-yellow-400/10 shadow-xl shadow-yellow-400/20' : 'border-gray-700 bg-gray-800/50 hover:border-gray-500'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-3">
+                        <MapPin size={28} className="text-yellow-400" />
+                        {selectedLocation === location.id && (
+                          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="bg-yellow-400 rounded-full p-1.5">
+                            <Check size={16} className="text-gray-900" />
+                          </motion.div>
+                        )}
+                      </div>
+                      <h3 className="text-lg font-black text-white">{location.label}</h3>
+                    </motion.button>
+                  ))}
+                </div>
+
+                <motion.button onClick={() => setCurrentStep(2)} disabled={!canProceedStep2}
+                  whileHover={canProceedStep2 ? { scale: 1.02 } : {}} whileTap={canProceedStep2 ? { scale: 0.98 } : {}}
+                  className={`w-full py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
+                    canProceedStep2 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                  }`}>
+                  {t('stepContinue')} <ChevronRight size={24} />
+                </motion.button>
+              </motion.div>
+            )}
+
+            {/* ── STEP 2: Model Selection ── */}
+            {currentStep === 2 && (
+              <motion.div key="step2" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{t('step2Title')}</h2>
+                </div>
+
+                <div className={`grid gap-4 mb-6 ${
+                  Object.values(MODELS).filter(m => LOCATIONS[selectedLocation]?.models.includes(m.id)).length === 1
+                    ? 'max-w-md mx-auto'
+                    : 'md:grid-cols-2'
+                }`}>
+                  {Object.values(MODELS)
+                    .filter(model => LOCATIONS[selectedLocation]?.models.includes(model.id))
+                    .map((model) => (
                     <motion.button key={model.id}
                       onClick={() => { setSelectedModel(model.id); setFormData(prev => ({ ...prev, bikeQuantity: '1' })); setAvailabilityError(''); setAppliedPromo(null); }}
                       whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }}
@@ -510,21 +597,27 @@ const BookingPage = () => {
                   ))}
                 </div>
 
-                <motion.button onClick={() => setCurrentStep(2)} disabled={!canProceedStep2}
-                  whileHover={canProceedStep2 ? { scale: 1.02 } : {}} whileTap={canProceedStep2 ? { scale: 0.98 } : {}}
-                  className={`w-full py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
-                    canProceedStep2 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                  }`}>
-                  {t('stepContinue')} <ChevronRight size={24} />
-                </motion.button>
+                <div className="flex gap-4">
+                  <motion.button onClick={() => setCurrentStep(1)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
+                    <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
+                  </motion.button>
+                  <motion.button onClick={() => setCurrentStep(3)} disabled={!canProceedStep3}
+                    whileHover={canProceedStep3 ? { scale: 1.02 } : {}} whileTap={canProceedStep3 ? { scale: 0.98 } : {}}
+                    className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
+                      canProceedStep3 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                    }`}>
+                    {t('stepContinue')} <ChevronRight size={24} />
+                  </motion.button>
+                </div>
               </motion.div>
             )}
 
-            {/* ── STEP 2: Dates + Quantity ── */}
-            {currentStep === 2 && (
-              <motion.div key="step2" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
+            {/* ── STEP 3: Dates + Quantity ── */}
+            {currentStep === 3 && (
+              <motion.div key="step3-dates" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
                 <div className="text-center mb-4">
-                  <h2 className="text-2xl md:text-3xl font-black text-white mb-1">{t('step2Title')}</h2>
+                  <h2 className="text-2xl md:text-3xl font-black text-white mb-1">{t('step3Title')}</h2>
                   <div className="inline-flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/30 rounded-full px-4 py-1.5 mt-2">
                     <span className="text-yellow-400 text-sm font-bold">{currentModelConfig?.label}</span>
                   </div>
@@ -560,7 +653,7 @@ const BookingPage = () => {
                 <div className="mb-4">
                   {selectedModel === 'CFMoto700'
                     ? <CFMotoCalendar onDateRangeChange={handleDateRangeChange} />
-                    : <BookingCalendar onDateRangeChange={handleDateRangeChange} />
+                    : <BookingCalendar onDateRangeChange={handleDateRangeChange} location={selectedLocation} />
                   }
                 </div>
 
@@ -600,14 +693,14 @@ const BookingPage = () => {
                 )}
 
                 <div className="flex gap-4">
-                  <motion.button onClick={() => setCurrentStep(1)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  <motion.button onClick={() => setCurrentStep(2)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
-                  <motion.button onClick={() => setCurrentStep(3)} disabled={!canProceedStep3}
-                    whileHover={canProceedStep3 ? { scale: 1.02 } : {}} whileTap={canProceedStep3 ? { scale: 0.98 } : {}}
+                  <motion.button onClick={() => setCurrentStep(4)} disabled={!canProceedStep4}
+                    whileHover={canProceedStep4 ? { scale: 1.02 } : {}} whileTap={canProceedStep4 ? { scale: 0.98 } : {}}
                     className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
-                      canProceedStep3 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      canProceedStep4 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}>
                     {t('stepContinue')} <ChevronRight size={24} />
                   </motion.button>
@@ -615,12 +708,12 @@ const BookingPage = () => {
               </motion.div>
             )}
 
-            {/* ── STEP 3: Personal Information ── */}
-            {currentStep === 3 && (
-              <motion.div key="step3" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
+            {/* ── STEP 4: Personal Information ── */}
+            {currentStep === 4 && (
+              <motion.div key="step4-info" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
                 <div className="text-center mb-6">
-                  <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{t('step3Title')}</h2>
-                  <p className="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">{t('step3Subtitle')}</p>
+                  <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{t('step4Title')}</h2>
+                  <p className="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">{t('step4Subtitle')}</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-4 mb-6">
@@ -718,14 +811,14 @@ const BookingPage = () => {
                 )}
 
                 <div className="flex gap-4">
-                  <motion.button onClick={() => setCurrentStep(2)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  <motion.button onClick={() => setCurrentStep(3)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
-                  <motion.button onClick={() => setCurrentStep(4)} disabled={!canProceedStep4}
-                    whileHover={canProceedStep4 ? { scale: 1.02 } : {}} whileTap={canProceedStep4 ? { scale: 0.98 } : {}}
+                  <motion.button onClick={() => setCurrentStep(5)} disabled={!canProceedStep5}
+                    whileHover={canProceedStep5 ? { scale: 1.02 } : {}} whileTap={canProceedStep5 ? { scale: 0.98 } : {}}
                     className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
-                      canProceedStep4 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      canProceedStep5 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}>
                     {t('stepContinue')} <ChevronRight size={24} />
                   </motion.button>
@@ -733,9 +826,9 @@ const BookingPage = () => {
               </motion.div>
             )}
 
-            {/* ── STEP 4: Review & Pay ── */}
-            {currentStep === 4 && (
-              <motion.div key="step4" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
+            {/* ── STEP 5: Review & Pay ── */}
+            {currentStep === 5 && (
+              <motion.div key="step5-review" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
                 <div className="text-center mb-6">
                   <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{t('summaryTitle')}</h2>
                   <p className="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">{t('summarySubtitle')}</p>
@@ -747,13 +840,17 @@ const BookingPage = () => {
                   {/* Bikes & dates */}
                   <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-700">
                     <h3 className="text-lg font-black text-white">{t('summaryMotorcycles')} & {t('summaryDates')}</h3>
-                    <button onClick={() => setCurrentStep(1)}
+                    <button onClick={() => setCurrentStep(2)}
                       className="p-2 rounded-lg bg-yellow-400/10 hover:bg-yellow-400/20 text-yellow-400 transition-all text-xs flex items-center gap-1">
                       <Edit2 size={14} /><span className="hidden sm:inline">{t('stepChange')}</span>
                     </button>
                   </div>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4 pb-4 border-b border-gray-700">
+                    <div>
+                      <div className="text-xs text-gray-400">{t('summaryLocation')}</div>
+                      <div className="text-sm font-black text-yellow-400">{LOCATIONS[selectedLocation]?.label}</div>
+                    </div>
                     <div>
                       <div className="text-xs text-gray-400">{t('summaryModel')}</div>
                       <div className="text-sm font-black text-yellow-400">{currentModelConfig?.shortLabel}</div>
@@ -775,7 +872,7 @@ const BookingPage = () => {
                   {/* Contact info */}
                   <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-700">
                     <h3 className="text-base font-black text-white">{t('summaryContact')}</h3>
-                    <button onClick={() => setCurrentStep(3)}
+                    <button onClick={() => setCurrentStep(4)}
                       className="p-2 rounded-lg bg-yellow-400/10 hover:bg-yellow-400/20 text-yellow-400 transition-all text-xs flex items-center gap-1">
                       <Edit2 size={14} /><span className="hidden sm:inline">{t('stepChange')}</span>
                     </button>
@@ -893,7 +990,7 @@ const BookingPage = () => {
                 </div>
 
                 <div className="flex gap-4">
-                  <motion.button onClick={() => setCurrentStep(3)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  <motion.button onClick={() => setCurrentStep(4)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>

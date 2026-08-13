@@ -30,12 +30,13 @@ export async function POST(request) {
       endDate,
       bikeQuantity,
       motorcycleModel,   // ← new field from booking page
+      pickupLocation,    // ← 'Panama City' | 'Playa Coronado'
       calculatedDays,
       additionalRiders = [],
     } = body;
 
     // Validate required fields
-    if (!firstName || !lastName || !email || !downPayment || !startDate || !endDate || !bikeQuantity || !motorcycleModel) {
+    if (!firstName || !lastName || !email || !downPayment || !startDate || !endDate || !bikeQuantity || !motorcycleModel || !pickupLocation) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -46,6 +47,47 @@ export async function POST(request) {
     if (!MODEL_LABELS[motorcycleModel]) {
       return NextResponse.json(
         { error: `Invalid motorcycle model: ${motorcycleModel}` },
+        { status: 400 }
+      );
+    }
+
+    // Validate location value
+    if (!['Panama City', 'Playa Coronado'].includes(pickupLocation)) {
+      return NextResponse.json(
+        { error: `Invalid pickup location: ${pickupLocation}` },
+        { status: 400 }
+      );
+    }
+
+    // Playa Coronado only offers the Himalayan
+    if (pickupLocation === 'Playa Coronado' && motorcycleModel === 'CFMoto700') {
+      return NextResponse.json(
+        { error: 'CF Moto 700 is not available for pickup in Playa Coronado' },
+        { status: 400 }
+      );
+    }
+
+    // Hard server-side capacity gate — Coronado is a strict location match (only
+    // Coronado-stationed bikes count), Panama City stays pooled/soft across the whole
+    // fleet (matches current behavior). This runs before the booking row is ever
+    // created, so a request that can't be fulfilled never reaches payment.
+    const locationFilter = pickupLocation === 'Playa Coronado' ? 'Playa Coronado' : null;
+    const { data: availableBikes, error: availabilityError } = await supabase.rpc(
+      'check_bikes_available_by_model',
+      {
+        p_start_date: startDate,
+        p_end_date:   endDate,
+        p_model:      motorcycleModel,
+        p_location:   locationFilter,
+      }
+    );
+    if (availabilityError) {
+      console.error('❌ Availability check error:', availabilityError);
+      return NextResponse.json({ error: 'Failed to verify availability' }, { status: 500 });
+    }
+    if ((availableBikes ?? 0) < parseInt(bikeQuantity)) {
+      return NextResponse.json(
+        { error: `Only ${availableBikes ?? 0} motorcycle(s) available for the selected dates.` },
         { status: 400 }
       );
     }
@@ -67,6 +109,7 @@ export async function POST(request) {
           end_date:          endDate,
           bike_quantity:     parseInt(bikeQuantity),
           motorcycle_model:  motorcycleModel,   // ← saved to DB
+          pickup_location:   pickupLocation,    // ← saved to DB
           down_payment:      parseFloat(downPayment),
           total_price:       parseFloat(totalRentalPrice),
           deposit:           parseFloat(totalDeposit),
@@ -112,6 +155,7 @@ export async function POST(request) {
       { id: 'bookingId',      nameOrLabel: 'Booking ID',      value: booking.id },
       { id: 'token',          nameOrLabel: 'Security Token',  value: uniqueToken },
       { id: 'motorcycleModel',nameOrLabel: 'Motorcycle Model',value: motorcycleModel },
+      { id: 'pickupLocation', nameOrLabel: 'Pickup Location', value: pickupLocation },
         { id: 'paymentType',   nameOrLabel: 'Payment Type',   value: 'INITIAL' }, // ← ajout
 
     ];
@@ -122,7 +166,7 @@ export async function POST(request) {
     const pagueloFacilData = {
       CCLW:       process.env.PAGUELOFACIL_CCLW,
       CMTN:       parseFloat(downPayment).toFixed(2),
-      CDSC:       `Motorcycle Rental - ${firstName} ${lastName} - ${bikeQty} × ${modelLabel} for ${calculatedDays} days`,
+      CDSC:       `Motorcycle Rental - ${firstName} ${lastName} - ${bikeQty} × ${modelLabel} for ${calculatedDays} days (Pickup: ${pickupLocation})`,
       RETURN_URL: returnUrlHex,
       PF_CF:      customFieldsHex,
       PARM_1:     booking.id,

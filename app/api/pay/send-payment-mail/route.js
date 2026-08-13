@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { generatePaymentLinkEmailHTML } from '@/lib/emails/paymentLinkEmail';
+import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from '@/lib/admin-auth';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -14,6 +15,12 @@ export async function POST(request) {
   try {
     const { bookingId, links } = await request.json();
 
+    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+    const { valid, role } = await verifyAdminSessionToken(token);
+    if (!valid) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const { data: booking, error } = await supabase
       .from('bookings')
       .select('*')
@@ -22,6 +29,15 @@ export async function POST(request) {
 
     if (error || !booking) {
       return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+    }
+
+    if (role === 'coronado') {
+      if ((booking.pickup_location || 'Panama City') !== 'Playa Coronado') {
+        return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+      }
+      if ((links || []).some(l => l.type === 'auth')) {
+        return NextResponse.json({ error: 'Not authorized to send security deposit links' }, { status: 403 });
+      }
     }
 
     const base = process.env.NEXT_PUBLIC_BASE_URL;

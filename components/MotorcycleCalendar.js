@@ -27,7 +27,7 @@ const parseLocalDate = (dateStr) => {
   return new Date(y, m - 1, d, 12, 0, 0);
 };
 
-export default function MotorcycleCalendar() {
+export default function MotorcycleCalendar({ restrictedLocation = null }) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [motorcycles, setMotorcycles] = useState([]);
   const [calendarData, setCalendarData] = useState([]);
@@ -56,7 +56,7 @@ export default function MotorcycleCalendar() {
 
   useEffect(() => {
     loadData();
-  }, [currentDate]);
+  }, [currentDate, restrictedLocation]);
 
   const loadData = async () => {
     setLoading(true);
@@ -67,8 +67,8 @@ export default function MotorcycleCalendar() {
       const endStr = format(monthEnd, 'yyyy-MM-dd');
 
       const [bikes, bookings] = await Promise.all([
-        getAllMotorcycles(),
-        getMotorcycleCalendarWithPhone(startStr, endStr),
+        getAllMotorcycles(restrictedLocation),
+        getMotorcycleCalendarWithPhone(startStr, endStr, restrictedLocation),
       ]);
 
       setMotorcycles(bikes || []);
@@ -238,7 +238,10 @@ const prevMonth = () => setCurrentDate(addMonths(currentDate, -1));
                             style={{ left: `${leftPos}px`, width: `${width}px`, height: '40px' }}
                             onClick={() => setSelectedBooking({ ...b, motorcycle_name: bike.name })}
                           >
-                            <span className="truncate">{b.display_name || b.customer_name}</span>
+                            <span className="truncate">
+                              {b.display_name || b.customer_name}
+                              <span className="opacity-75"> · {b.pickup_location === 'Playa Coronado' ? 'COR' : 'PC'}</span>
+                            </span>
                           </div>
                         );
                       })}
@@ -289,6 +292,10 @@ const prevMonth = () => setCurrentDate(addMonths(currentDate, -1));
               <div>
                 <span className="font-semibold text-gray-600">Motorcycle:</span>{' '}
                 <span className="font-medium text-gray-900">{selectedBooking.motorcycle_name}</span>
+              </div>
+              <div>
+                <span className="font-semibold text-gray-600">Pickup Location:</span>{' '}
+                <span className="font-medium text-gray-900">{selectedBooking.pickup_location || 'Panama City'}</span>
               </div>
               <div>
                 <span className="font-semibold text-gray-600">Period:</span>{' '}

@@ -241,6 +241,10 @@ const fetchBooking = async () => {
                     <span className="text-gray-900">{MODEL_LABELS[bookingDetails.booking.motorcycle_model] || bookingDetails.booking.motorcycle_model}</span>
                   </div>
                   <div className="flex justify-between">
+                    <span className="text-gray-600">{t('details.pickupLocation')}:</span>
+                    <span className="text-gray-900">{bookingDetails.booking.pickup_location || 'Panama City'}</span>
+                  </div>
+                  <div className="flex justify-between">
                     <span className="text-gray-600">{t('details.motorcycles')}:</span>
                     <span className="text-gray-900">{bookingDetails.booking.bike_quantity} {t('details.bikes')}</span>
                   </div>

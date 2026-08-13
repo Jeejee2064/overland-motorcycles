@@ -114,6 +114,9 @@ const ContactPage = () => {
                     San Felipe{'\n'}
                     Panama City, Panama
                   </p>
+                  <p className="text-gray-600 mt-2">
+                    Also serving Playa Coronado — contact us to arrange pickup there.
+                  </p>
                 </div>
               </div>
 

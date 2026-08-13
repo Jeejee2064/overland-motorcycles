@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import crypto from 'crypto';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -45,7 +46,16 @@ export async function POST(request) {
       paymentType = 'BALANCE';
     }
 
-    const returnUrlPlain = `${process.env.NEXT_PUBLIC_BASE_URL}/en/pay/balance-success?bookingId=${bookingId}&mode=${mode}`;
+    // Every payment-confirmation return trip must carry proof it's really this booking's
+    // payment — reuse the token generated at booking creation, or mint one now for
+    // bookings that never went through create-paguelofacil-payment (e.g. admin-created).
+    let confirmToken = booking.paguelofacil_token;
+    if (!confirmToken) {
+      confirmToken = crypto.randomBytes(16).toString('hex');
+      await supabase.from('bookings').update({ paguelofacil_token: confirmToken }).eq('id', bookingId);
+    }
+
+    const returnUrlPlain = `${process.env.NEXT_PUBLIC_BASE_URL}/en/pay/balance-success?bookingId=${bookingId}&mode=${mode}&token=${confirmToken}`;
     const returnUrlHex   = Buffer.from(returnUrlPlain).toString('hex');
 
     const customFields = [

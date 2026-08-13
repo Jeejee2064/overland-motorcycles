@@ -2,17 +2,20 @@
 import React, { useEffect, useState } from 'react';
 import { DateRange } from 'react-date-range';
 import { enUS } from 'date-fns/locale';
-import { checkBikesAvailabilityRangeByModel } from '@/lib/supabase/bookings';
+import { checkBikesAvailabilityRangeByModel, getFleetSize } from '@/lib/supabase/bookings';
 import { useTranslations } from 'next-intl';
 import 'react-date-range/dist/styles.css';
 import 'react-date-range/dist/theme/default.css';
 
-// Updated to 6 — total Himalayan fleet
-const MAX_BIKES = 6;
+// Fallback used for Panama City (pooled fleet-wide count, matches current behavior).
+// Coronado uses the real fleet size fetched dynamically instead (see below).
+const DEFAULT_MAX_BIKES = 6;
 
-export default function BookingCalendar({ onDateRangeChange }) {
+export default function BookingCalendar({ onDateRangeChange, location }) {
   const t = useTranslations('calendar');
+  const isCoronado = location === 'Playa Coronado';
   const [availabilityMap, setAvailabilityMap] = useState({});
+  const [maxBikes, setMaxBikes] = useState(DEFAULT_MAX_BIKES);
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -33,9 +36,19 @@ export default function BookingCalendar({ onDateRangeChange }) {
     const fetchAvailability = async () => {
       setLoading(true);
       try {
-        // Now fetches Himalayan-only availability
-        const data = await checkBikesAvailabilityRangeByModel('Himalayan');
-        setAvailabilityMap(data || {});
+        if (isCoronado) {
+          const [data, fleetSize] = await Promise.all([
+            checkBikesAvailabilityRangeByModel('Himalayan', 'Playa Coronado'),
+            getFleetSize('Himalayan', 'Playa Coronado'),
+          ]);
+          setAvailabilityMap(data || {});
+          setMaxBikes(fleetSize || 0);
+        } else {
+          // Panama City (or no location yet): pooled fleet-wide availability, unchanged behavior.
+          const data = await checkBikesAvailabilityRangeByModel('Himalayan');
+          setAvailabilityMap(data || {});
+          setMaxBikes(DEFAULT_MAX_BIKES);
+        }
       } catch (err) {
         console.error('BookingCalendar availability error:', err);
       } finally {
@@ -43,7 +56,7 @@ export default function BookingCalendar({ onDateRangeChange }) {
       }
     };
     fetchAvailability();
-  }, []);
+  }, [isCoronado]);
 
   const isSelected = (day) => {
     const start = selectedRange?.startDate;
@@ -61,14 +74,14 @@ export default function BookingCalendar({ onDateRangeChange }) {
     const key = `${y}-${m}-${d}`;
 
     const booked    = availabilityMap[key] || 0;
-    const remaining = MAX_BIKES - booked;
+    const remaining = maxBikes - booked;
 
     let bgColor, textColor;
 
     if (isSelected(day)) {
       bgColor   = 'bg-yellow-400';
       textColor = 'text-gray-900 font-bold';
-    } else if (remaining === MAX_BIKES) {
+    } else if (remaining === maxBikes) {
       bgColor   = 'bg-green-200';
       textColor = 'text-gray-900';
     } else if (remaining >= 2) {
