@@ -8,17 +8,11 @@ import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import Navigation from '../../../../components/Navigation';
 import Footer from '../../../../components/Footer';
-import { createClient } from '@supabase/supabase-js';
 
 const MODEL_LABELS = {
   Himalayan: 'Royal Enfield Himalayan 450',
   CFMoto700: 'CF Moto 700 CL-X',
 };
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
 
 export default function BookingSuccessPage() {
   const t = useTranslations('SuccessPage');
@@ -46,13 +40,11 @@ const fetchBooking = async () => {
         const maxAttempts = 2;
         
         while (attempts < maxAttempts) {
-          const { data: booking, error: fetchError } = await supabase
-            .from('bookings')
-            .select('*')
-            .eq('id', bookingId)
-            .single();
+          const res  = await fetch(`/api/bookings/${bookingId}/confirmation`);
+          const json = await res.json();
 
-          if (fetchError) throw new Error('Booking not found');
+          if (!res.ok || !json.booking) throw new Error('Booking not found');
+          const booking = json.booking;
 
           // Check if webhook has been received
           if (booking.webhook_received && booking.status === 'confirmed') {

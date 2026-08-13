@@ -9,6 +9,41 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
+// List all bookings (+ riders) for the admin dashboard. Replaces the direct
+// anon-key `getAllBookings()` call that used to run from the browser — RLS
+// hardening means the client no longer has table-level SELECT on `bookings`.
+export async function GET(request) {
+  try {
+    const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+    const { valid, role } = await verifyAdminSessionToken(token);
+    if (!valid) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    // A coronado-role admin only ever sees Coronado bookings — enforced here
+    // from the verified session, never from a client-supplied query param.
+    let query = supabase
+      .from('bookings')
+      .select('*, booking_riders(*)')
+      .order('created_at', { ascending: false });
+
+    if (role === 'coronado') {
+      query = query.eq('pickup_location', 'Playa Coronado');
+    }
+
+    const { data, error } = await query;
+    if (error) {
+      console.error('Error fetching bookings:', error);
+      return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 });
+    }
+
+    return NextResponse.json({ bookings: data || [] });
+  } catch (err) {
+    console.error('Error in GET /api/admin/bookings:', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
 // Admin manual "Add Booking" flow — server-side port of what used to run directly
 // against the anon Supabase client in AdminDashboardClient.jsx's handleAddBooking.
 // Same availability/assignment logic as the webhook (Phase 1F): hard location filter
