@@ -348,6 +348,8 @@ const BookingPage = () => {
     return true;
   };
 
+  // Returns { ok, available } so callers can react immediately (popup, block
+  // navigation, …) instead of relying on the (async) availabilityError state.
   const checkAvailability = async (start, end, qty) => {
     try {
       // Coronado is a hard location filter (only Coronado-stationed bikes count);
@@ -357,11 +359,13 @@ const BookingPage = () => {
       const needed    = parseInt(qty);
       if (available < needed) {
         setAvailabilityError(t('availabilityError', { available, model: currentModelConfig?.shortLabel ?? '' }));
-      } else {
-        setAvailabilityError('');
+        return { ok: false, available };
       }
+      setAvailabilityError('');
+      return { ok: true, available };
     } catch {
       setAvailabilityError(t('availabilityCheckFailed'));
+      return { ok: false, available: null };
     }
   };
 
@@ -386,6 +390,36 @@ const BookingPage = () => {
         await checkAvailability(startDate, endDate, value);
       }
     }
+  };
+
+  // Bike quantity buttons on step 3 set formData directly (not via handleChange),
+  // so re-check availability here too — otherwise bumping from 1 → 3 bikes after
+  // dates are already picked slips through until the payment step.
+  const handleBikeQuantitySelect = async (num) => {
+    const qty = num.toString();
+    setFormData(prev => ({ ...prev, bikeQuantity: qty }));
+    setAppliedPromo(null);
+    if (startDate && endDate) {
+      await checkAvailability(startDate, endDate, qty);
+    }
+  };
+
+  // Re-verify availability at the moment the user clicks Continue on the
+  // calendar step, and surface it as a popup — catches both the case above
+  // and someone else grabbing the last bike in the seconds since selection.
+  const handleContinueFromDates = async () => {
+    if (!canProceedStep4) return;
+    const { ok, available } = await checkAvailability(startDate, endDate, formData.bikeQuantity);
+    if (!ok) {
+      showModal(
+        'error',
+        available !== null
+          ? t('availabilityErrorSubmit', { available, model: currentModelConfig?.shortLabel ?? '' })
+          : t('availabilityCheckFailed')
+      );
+      return;
+    }
+    setCurrentStep(4);
   };
 
   const calculateDays = () => {
@@ -629,7 +663,7 @@ const BookingPage = () => {
                     <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
                       {[1, 2, 3, 4, 5, 6].map((num) => (
                         <motion.button key={num}
-                          onClick={() => setFormData(prev => ({ ...prev, bikeQuantity: num.toString() }))}
+                          onClick={() => handleBikeQuantitySelect(num)}
                           whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
                           className={`relative p-3 rounded-xl border-2 transition-all ${
                             formData.bikeQuantity === num.toString()
@@ -697,7 +731,7 @@ const BookingPage = () => {
                     className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
-                  <motion.button onClick={() => setCurrentStep(4)} disabled={!canProceedStep4}
+                  <motion.button onClick={handleContinueFromDates} disabled={!canProceedStep4}
                     whileHover={canProceedStep4 ? { scale: 1.02 } : {}} whileTap={canProceedStep4 ? { scale: 0.98 } : {}}
                     className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
                       canProceedStep4 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
