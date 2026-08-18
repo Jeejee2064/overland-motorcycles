@@ -6,22 +6,20 @@ import {
   getAvailableMotorcyclesForEdit,
 } from '@/lib/supabase/bookings-admin-helpers';
 
-function PaymentMailGenerator({ booking, onSent, notify, role }) {
-  const isCoronado = role === 'coronado';
-  const bikeCount = booking.bike_quantity || 1;
-  const authCount = booking.auth_count || 0;
-  const authDone  = booking.auth_status === 'authorized';
+function PaymentMailGenerator({ booking, onSent, notify }) {
   const balDone   = booking.balance_status === 'captured';
   const initDone  = booking.webhook_received && booking.payment_status === 'paid';
-  const isPending = booking.status === 'pending' || !initDone;
 
   const options = [];
 
-  if (isPending && !booking.paid) {
+  // "Full payment" covers initial + balance in one link — only offer it
+  // while neither half has been paid yet, otherwise it would let the
+  // customer re-pay a part that's already settled.
+  if (!initDone && !balDone) {
     options.push({
       id:    'full',
       label: `Full Payment (Initial + Balance) — $${parseFloat(booking.total_price).toFixed(2)}`,
-      done:  booking.paid,
+      done:  false,
       type:  'full',
       index: 0,
     });
@@ -31,23 +29,10 @@ function PaymentMailGenerator({ booking, onSent, notify, role }) {
     options.push({
       id:    'initial',
       label: `Initial Payment (50%) — $${parseFloat(booking.down_payment).toFixed(2)}`,
-      done:  initDone,
+      done:  false,
       type:  'initial',
       index: 0,
     });
-  }
-
-  if (!isCoronado) {
-    for (let i = 0; i < bikeCount; i++) {
-      const done = authDone && authCount > i;
-      options.push({
-        id:    `auth_${i}`,
-        label: bikeCount > 1 ? `Security Deposit #${i + 1} — $1,000` : 'Security Deposit — $1,000',
-        done,
-        type:  'auth',
-        index: i,
-      });
-    }
   }
 
   options.push({
@@ -58,23 +43,26 @@ function PaymentMailGenerator({ booking, onSent, notify, role }) {
     index: 0,
   });
 
-  const [selected, setSelected] = React.useState(
-    options.filter(o => !o.done).map(o => o.id)
-  );
+  const [selected, setSelected] = React.useState(() => {
+    const notDone = options.filter(o => !o.done);
+    const full = notDone.find(o => o.id === 'full');
+    // "full" replaces initial + balance — never preselect it alongside them
+    return full ? [full.id] : notDone.map(o => o.id);
+  });
   const [sending, setSending] = React.useState(false);
 
+  // "full" is mutually exclusive with "initial"/"balance": picking one
+  // covers what the other would, so checking either disables the other(s).
+  const fullSelected      = selected.includes('full');
+  const halfOrBalanceSelected = selected.some(id => id === 'initial' || id === 'balance');
+
+  const isLocked = (opt) =>
+    opt.done ||
+    (opt.id === 'full' && halfOrBalanceSelected) ||
+    ((opt.id === 'initial' || opt.id === 'balance') && fullSelected);
+
   const toggle = (id) => {
-    setSelected(prev => {
-      if (id === 'full') {
-        const without = prev.filter(x => x !== 'initial' && x !== 'balance');
-        return without.includes('full') ? without.filter(x => x !== 'full') : [...without, 'full'];
-      }
-      if (id === 'initial' || id === 'balance') {
-        const without = prev.filter(x => x !== 'full');
-        return without.includes(id) ? without.filter(x => x !== id) : [...without, id];
-      }
-      return prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id];
-    });
+    setSelected(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
   };
 
   const handleSend = async () => {
@@ -107,22 +95,30 @@ function PaymentMailGenerator({ booking, onSent, notify, role }) {
     <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
       <p className="text-sm font-bold text-gray-700 mb-3">📧 Send Payment Links</p>
       <div className="space-y-2 mb-4">
-        {options.map(opt => (
-          <label
-            key={opt.id}
-            className={'flex items-center gap-3 p-2 rounded-lg transition ' + (opt.done ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100')}
-          >
-            <input
-              type="checkbox"
-              disabled={opt.done}
-              checked={selected.includes(opt.id)}
-              onChange={() => toggle(opt.id)}
-              className="w-4 h-4 rounded text-yellow-400"
-            />
-            <span className="text-sm text-gray-800">{opt.label}</span>
-            {opt.done && <span className="text-xs text-green-600 ml-auto">✅ Done</span>}
-          </label>
-        ))}
+        {options.map(opt => {
+          const locked = isLocked(opt);
+          return (
+            <label
+              key={opt.id}
+              className={'flex items-center gap-3 p-2 rounded-lg transition ' + (locked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100')}
+            >
+              <input
+                type="checkbox"
+                disabled={locked}
+                checked={selected.includes(opt.id)}
+                onChange={() => toggle(opt.id)}
+                className="w-4 h-4 rounded text-yellow-400"
+              />
+              <span className="text-sm text-gray-800">{opt.label}</span>
+              {opt.done && <span className="text-xs text-green-600 ml-auto">✅ Done</span>}
+              {!opt.done && locked && (
+                <span className="text-xs text-gray-400 ml-auto">
+                  {opt.id === 'full' ? 'uncheck other options first' : 'covered by full payment'}
+                </span>
+              )}
+            </label>
+          );
+        })}
       </div>
       <button
         onClick={handleSend}
@@ -791,7 +787,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             </div>
 
             {/* Mail generator */}
-            <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} notify={notify} role={role} />
+            <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} notify={notify} />
 
             {editedBooking.payment_mail_sent_at && (
               <p className="text-xs text-gray-400 text-center mt-2">
