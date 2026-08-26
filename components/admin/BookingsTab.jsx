@@ -1,6 +1,7 @@
 'use client'
 import React, { useState } from 'react';
-import { Search, Package, Link as LinkIcon, X, Copy, Mail, Send } from 'lucide-react';
+import { Search, Package, Link as LinkIcon, X, Copy, Mail, Send, AlertTriangle } from 'lucide-react';
+import ImportantNoteModal from '@/components/admin/ImportantNoteModal';
 
 const BookingsTab = ({
   bookings,
@@ -23,6 +24,7 @@ const BookingsTab = ({
   const [linkLocale, setLinkLocale] = useState('en');
   const [sendingMail, setSendingMail] = useState(null);
   const [filterLocation, setFilterLocation] = useState('all');
+  const [noteBooking, setNoteBooking] = useState(null);
 
   const LOCALES = [
     { value: 'en', label: '🇺🇸 EN', prefix: '' },
@@ -169,9 +171,21 @@ const BookingsTab = ({
 
                     {/* Customer */}
                     <td className="px-6 py-4">
-                      <p className="font-semibold text-gray-900">
-                        {booking.first_name} {booking.last_name}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="font-semibold text-gray-900">
+                          {booking.first_name} {booking.last_name}
+                        </p>
+                        {booking.important_note && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setNoteBooking(booking); }}
+                            title="Important note — click to view"
+                            className="flex items-center gap-1 px-2 py-0.5 bg-red-100 text-red-700 border border-red-300 text-xs font-bold rounded-full hover:bg-red-200 transition"
+                          >
+                            <AlertTriangle size={12} />
+                            Important
+                          </button>
+                        )}
+                      </div>
                       <a
                         href={'mailto:' + booking.email}
                         className="text-sm text-blue-500 hover:text-blue-700 hover:underline flex items-center gap-1"
@@ -356,6 +370,10 @@ const BookingsTab = ({
             </button>
           </div>
         </div>
+      )}
+
+      {noteBooking && (
+        <ImportantNoteModal note={noteBooking.special_requests} onClose={() => setNoteBooking(null)} />
       )}
     </>
   );

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e ' *)",
+      "Bash(git commit -m ' *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\\\\n\" https://overland-motorcycles.com/ --max-time 10)",
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" https://overland-motorcycles.com/api/bookings/00000000-0000-0000-0000-000000000000/confirmation --max-time 10)",
+      "Bash(curl -s -w \"\\\\nHTTP %{http_code}\\\\n\" https://overland-motorcycles.com/api/admin/bookings --max-time 10)",
+      "Bash(curl -s -b /tmp/admin-cookie.txt \"https://overland-motorcycles.com/api/admin/motorcycle-calendar?start_date=2026-08-01&end_date=2026-08-31\" -w \"\\\\nHTTP %{http_code}\\\\n\")",
+      "Bash(curl -s -b /tmp/admin-cookie.txt https://overland-motorcycles.com/api/admin/messages -w \"\\\\nHTTP %{http_code}\\\\n\")",
+      "Bash(curl -s -b /tmp/coronado-cookie.txt \"https://overland-motorcycles.com/api/admin/motorcycle-calendar?start_date=2020-01-01&end_date=2027-12-31\")",
+      "Bash(curl -s -b /tmp/coronado-cookie.txt https://overland-motorcycles.com/api/admin/messages -w \"\\\\nHTTP %{http_code}\\\\n\")"
+    ]
+  }
+}

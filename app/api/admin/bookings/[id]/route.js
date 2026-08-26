@@ -15,7 +15,7 @@ const supabase = createClient(
 const ALLOWED_FIELDS = [
   'first_name', 'last_name', 'email', 'phone', 'country',
   'start_date', 'end_date', 'bike_quantity', 'motorcycle_model', 'pickup_location',
-  'total_price', 'down_payment', 'deposit', 'special_requests', 'hear_about_us',
+  'total_price', 'down_payment', 'deposit', 'special_requests', 'important_note', 'hear_about_us',
   'status', 'payment_status', 'webhook_received',
   'auth_status', 'auth_count', 'balance_status', 'balance_paid_at',
   'paid',

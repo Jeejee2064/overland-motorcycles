@@ -1,13 +1,17 @@
 
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 const WhatsApp = () => {
   const lottieRef = useRef(null);
   const [lottie, setLottie] = useState(null);
+  const pathname = usePathname();
 
   const whatsappNumber = '50768051100'; // Replace with your number
   const whatsappLink = `https://wa.me/${whatsappNumber}`;
+
+  const isAdmin = pathname?.includes('/admin');
 
   useEffect(() => {
     import('lottie-web').then((Lottie) => {
@@ -16,7 +20,7 @@ const WhatsApp = () => {
   }, []);
 
   useEffect(() => {
-    if (!lottie || !lottieRef.current) return;
+    if (!lottie || !lottieRef.current || isAdmin) return;
 
     const animation = lottie.loadAnimation({
       container: lottieRef.current,
@@ -27,7 +31,9 @@ const WhatsApp = () => {
     });
 
     return () => animation.destroy();
-  }, [lottie]);
+  }, [lottie, isAdmin]);
+
+  if (isAdmin) return null;
 
   return (
     <a

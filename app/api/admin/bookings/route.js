@@ -135,6 +135,7 @@ export async function POST(request) {
         down_payment:     newBooking.down_payment,
         deposit:          newBooking.deposit,
         special_requests: newBooking.special_requests || null,
+        important_note:   newBooking.important_note || false,
         hear_about_us:    newBooking.hear_about_us || null,
         status:           newBooking.status || 'confirmed',
         payment_status:   newBooking.payment_status || 'confirmed',

@@ -13,7 +13,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request) {
   try {
-    const { bookingId, links } = await request.json();
+    const { bookingId, links, sendEmail = true } = await request.json();
 
     const token = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
     const { valid, role } = await verifyAdminSessionToken(token);
@@ -88,20 +88,24 @@ export async function POST(request) {
       statusUpdate.auth_link_sent_at = now;
     }
 
-    // Send email first — only persist to DB if it succeeds
-    await resend.emails.send({
-      from:    process.env.RESEND_FROM_EMAIL,
-      to:      [booking.email],
-      subject: '🏍️ Action Required — Complete Your Booking',
-      html:    generatePaymentLinkEmailHTML(booking, urlLinks),
-    });
+    // Send email first — only persist to DB if it succeeds. When sendEmail
+    // is false (admin just wants to copy the link), skip straight to
+    // persisting the same status update the email flow would have made.
+    if (sendEmail) {
+      await resend.emails.send({
+        from:    process.env.RESEND_FROM_EMAIL,
+        to:      [booking.email],
+        subject: '🏍️ Action Required — Complete Your Booking',
+        html:    generatePaymentLinkEmailHTML(booking, urlLinks),
+      });
+    }
 
     await supabase
       .from('bookings')
       .update(statusUpdate)
       .eq('id', bookingId);
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, links: urlLinks });
 
   } catch (error) {
     console.error('[send-payment-link]', error);

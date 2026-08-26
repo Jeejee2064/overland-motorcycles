@@ -1,7 +1,8 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChevronLeft, ChevronRight, X, ExternalLink } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, ExternalLink, AlertTriangle } from 'lucide-react';
 import { getMotorcycleCalendarWithPhone, getAllMotorcycles } from '@/lib/supabase/bookings';
+import ImportantNoteModal from '@/components/admin/ImportantNoteModal';
 import {
   startOfMonth,
   endOfMonth,
@@ -34,6 +35,7 @@ export default function MotorcycleCalendar({ restrictedLocation = null }) {
   const [loading, setLoading] = useState(true);
   const [colorMap, setColorMap] = useState({});
   const [selectedBooking, setSelectedBooking] = useState(null);
+  const [noteBooking, setNoteBooking] = useState(null);
   const [cellWidth, setCellWidth] = useState(40);
   const containerRef = useRef(null);
 
@@ -238,6 +240,15 @@ const prevMonth = () => setCurrentDate(addMonths(currentDate, -1));
                             style={{ left: `${leftPos}px`, width: `${width}px`, height: '40px' }}
                             onClick={() => setSelectedBooking({ ...b, motorcycle_name: bike.name })}
                           >
+                            {b.important_note && (
+                              <button
+                                onClick={(e) => { e.stopPropagation(); setNoteBooking(b); }}
+                                title="Important note — click to view"
+                                className="mr-1 flex-shrink-0 bg-white/90 text-red-600 rounded-full p-0.5 hover:bg-white transition"
+                              >
+                                <AlertTriangle size={12} />
+                              </button>
+                            )}
                             <span className="truncate">
                               {b.display_name || b.customer_name}
                               <span className="opacity-75"> · {b.pickup_location === 'Playa Coronado' ? 'COR' : 'PC'}</span>
@@ -341,6 +352,17 @@ const prevMonth = () => setCurrentDate(addMonths(currentDate, -1));
                   {selectedBooking.status}
                 </span>
               </div>
+              {selectedBooking.important_note && (
+                <div>
+                  <button
+                    onClick={() => setNoteBooking(selectedBooking)}
+                    className="flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 border border-red-300 text-xs font-bold rounded-full hover:bg-red-200 transition"
+                  >
+                    <AlertTriangle size={12} />
+                    Important — click to view note
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* View Details button */}
@@ -357,6 +379,11 @@ const prevMonth = () => setCurrentDate(addMonths(currentDate, -1));
             </div>
           </div>
         </div>
+      )}
+
+      {/* Important Note Modal */}
+      {noteBooking && (
+        <ImportantNoteModal note={noteBooking.special_requests} onClose={() => setNoteBooking(null)} />
       )}
     </div>
   );

@@ -52,7 +52,7 @@ export async function GET(request) {
     const bookingIds = calendarData.map(event => event.booking_id).filter(Boolean);
 
     const [{ data: bookingsData }, { data: ridersData }, { data: motoAssignments }] = await Promise.all([
-      supabase.from('bookings').select('id, phone, email, first_name, last_name, pickup_location').in('id', bookingIds),
+      supabase.from('bookings').select('id, phone, email, first_name, last_name, pickup_location, special_requests, important_note').in('id', bookingIds),
       supabase.from('booking_riders').select('booking_id, rider_index, first_name, last_name, email, phone').in('booking_id', bookingIds).order('rider_index'),
       supabase.from('booking_motorcycles').select('booking_id, motorcycle_id').in('booking_id', bookingIds).order('motorcycle_id'),
     ]);
@@ -98,6 +98,8 @@ export async function GET(request) {
         display_email:   rider?.email || booking?.email      || null,
         all_rider_names: riders.map(r => r?.name).filter(Boolean),
         pickup_location: booking?.pickup_location || 'Panama City',
+        special_requests: booking?.special_requests || null,
+        important_note:   booking?.important_note || false,
       };
     });
 

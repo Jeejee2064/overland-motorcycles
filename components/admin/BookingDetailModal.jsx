@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { XCircle, Edit2, Save, X, Bike, Mail, Share2 } from 'lucide-react';
+import { XCircle, Edit2, Save, X, Bike, Mail, Share2, Copy, Check } from 'lucide-react';
 import {
   getBookingMotorcycles,
   getAvailableMotorcyclesForEdit,
@@ -50,6 +50,8 @@ function PaymentMailGenerator({ booking, onSent, notify }) {
     return full ? [full.id] : notDone.map(o => o.id);
   });
   const [sending, setSending] = React.useState(false);
+  const [copyingId, setCopyingId] = React.useState(null);
+  const [copiedId, setCopiedId] = React.useState(null);
 
   // "full" is mutually exclusive with "initial"/"balance": picking one
   // covers what the other would, so checking either disables the other(s).
@@ -91,6 +93,35 @@ function PaymentMailGenerator({ booking, onSent, notify }) {
     }
   };
 
+  // Generates the same link the email would contain, marks it "sent" on the
+  // booking exactly like the email flow does, but copies it to the clipboard
+  // instead of mailing it — handy for sending it manually via WhatsApp/SMS.
+  const handleCopy = async (opt) => {
+    setCopyingId(opt.id);
+    try {
+      const res = await fetch('/api/pay/send-payment-mail', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bookingId: booking.id,
+          links:     [{ type: opt.type, index: opt.index }],
+          sendEmail: false,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      await navigator.clipboard.writeText(data.links[0].url);
+      notify('Link copied to clipboard!');
+      setCopiedId(opt.id);
+      setTimeout(() => setCopiedId(id => (id === opt.id ? null : id)), 2000);
+      if (onSent) await onSent();
+    } catch (e) {
+      notify('Error: ' + e.message, 'error');
+    } finally {
+      setCopyingId(null);
+    }
+  };
+
   return (
     <div className="border border-gray-200 rounded-xl p-4 bg-gray-50">
       <p className="text-sm font-bold text-gray-700 mb-3">📧 Send Payment Links</p>
@@ -98,25 +129,42 @@ function PaymentMailGenerator({ booking, onSent, notify }) {
         {options.map(opt => {
           const locked = isLocked(opt);
           return (
-            <label
+            <div
               key={opt.id}
-              className={'flex items-center gap-3 p-2 rounded-lg transition ' + (locked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:bg-gray-100')}
+              className="flex items-center gap-3 p-2 rounded-lg transition hover:bg-gray-100"
             >
-              <input
-                type="checkbox"
-                disabled={locked}
-                checked={selected.includes(opt.id)}
-                onChange={() => toggle(opt.id)}
-                className="w-4 h-4 rounded text-yellow-400"
-              />
-              <span className="text-sm text-gray-800">{opt.label}</span>
-              {opt.done && <span className="text-xs text-green-600 ml-auto">✅ Done</span>}
+              <label
+                className={'flex items-center gap-3 flex-1 min-w-0 ' + (locked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer')}
+              >
+                <input
+                  type="checkbox"
+                  disabled={locked}
+                  checked={selected.includes(opt.id)}
+                  onChange={() => toggle(opt.id)}
+                  className="w-4 h-4 rounded text-yellow-400 shrink-0"
+                />
+                <span className="text-sm text-gray-800">{opt.label}</span>
+              </label>
+              {opt.done && <span className="text-xs text-green-600 whitespace-nowrap">✅ Done</span>}
               {!opt.done && locked && (
-                <span className="text-xs text-gray-400 ml-auto">
+                <span className="text-xs text-gray-400 whitespace-nowrap">
                   {opt.id === 'full' ? 'uncheck other options first' : 'covered by full payment'}
                 </span>
               )}
-            </label>
+              {!opt.done && (
+                <button
+                  type="button"
+                  onClick={() => handleCopy(opt)}
+                  disabled={copyingId === opt.id}
+                  title="Copy payment link (doesn't send an email)"
+                  className="flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900 hover:bg-gray-200 border border-gray-300 rounded-md px-2 py-1 transition disabled:opacity-50 whitespace-nowrap shrink-0"
+                >
+                  {copiedId === opt.id
+                    ? <><Check className="w-3.5 h-3.5 text-green-600" /> Copied</>
+                    : <><Copy className="w-3.5 h-3.5" /> {copyingId === opt.id ? '...' : 'Copy link'}</>}
+                </button>
+              )}
+            </div>
           );
         })}
       </div>
@@ -276,6 +324,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
           down_payment:     editedBooking.down_payment,
           deposit:          editedBooking.deposit,
           special_requests: editedBooking.special_requests,
+          important_note:   editedBooking.important_note,
           hear_about_us:    editedBooking.hear_about_us,
           // payment statuses
           payment_status:   editedBooking.payment_status,
@@ -357,6 +406,11 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                 <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-800 border border-blue-300">
                   📍 {editedBooking.pickup_location || 'Panama City'}
                 </span>
+                {editedBooking.important_note && (
+                  <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-red-100 text-red-800 border border-red-300">
+                    ⚠️ Important
+                  </span>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -638,15 +692,28 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
 
           {/* Special Requests */}
           <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-3">Special Requests</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-bold text-gray-900">Special Requests</h3>
+              {isEditing && (
+                <label className="flex items-center gap-2 text-sm font-semibold text-red-600 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={!!editedBooking.important_note}
+                    onChange={(e) => handleFieldChange('important_note', e.target.checked)}
+                    className="w-4 h-4 rounded text-red-600 focus:ring-red-400"
+                  />
+                  ⚠️ Important
+                </label>
+              )}
+            </div>
             {isEditing ? (
               <textarea value={editedBooking.special_requests || ''}
                 onChange={(e) => handleFieldChange('special_requests', e.target.value)}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400"
+                className={'w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 ' + (editedBooking.important_note ? 'border-red-300 bg-red-50' : 'border-gray-300')}
                 placeholder="Enter any special requests..." />
             ) : (
-              <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">
+              <p className={'p-4 rounded-lg ' + (editedBooking.important_note ? 'bg-red-50 border border-red-200 text-red-900 font-medium' : 'bg-gray-50 text-gray-700')}>
                 {editedBooking.special_requests || 'No special requests'}
               </p>
             )}

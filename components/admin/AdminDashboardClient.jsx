@@ -67,6 +67,7 @@ const EMPTY_BOOKING = {
   down_payment:     0,
   deposit:          1000,
   special_requests: '',
+  important_note:   false,
   hear_about_us:    'walk-in',
   status:           'confirmed',
   paid:             false,
