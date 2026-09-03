@@ -6,7 +6,11 @@ import {
   getAvailableMotorcyclesForEdit,
 } from '@/lib/supabase/bookings-admin-helpers';
 
-function PaymentMailGenerator({ booking, onSent, notify }) {
+function PaymentMailGenerator({ booking, onSent, notify, role }) {
+  const isCoronado = role === 'coronado';
+  const bikeCount = booking.bike_quantity || 1;
+  const authCount = booking.auth_count || 0;
+  const authDone  = booking.auth_status === 'authorized';
   const balDone   = booking.balance_status === 'captured';
   const initDone  = booking.webhook_received && booking.payment_status === 'paid';
 
@@ -35,6 +39,19 @@ function PaymentMailGenerator({ booking, onSent, notify }) {
     });
   }
 
+  if (!isCoronado) {
+    for (let i = 0; i < bikeCount; i++) {
+      const done = authDone && authCount > i;
+      options.push({
+        id:    `auth_${i}`,
+        label: bikeCount > 1 ? `Security Deposit #${i + 1} — $1,000` : 'Security Deposit — $1,000',
+        done,
+        type:  'auth',
+        index: i,
+      });
+    }
+  }
+
   options.push({
     id:    'balance',
     label: `Remaining Balance — $${(parseFloat(booking.total_price) - parseFloat(booking.down_payment)).toFixed(2)}`,
@@ -46,8 +63,11 @@ function PaymentMailGenerator({ booking, onSent, notify }) {
   const [selected, setSelected] = React.useState(() => {
     const notDone = options.filter(o => !o.done);
     const full = notDone.find(o => o.id === 'full');
-    // "full" replaces initial + balance — never preselect it alongside them
-    return full ? [full.id] : notDone.map(o => o.id);
+    // "full" replaces initial + balance — never preselect those alongside it,
+    // but unrelated options (security deposits) still default to selected.
+    return full
+      ? notDone.filter(o => o.id !== 'initial' && o.id !== 'balance').map(o => o.id)
+      : notDone.map(o => o.id);
   });
   const [sending, setSending] = React.useState(false);
   const [copyingId, setCopyingId] = React.useState(null);
@@ -854,7 +874,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
             </div>
 
             {/* Mail generator */}
-            <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} notify={notify} />
+            <PaymentMailGenerator booking={editedBooking} onSent={onUpdate} notify={notify} role={role} />
 
             {editedBooking.payment_mail_sent_at && (
               <p className="text-xs text-gray-400 text-center mt-2">

@@ -60,9 +60,11 @@ export async function POST(request) {
       EXPIRES_IN: 3600,
     };
 
+    // /AUTH suffix is required so PagueloFacil generates a hold (AUTH) instead
+    // of capturing the funds immediately, even with TX_TYPE=AUTH in the body.
     const linkDeamonUrl = process.env.NODE_ENV === 'production'
-      ? 'https://secure.paguelofacil.com/LinkDeamon.cfm'
-      : 'https://sandbox.paguelofacil.com/LinkDeamon.cfm';
+      ? 'https://secure.paguelofacil.com/LinkDeamon.cfm/AUTH'
+      : 'https://sandbox.paguelofacil.com/LinkDeamon.cfm/AUTH';
 
     const formBody = Object.keys(pagueloFacilData)
       .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(pagueloFacilData[key])}`)

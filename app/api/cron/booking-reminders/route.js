@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { generateBookingReminderEmailHTML } from '@/lib/emails/bookingReminderEmail';
+import { generatePickupReminderEmailHTML } from '@/lib/emails/pickupReminderEmail';
 
 export const runtime = 'nodejs';
 
@@ -83,12 +84,35 @@ export async function GET(request) {
           html:    generateBookingReminderEmailHTML(bookingWithDuration, assigned),
         });
 
-        console.log(`✅ Reminder sent for booking ${booking.id} — ${booking.first_name} ${booking.last_name}`);
+        console.log(`✅ Internal reminder sent for booking ${booking.id} — ${booking.first_name} ${booking.last_name}`);
         results.push({ id: booking.id, status: 'sent' });
 
       } catch (err) {
-        console.error(`❌ Failed to send reminder for booking ${booking.id}:`, err);
+        console.error(`❌ Failed to send internal reminder for booking ${booking.id}:`, err);
         results.push({ id: booking.id, status: 'failed', error: err.message });
+      }
+
+      // Customer-facing pickup reminder — independent of the internal one above,
+      // a failure here shouldn't be masked by (or mask) the internal send.
+      try {
+        await resend.emails.send({
+          from:    process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
+          to:      [booking.email],
+          subject: '🏍️ Your Pickup is in 2 Days — Overland Motorcycles',
+          html:    generatePickupReminderEmailHTML(booking),
+        });
+
+        await supabase
+          .from('bookings')
+          .update({ pickup_reminder_sent_at: new Date().toISOString() })
+          .eq('id', booking.id);
+
+        console.log(`✅ Customer pickup reminder sent for booking ${booking.id} — ${booking.email}`);
+        results.push({ id: booking.id, status: 'sent', type: 'customer' });
+
+      } catch (err) {
+        console.error(`❌ Failed to send customer pickup reminder for booking ${booking.id}:`, err);
+        results.push({ id: booking.id, status: 'failed', type: 'customer', error: err.message });
       }
     }
 

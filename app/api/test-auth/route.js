@@ -16,8 +16,8 @@ export async function POST() {
 
     const linkDeamonUrl =
       process.env.NODE_ENV === 'production'
-        ? 'https://secure.paguelofacil.com/LinkDeamon.cfm'
-        : 'https://sandbox.paguelofacil.com/LinkDeamon.cfm';
+        ? 'https://secure.paguelofacil.com/LinkDeamon.cfm/AUTH'
+        : 'https://sandbox.paguelofacil.com/LinkDeamon.cfm/AUTH';
 
     const formBody = Object.keys(pagueloFacilData)
       .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(pagueloFacilData[key])}`)

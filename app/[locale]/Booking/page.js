@@ -289,7 +289,11 @@ const BookingPage = () => {
     if (modelValidForLocation) {
       setSelectedModel(model);
       if (hasLocation) {
-        setCurrentStep(start && end ? 4 : 3);
+        if (start && end) {
+          setCurrentStep(5);
+        } else {
+          setCurrentStep(model === 'CFMoto700' ? 4 : 3);
+        }
       } else {
         setCurrentStep(1);
       }
@@ -408,7 +412,7 @@ const BookingPage = () => {
   // calendar step, and surface it as a popup — catches both the case above
   // and someone else grabbing the last bike in the seconds since selection.
   const handleContinueFromDates = async () => {
-    if (!canProceedStep4) return;
+    if (!canProceedStep5) return;
     const { ok, available } = await checkAvailability(startDate, endDate, formData.bikeQuantity);
     if (!ok) {
       showModal(
@@ -419,7 +423,7 @@ const BookingPage = () => {
       );
       return;
     }
-    setCurrentStep(4);
+    setCurrentStep(5);
   };
 
   const calculateDays = () => {
@@ -511,8 +515,8 @@ const BookingPage = () => {
 
   const canProceedStep2 = selectedLocation !== null;
   const canProceedStep3 = selectedModel !== null;
-  const canProceedStep4 = startDate && endDate && !validationError && !availabilityError;
-  const canProceedStep5 =
+  const canProceedStep5 = startDate && endDate && !validationError && !availabilityError;
+  const canProceedStep6 =
     formData.firstName.trim() && formData.lastName.trim() && formData.email.trim() && formData.phone.trim() && formData.country.trim() &&
     additionalRiders.every(r => r.firstName.trim() && r.lastName.trim() && r.email.trim() && r.phone.trim());
 
@@ -538,7 +542,7 @@ const BookingPage = () => {
 
       <div className="min-h-screen pt-24 pb-6 px-4 flex items-center justify-center">
         <div className="w-full max-w-4xl">
-          <ProgressDots currentStep={currentStep} totalSteps={5} />
+          <ProgressDots currentStep={currentStep} totalSteps={6} />
 
           <AnimatePresence mode="wait">
 
@@ -636,7 +640,7 @@ const BookingPage = () => {
                     className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
-                  <motion.button onClick={() => setCurrentStep(3)} disabled={!canProceedStep3}
+                  <motion.button onClick={() => setCurrentStep(selectedModel === 'CFMoto700' ? 4 : 3)} disabled={!canProceedStep3}
                     whileHover={canProceedStep3 ? { scale: 1.02 } : {}} whileTap={canProceedStep3 ? { scale: 0.98 } : {}}
                     className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
                       canProceedStep3 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
@@ -647,42 +651,68 @@ const BookingPage = () => {
               </motion.div>
             )}
 
-            {/* ── STEP 3: Dates + Quantity ── */}
+            {/* ── STEP 3: Bike Quantity ── */}
             {currentStep === 3 && (
-              <motion.div key="step3-dates" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
+              <motion.div key="step3-quantity" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
+                <div className="text-center mb-6">
+                  <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{t('howManyBikes')}</h2>
+                  <div className="inline-flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/30 rounded-full px-4 py-1.5 mt-2">
+                    <span className="text-yellow-400 text-sm font-bold">{currentModelConfig?.label}</span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 mb-6">
+                  {[1, 2, 3, 4, 5, 6].map((num) => (
+                    <motion.button key={num}
+                      onClick={() => handleBikeQuantitySelect(num)}
+                      whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
+                      className={`relative p-3 rounded-xl border-2 transition-all ${
+                        formData.bikeQuantity === num.toString()
+                          ? 'border-yellow-400 bg-yellow-400/10 shadow-lg shadow-yellow-400/20'
+                          : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
+                      }`}>
+                      <div className="text-2xl font-black text-yellow-400">{num}</div>
+                      <div className="text-xs text-gray-400">{num === 1 ? t('bike') : t('bikes')}</div>
+                      {formData.bikeQuantity === num.toString() && (
+                        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
+                          className="absolute -top-1.5 -right-1.5 bg-yellow-400 rounded-full p-0.5">
+                          <Check size={12} className="text-gray-900" />
+                        </motion.div>
+                      )}
+                    </motion.button>
+                  ))}
+                </div>
+
+                {availabilityError && (
+                  <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }}
+                    className="mb-3 p-3 bg-red-500/10 border border-red-500/50 rounded-xl flex items-start gap-3">
+                    <AlertCircle className="text-red-400 flex-shrink-0 mt-1" size={18} />
+                    <p className="text-red-300 text-sm">{availabilityError}</p>
+                  </motion.div>
+                )}
+
+                <div className="flex gap-4">
+                  <motion.button onClick={() => setCurrentStep(2)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
+                    <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
+                  </motion.button>
+                  <motion.button onClick={() => setCurrentStep(4)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                    className="flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50">
+                    {t('stepContinue')} <ChevronRight size={24} />
+                  </motion.button>
+                </div>
+              </motion.div>
+            )}
+
+            {/* ── STEP 4: Dates ── */}
+            {currentStep === 4 && (
+              <motion.div key="step4-dates" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
                 <div className="text-center mb-4">
                   <h2 className="text-2xl md:text-3xl font-black text-white mb-1">{t('step3Title')}</h2>
                   <div className="inline-flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/30 rounded-full px-4 py-1.5 mt-2">
                     <span className="text-yellow-400 text-sm font-bold">{currentModelConfig?.label}</span>
                   </div>
                 </div>
-
-                {selectedModel === 'Himalayan' && (
-                  <div className="mb-4">
-                    <p className="text-center text-sm text-gray-400 mb-3">{t('howManyBikes')}</p>
-                    <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
-                      {[1, 2, 3, 4, 5, 6].map((num) => (
-                        <motion.button key={num}
-                          onClick={() => handleBikeQuantitySelect(num)}
-                          whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                          className={`relative p-3 rounded-xl border-2 transition-all ${
-                            formData.bikeQuantity === num.toString()
-                              ? 'border-yellow-400 bg-yellow-400/10 shadow-lg shadow-yellow-400/20'
-                              : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
-                          }`}>
-                          <div className="text-2xl font-black text-yellow-400">{num}</div>
-                          <div className="text-xs text-gray-400">{num === 1 ? t('bike') : t('bikes')}</div>
-                          {formData.bikeQuantity === num.toString() && (
-                            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
-                              className="absolute -top-1.5 -right-1.5 bg-yellow-400 rounded-full p-0.5">
-                              <Check size={12} className="text-gray-900" />
-                            </motion.div>
-                          )}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 <div className="mb-4">
                   {selectedModel === 'CFMoto700'
@@ -727,14 +757,14 @@ const BookingPage = () => {
                 )}
 
                 <div className="flex gap-4">
-                  <motion.button onClick={() => setCurrentStep(2)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  <motion.button onClick={() => setCurrentStep(selectedModel === 'CFMoto700' ? 2 : 3)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
-                  <motion.button onClick={handleContinueFromDates} disabled={!canProceedStep4}
-                    whileHover={canProceedStep4 ? { scale: 1.02 } : {}} whileTap={canProceedStep4 ? { scale: 0.98 } : {}}
+                  <motion.button onClick={handleContinueFromDates} disabled={!canProceedStep5}
+                    whileHover={canProceedStep5 ? { scale: 1.02 } : {}} whileTap={canProceedStep5 ? { scale: 0.98 } : {}}
                     className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
-                      canProceedStep4 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      canProceedStep5 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}>
                     {t('stepContinue')} <ChevronRight size={24} />
                   </motion.button>
@@ -742,9 +772,9 @@ const BookingPage = () => {
               </motion.div>
             )}
 
-            {/* ── STEP 4: Personal Information ── */}
-            {currentStep === 4 && (
-              <motion.div key="step4-info" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
+            {/* ── STEP 5: Personal Information ── */}
+            {currentStep === 5 && (
+              <motion.div key="step5-info" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
                 <div className="text-center mb-6">
                   <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{t('step4Title')}</h2>
                   <p className="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">{t('step4Subtitle')}</p>
@@ -845,14 +875,14 @@ const BookingPage = () => {
                 )}
 
                 <div className="flex gap-4">
-                  <motion.button onClick={() => setCurrentStep(3)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  <motion.button onClick={() => setCurrentStep(4)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
-                  <motion.button onClick={() => setCurrentStep(5)} disabled={!canProceedStep5}
-                    whileHover={canProceedStep5 ? { scale: 1.02 } : {}} whileTap={canProceedStep5 ? { scale: 0.98 } : {}}
+                  <motion.button onClick={() => setCurrentStep(6)} disabled={!canProceedStep6}
+                    whileHover={canProceedStep6 ? { scale: 1.02 } : {}} whileTap={canProceedStep6 ? { scale: 0.98 } : {}}
                     className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
-                      canProceedStep5 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                      canProceedStep6 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}>
                     {t('stepContinue')} <ChevronRight size={24} />
                   </motion.button>
@@ -860,9 +890,9 @@ const BookingPage = () => {
               </motion.div>
             )}
 
-            {/* ── STEP 5: Review & Pay ── */}
-            {currentStep === 5 && (
-              <motion.div key="step5-review" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
+            {/* ── STEP 6: Review & Pay ── */}
+            {currentStep === 6 && (
+              <motion.div key="step6-review" initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -50 }} transition={{ duration: 0.4 }}>
                 <div className="text-center mb-6">
                   <h2 className="text-2xl md:text-3xl font-black text-white mb-2">{t('summaryTitle')}</h2>
                   <p className="text-gray-400 text-sm md:text-base max-w-2xl mx-auto">{t('summarySubtitle')}</p>
@@ -906,7 +936,7 @@ const BookingPage = () => {
                   {/* Contact info */}
                   <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-700">
                     <h3 className="text-base font-black text-white">{t('summaryContact')}</h3>
-                    <button onClick={() => setCurrentStep(4)}
+                    <button onClick={() => setCurrentStep(5)}
                       className="p-2 rounded-lg bg-yellow-400/10 hover:bg-yellow-400/20 text-yellow-400 transition-all text-xs flex items-center gap-1">
                       <Edit2 size={14} /><span className="hidden sm:inline">{t('stepChange')}</span>
                     </button>
@@ -1024,7 +1054,7 @@ const BookingPage = () => {
                 </div>
 
                 <div className="flex gap-4">
-                  <motion.button onClick={() => setCurrentStep(4)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                  <motion.button onClick={() => setCurrentStep(5)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                     className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
