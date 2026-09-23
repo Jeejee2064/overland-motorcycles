@@ -3,13 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
-import { Mountain, Waves, TreePine, Sun, Compass, Map, Bird, ChevronDown, Camera, Shield, Sparkles, MapPin, Clock, Users } from 'lucide-react';
+import { Mountain, Waves, TreePine, Sun, Compass, Map, Bird, ChevronDown, Camera, Shield, Sparkles, MapPin, Clock, Users, ArrowUpRight } from 'lucide-react';
 
 import Navigation from '../../../components/Navigation';
 import MountainParallax from '../../../components/MountainParallax';
 import Footer from '../../../components/Footer';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import ButtonSecondary from '../../../components/ButtonSecondary';
+import AcomodoLink from '../../../components/AcomodoLink';
 
 const PanamaPage = () => {
   const t = useTranslations('PanamaPage');
@@ -431,6 +432,21 @@ const PanamaPage = () => {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Accommodation partner — Acomodo Rentals (referral, clicks tracked) */}
+      <section className="py-20 bg-white">
+        <div className="max-w-2xl mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">{t('stayTitle')}</h2>
+          <p className="text-lg text-gray-600 mb-8">{t('stayDesc')}</p>
+          <AcomodoLink
+            source="panama-page-stay"
+            className="inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-yellow-400 text-gray-900 font-bold hover:bg-yellow-300 transition-colors duration-300"
+          >
+            {t('stayCta')}
+            <ArrowUpRight size={20} />
+          </AcomodoLink>
         </div>
       </section>
 
