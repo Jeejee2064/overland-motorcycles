@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Calendar, MessageSquare, Bike, TrendingUp, Link as LinkIcon } from 'lucide-react';
+import { Calendar, MessageSquare, Bike, TrendingUp, Link as LinkIcon, Activity } from 'lucide-react';
 
 
 const CORONADO_VISIBLE_TABS = ['calendar', 'bookings'];
@@ -17,6 +17,7 @@ const AdminNavigation = ({ activeTab, setActiveTab, stats = {}, role }) => {
     { id: 'overview',       label: 'Overview',    icon: TrendingUp },
     { id: 'motorcycles',    label: 'Motorcycles', icon: Bike },
     { id: 'revenue',        label: 'Revenue',     icon: TrendingUp },
+    { id: 'analytics',      label: 'Analytics',   icon: Activity },
     { id: 'link-generator', label: 'Links',       icon: LinkIcon },
   ];
 

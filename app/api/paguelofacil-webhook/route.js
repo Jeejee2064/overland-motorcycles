@@ -18,6 +18,38 @@ const MODEL_LABELS = {
   CFMoto700: 'CF Moto 700 CL-X',
 };
 
+// Best-effort funnel event, server-side — the only reliable source of truth
+// for actual conversions (unlike client beacons, it can't be lost to a closed
+// tab or an ad blocker). Re-attaches the visitor/session id recorded at
+// checkout so this event lines up with the rest of that visitor's journey.
+async function recordFunnelEvent(eventName, bookingId, bookingRow) {
+  try {
+    const { data: initEvent } = await supabase
+      .from('analytics_events')
+      .select('session_id, visitor_id')
+      .eq('event_name', 'checkout_initiated')
+      .eq('metadata->>booking_id', String(bookingId))
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    await supabase.from('analytics_events').insert({
+      event_type: 'funnel',
+      event_name: eventName,
+      session_id: initEvent?.session_id || 'server',
+      visitor_id: initEvent?.visitor_id || 'server',
+      metadata: {
+        booking_id:       bookingId,
+        motorcycle_model: bookingRow?.motorcycle_model,
+        pickup_location:  bookingRow?.pickup_location,
+        total_price:      bookingRow?.total_price,
+      },
+    });
+  } catch (err) {
+    console.error(`Analytics event (${eventName}) failed:`, err);
+  }
+}
+
 export async function POST(request) {
   try {
     const data = await request.json();
@@ -83,6 +115,8 @@ export async function POST(request) {
         })
         .eq('id', bookingId);
 
+      await recordFunnelEvent('checkout_failed', bookingId, booking);
+
       return NextResponse.json({ status: 'payment_failed', message: messageSys });
     }
 
@@ -106,6 +140,8 @@ export async function POST(request) {
       .select('*')
       .eq('id', bookingId)
       .single();
+
+    await recordFunnelEvent('purchase', bookingId, updatedBooking);
 
     /* -------------------------------------------------
        6️⃣ Model-aware motorcycle assignment

@@ -33,6 +33,7 @@ export async function POST(request) {
       pickupLocation,    // ← 'Panama City' | 'Playa Coronado'
       calculatedDays,
       additionalRiders = [],
+      analytics = {},
     } = body;
 
     // Validate required fields
@@ -130,6 +131,25 @@ export async function POST(request) {
         { error: 'Failed to create booking' },
         { status: 500 }
       );
+    }
+
+    // 1a. Best-effort funnel event — "checkout initiated". Never blocks the
+    // booking flow; a lost analytics row is fine, a broken payment link isn't.
+    try {
+      await supabase.from('analytics_events').insert({
+        event_type: 'funnel',
+        event_name: 'checkout_initiated',
+        session_id: typeof analytics?.session_id === 'string' ? analytics.session_id.slice(0, 100) : 'server',
+        visitor_id: typeof analytics?.visitor_id === 'string' ? analytics.visitor_id.slice(0, 100) : 'server',
+        metadata: {
+          booking_id:       booking.id,
+          motorcycle_model: motorcycleModel,
+          pickup_location:  pickupLocation,
+          total_price:      parseFloat(totalRentalPrice),
+        },
+      });
+    } catch (err) {
+      console.error('Analytics event (checkout_initiated) failed:', err);
     }
 
     // 1b. Save additional riders

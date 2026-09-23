@@ -14,6 +14,7 @@ import Footer from '../../../components/Footer';
 import BookingCalendar from '../../../components/BookingCalendar';
 import CFMotoCalendar from '../../../components/CFMotoCalendar';
 import { checkBikesAvailableByModel } from '@/lib/supabase/bookings';
+import { trackEvent, getSessionId, getVisitorId } from '@/lib/analytics/track';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
 
@@ -501,6 +502,10 @@ const BookingPage = () => {
             email:      r.email,
             phone:      r.phone,
           })),
+          analytics: {
+            session_id: getSessionId(),
+            visitor_id: getVisitorId(),
+          },
         }),
       });
       const { url, error } = await response.json();
@@ -521,6 +526,11 @@ const BookingPage = () => {
     additionalRiders.every(r => r.firstName.trim() && r.lastName.trim() && r.email.trim() && r.phone.trim());
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'smooth' }); }, [currentStep]);
+
+  useEffect(() => {
+    trackEvent('funnel', `wizard_step_${currentStep}`, { step: currentStep });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentStep]);
 
   useEffect(() => {
     if (selectedModel === 'CFMoto700') { setAdditionalRiders([]); return; }

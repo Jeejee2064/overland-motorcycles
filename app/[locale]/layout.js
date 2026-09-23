@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import './globals.css';
 import { Analytics } from "@vercel/analytics/next"
 import WhatsApp from '@/components/Whatsapp';
+import PageTracker from '@/components/Analytics/PageTracker';
 const locales = ['en', 'es', 'pt', 'fr'];
 
 export async function generateStaticParams() {
@@ -316,6 +317,7 @@ export default async function RootLayout({ children, params }) {
           {children}
           <WhatsApp />
           <Analytics/>
+          <PageTracker />
         </NextIntlClientProvider>
       </body>
     </html>

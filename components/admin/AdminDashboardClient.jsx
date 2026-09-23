@@ -16,6 +16,7 @@ import BookingDetailModal from '@/components/admin/BookingDetailModal';
 import AddBookingModal from '@/components/admin/AddBookingModal';
 import BookingLinkGeneratorTab from '@/components/admin/BookingLinkGeneratorTab';
 import RevenueTab from '@/components/admin/RevenueTab';
+import AnalyticsTab from '@/components/admin/AnalyticsTab';
 
 const HIMALAYAN_PRICING = [
   { days: 1,  price: 280 }, { days: 2,  price: 280 }, { days: 3,  price: 400 },
@@ -365,6 +366,7 @@ const AdminDashboardClient = ({ role }) => {
         )}
         {!isCoronado && activeTab === 'motorcycles'    && <MotorcyclesTab />}
         {!isCoronado && activeTab === 'revenue'        && <RevenueTab bookings={bookings} />}
+        {!isCoronado && activeTab === 'analytics'      && <AnalyticsTab />}
         {!isCoronado && activeTab === 'link-generator' && <BookingLinkGeneratorTab />}
       </main>
 
