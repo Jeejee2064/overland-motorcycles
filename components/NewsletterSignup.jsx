@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocale, useTranslations } from 'next-intl';
 import { Mail, X } from 'lucide-react';
@@ -22,6 +22,13 @@ const NewsletterSignup = ({ source, variant = 'primary' }) => {
     setMessage('');
     setIsError(false);
   };
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e) => { if (e.key === 'Escape') close(); };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [open]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -66,7 +73,7 @@ const NewsletterSignup = ({ source, variant = 'primary' }) => {
 
       {open && createPortal(
         <div
-          className="fixed inset-0 z-[300] flex items-center justify-center bg-black/70 px-4"
+          className="fixed inset-0 z-[300] flex items-center justify-center bg-black/70 px-4 overscroll-contain"
           onClick={close}
         >
           <div
@@ -92,21 +99,27 @@ const NewsletterSignup = ({ source, variant = 'primary' }) => {
             <p className="text-gris mb-6">{t('desc')}</p>
 
             {status === 'done' ? (
-              <p className="text-accent font-semibold">{message}</p>
+              <p role="status" className="text-accent font-semibold">{message}</p>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-3">
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
+                  spellCheck={false}
                   required
                   autoFocus
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={t('placeholder')}
-                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-gris/30 text-white placeholder-gris focus:outline-none focus:border-accent"
+                  aria-label={t('placeholder')}
+                  className="w-full px-4 py-3 rounded-lg bg-white/10 border border-gris/30 text-white placeholder-gris focus:outline-none focus:border-accent focus-visible:ring-2 focus-visible:ring-accent/50"
                 />
-                {message && (
-                  <p className={`text-sm ${isError ? 'text-red-400' : 'text-accent'}`}>{message}</p>
-                )}
+                <div aria-live="polite">
+                  {message && (
+                    <p role={isError ? 'alert' : undefined} className={`text-sm ${isError ? 'text-red-400' : 'text-accent'}`}>{message}</p>
+                  )}
+                </div>
                 <button
                   type="submit"
                   disabled={status === 'sending'}

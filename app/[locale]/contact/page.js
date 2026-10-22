@@ -174,17 +174,19 @@ const ContactPage = () => {
                     href="https://www.instagram.com/overlandmotorcycles/"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Instagram"
                     className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-yellow-400 transition-colors"
                   >
-                    <Instagram size={24} className="text-gray-900" />
+                    <Instagram size={24} className="text-gray-900" aria-hidden="true" />
                   </a>
                   <a
                     href="https://www.facebook.com/profile.php?id=61573828461831"
                     target="_blank"
                     rel="noopener noreferrer"
+                    aria-label="Facebook"
                     className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center hover:bg-yellow-400 transition-colors"
                   >
-                    <Facebook size={24} className="text-gray-900" />
+                    <Facebook size={24} className="text-gray-900" aria-hidden="true" />
                   </a>
                 </div>
               </div>
@@ -211,10 +213,11 @@ const ContactPage = () => {
                       type="text"
                       id="name"
                       name="name"
+                      autoComplete="name"
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition"
                       placeholder="John Doe"
                     />
                   </div>
@@ -228,10 +231,11 @@ const ContactPage = () => {
                       type="email"
                       id="email"
                       name="email"
+                      autoComplete="email"
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition"
                       placeholder="john@example.com"
                     />
                   </div>
@@ -245,9 +249,10 @@ const ContactPage = () => {
                       type="tel"
                       id="phone"
                       name="phone"
+                      autoComplete="tel"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition"
                       placeholder="+507 6805-1100"
                     />
                   </div>
@@ -264,7 +269,7 @@ const ContactPage = () => {
                       onChange={handleChange}
                       required
                       rows={6}
-                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition-all resize-none"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition resize-none"
                       placeholder="Tell us about your adventure plans..."
                     />
                   </div>
@@ -273,7 +278,7 @@ const ContactPage = () => {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-full px-8 py-4 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
+                    className={`w-full px-8 py-4 bg-gray-900 text-white font-semibold rounded-full hover:bg-gray-800 transition duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 ${
                       isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >

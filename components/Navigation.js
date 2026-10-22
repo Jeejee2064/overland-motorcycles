@@ -27,16 +27,24 @@ const Navigation = () => {
     checkScroll();
 
     // Then listen for scroll events
-    window.addEventListener('scroll', checkScroll);
+    window.addEventListener('scroll', checkScroll, { passive: true });
     return () => window.removeEventListener('scroll', checkScroll);
   }, []);
+
+  // Close the mobile menu with Escape
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKeyDown = (e) => { if (e.key === 'Escape') setIsOpen(false); };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [isOpen]);
 
   // Use translation keys for the nav items
   const navItems = [
     { name: t('navFleet'), href: '/Fleet' },
     { name: t('navPanama'), href: '/Panama' },
     { name: tTours('navLabel'), href: '/motorcycle-tours' },
-    { name: t('navPricing'), href: 'Pricing' },
+    { name: t('navPricing'), href: '/Pricing' },
     { name: t('navContact'), href: '/contact' }
   ];
 
@@ -46,7 +54,7 @@ const Navigation = () => {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-background`}
+      className={`fixed top-0 left-0 right-0 z-50 transition duration-300 bg-background`}
     >
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,7 +91,7 @@ const Navigation = () => {
                     transition={{ duration: 0.2 }}
                   />
                   <motion.div
-                    className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full group-hover:left-0 transition-all duration-300"
+                    className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 group-hover:w-full group-hover:left-0 transition duration-300"
                   />
                 </Link>
               </motion.div>
@@ -100,29 +108,31 @@ const Navigation = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8 }}
             >
-              <Link href="/Booking" className="relative group">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="relative px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-semibold rounded-lg shadow-lg overflow-hidden"
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                  />
-                  <span className="relative z-10">{t('bookNowBtn')}</span>
-                  <motion.div
-                    className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"
-                  />
-                </motion.button>
+              <Link
+                href="/Booking"
+                className="group relative inline-block px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-semibold rounded-lg shadow-lg overflow-hidden transition-transform duration-200 hover:scale-105 active:scale-95"
+              >
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                />
+                <span className="relative z-10">{t('bookNowBtn')}</span>
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"
+                />
               </Link>
             </motion.div>
           </div>
 
           {/* Mobile Menu Button */}
           <motion.button
-            className="lg:hidden p-2 text-gray-300 bg-gray-900/80 backdrop-blur-sm rounded-lg hover:text-yellow-400 transition-colors"
+            type="button"
+            className="lg:hidden p-3 text-gray-300 bg-gray-900/80 backdrop-blur-sm rounded-lg hover:text-yellow-400 transition-colors"
             onClick={toggleMenu}
             whileTap={{ scale: 0.95 }}
+            aria-label={isOpen ? t('closeMenu') : t('openMenu')}
+            aria-expanded={isOpen}
           >
             <AnimatePresence mode="wait">
               {isOpen ? (
@@ -133,7 +143,7 @@ const Navigation = () => {
                   exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <X size={24} aria-label={t('closeMenu')} />
+                  <X size={24} aria-hidden="true" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -143,7 +153,7 @@ const Navigation = () => {
                   exit={{ rotate: -90, opacity: 0 }}
                   transition={{ duration: 0.2 }}
                 >
-                  <Menu size={24} aria-label={t('openMenu')} />
+                  <Menu size={24} aria-hidden="true" />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -161,6 +171,7 @@ const Navigation = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm lg:hidden"
+              aria-hidden="true"
               onClick={toggleMenu}
             />
             
@@ -170,7 +181,7 @@ const Navigation = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-80 bg-gray-900 shadow-2xl lg:hidden z-50"
+              className="fixed top-0 right-0 h-full w-80 max-w-full overflow-y-auto overscroll-contain bg-gray-900 shadow-2xl lg:hidden z-50"
             >
               {/* Gradient overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/10 to-transparent" />
@@ -203,7 +214,7 @@ const Navigation = () => {
                       <Link
                         href={item.href}
                         onClick={toggleMenu}
-                        className="flex items-center px-4 py-3 text-gray-300 hover:text-yellow-400 hover:bg-yellow-400/10 rounded-lg transition-all duration-200 group"
+                        className="flex items-center px-4 py-3 text-gray-300 hover:text-yellow-400 hover:bg-yellow-400/10 rounded-lg transition duration-200 group"
                       >
                         <span className="font-medium">{item.name}</span>
                         <motion.div
@@ -234,17 +245,16 @@ const Navigation = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.6 }}
                 >
-                  <Link href="/Booking" onClick={toggleMenu}>
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full px-6 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-semibold rounded-lg shadow-lg relative overflow-hidden group"
-                    >
-                      <span className="relative z-10">{t('bookYourTripBtn')}</span>
-                      <motion.div
-                        className="absolute inset-0 bg-white/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300"
-                      />
-                    </motion.button>
+                  <Link
+                    href="/Booking"
+                    onClick={toggleMenu}
+                    className="group relative block w-full px-6 py-4 text-center bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-semibold rounded-lg shadow-lg overflow-hidden transition-transform duration-200 active:scale-[0.98]"
+                  >
+                    <span className="relative z-10">{t('bookYourTripBtn')}</span>
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-0 bg-white/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300"
+                    />
                   </Link>
                 </motion.div>
 

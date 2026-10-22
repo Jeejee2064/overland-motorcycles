@@ -14,6 +14,7 @@ import ButtonSecondary from '../../../components/ButtonSecondary';
 const FleetPage = () => {
   const t = useTranslations('FleetPage');
   const tNav = useTranslations('Navigation');
+  const tClose = useTranslations('Newsletter');
   const tPanama = useTranslations('PanamaPage');
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedBike, setSelectedBike] = useState('himalayan'); // 'himalayan' or 'cfmoto'
@@ -62,8 +63,10 @@ const FleetPage = () => {
           {/* Bike Selection Tabs */}
           <div className="flex justify-center gap-4 mb-12">
             <button
+              type="button"
+              aria-pressed={selectedBike === 'himalayan'}
               onClick={() => setSelectedBike('himalayan')}
-              className={`px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
+              className={`px-8 py-4 rounded-full font-bold text-lg transition duration-300 ${
                 selectedBike === 'himalayan'
                   ? 'bg-yellow-400 text-gray-900 shadow-lg'
                   : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
@@ -72,8 +75,10 @@ const FleetPage = () => {
               {t('himalayanTab')}
             </button>
             <button
+              type="button"
+              aria-pressed={selectedBike === 'cfmoto'}
               onClick={() => setSelectedBike('cfmoto')}
-              className={`px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 ${
+              className={`px-8 py-4 rounded-full font-bold text-lg transition duration-300 ${
                 selectedBike === 'cfmoto'
                   ? 'bg-yellow-400 text-gray-900 shadow-lg'
                   : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
@@ -339,13 +344,13 @@ const FleetPage = () => {
               transition={{ delay: 0.3 }}
               className="block mt-12 group"
             >
-              <div className="flex items-center justify-between p-6 rounded-xl bg-white hover:shadow-md transition-all duration-300">
+              <div className="flex items-center justify-between p-6 rounded-xl bg-white hover:shadow-md transition duration-300">
                 <div>
                   <p className="text-lg font-semibold text-gray-900 group-hover:text-yellow-600 transition-colors">
                     {tNav('navPricing')}
                   </p>
                 </div>
-                <ArrowRight className="text-gray-400 group-hover:text-yellow-600 group-hover:translate-x-2 transition-all duration-300" size={24} />
+                <ArrowRight className="text-gray-400 group-hover:text-yellow-600 group-hover:translate-x-2 transition duration-300" size={24} />
               </div>
             </motion.a>
           </div>
@@ -383,7 +388,7 @@ const FleetPage = () => {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
+                  className="p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition duration-300"
                 >
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-yellow-400/20 rounded-full flex items-center justify-center">
@@ -405,13 +410,13 @@ const FleetPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               className="block max-w-2xl mx-auto mt-16 group"
             >
-              <div className="flex items-center justify-between p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-yellow-400/30 transition-all duration-300">
+              <div className="flex items-center justify-between p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-yellow-400/30 transition duration-300">
                 <div>
                   <p className="text-lg font-semibold text-white group-hover:text-yellow-400 transition-colors">
                     {tPanama('heroTitle')}
                   </p>
                 </div>
-                <ArrowRight className="text-gray-400 group-hover:text-yellow-400 group-hover:translate-x-2 transition-all duration-300" size={24} />
+                <ArrowRight className="text-gray-400 group-hover:text-yellow-400 group-hover:translate-x-2 transition duration-300" size={24} />
               </div>
             </motion.a>
 
@@ -464,7 +469,7 @@ const FleetPage = () => {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
+                  className="p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition duration-300"
                 >
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-yellow-400/20 rounded-full flex items-center justify-center">
@@ -486,13 +491,13 @@ const FleetPage = () => {
               whileInView={{ opacity: 1, y: 0 }}
               className="block max-w-2xl mx-auto mt-16 group"
             >
-              <div className="flex items-center justify-between p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-yellow-400/30 transition-all duration-300">
+              <div className="flex items-center justify-between p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-yellow-400/30 transition duration-300">
                 <div>
                   <p className="text-lg font-semibold text-white group-hover:text-yellow-400 transition-colors">
                     {tPanama('heroTitle')}
                   </p>
                 </div>
-                <ArrowRight className="text-gray-400 group-hover:text-yellow-400 group-hover:translate-x-2 transition-all duration-300" size={24} />
+                <ArrowRight className="text-gray-400 group-hover:text-yellow-400 group-hover:translate-x-2 transition duration-300" size={24} />
               </div>
             </motion.a>
 
@@ -541,7 +546,7 @@ const FleetPage = () => {
                     initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="p-8 rounded-2xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
+                    className="p-8 rounded-2xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition duration-300"
                   >
                     <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
                     <p className="text-gray-300 leading-relaxed">{feature.desc}</p>
@@ -561,7 +566,7 @@ const FleetPage = () => {
                     initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="p-8 rounded-2xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
+                    className="p-8 rounded-2xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition duration-300"
                   >
                     <h3 className="text-2xl font-bold text-white mb-4">{feature.title}</h3>
                     <p className="text-gray-300 leading-relaxed">{feature.desc}</p>
@@ -595,7 +600,11 @@ const FleetPage = () => {
                 transition={{ delay: (index % 3) * 0.1 }}
                 whileHover={{ scale: 1.05 }}
                 className="group cursor-pointer"
+                role="button"
+                tabIndex={0}
+                aria-label={`${selectedBike === 'himalayan' ? t('himalayanGalleryAlt') : t('cfmotoGalleryAlt')} ${index + 1}`}
                 onClick={() => setSelectedImage(image)}
+                onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setSelectedImage(image); } }}
               >
                 <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-xl">
                   <Image
@@ -623,13 +632,13 @@ const FleetPage = () => {
             whileInView={{ opacity: 1, y: 0 }}
             className="block max-w-2xl mx-auto mt-16 group"
           >
-            <div className="flex items-center justify-between p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-yellow-400/30 transition-all duration-300">
+            <div className="flex items-center justify-between p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 hover:border-yellow-400/30 transition duration-300">
               <div>
                 <p className="text-lg font-semibold text-white group-hover:text-yellow-400 transition-colors">
                   {t('askQuestion')}
                 </p>
               </div>
-              <ArrowRight className="text-gray-400 group-hover:text-yellow-400 group-hover:translate-x-2 transition-all duration-300" size={24} />
+              <ArrowRight className="text-gray-400 group-hover:text-yellow-400 group-hover:translate-x-2 transition duration-300" size={24} />
             </div>
           </motion.a>
         </div>
@@ -641,14 +650,19 @@ const FleetPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4 overscroll-contain"
+          role="dialog"
+          aria-modal="true"
+          aria-label={t('galleryAlt')}
           onClick={() => setSelectedImage(null)}
         >
           <button
+            type="button"
+            aria-label={tClose('close')}
             className="absolute top-6 right-6 text-white hover:text-yellow-400 transition-colors"
             onClick={() => setSelectedImage(null)}
           >
-            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg aria-hidden="true" className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>

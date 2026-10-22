@@ -337,7 +337,7 @@ const HomePage = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1, duration: 0.5 }}
                     whileHover={{ x: 10 }}
-                    className="flex items-center space-x-4 p-5 rounded-xl bg-gray-50 border border-gray-200 group hover:border-yellow-400 hover:shadow-lg transition-all duration-300"
+                    className="flex items-center space-x-4 p-5 rounded-xl bg-gray-50 border border-gray-200 group hover:border-yellow-400 hover:shadow-lg transition duration-300"
                   >
                     <div className="w-14 h-14 bg-yellow-400/20 rounded-full flex items-center justify-center group-hover:bg-yellow-400/30 transition-colors duration-300">
                       <feature.icon size={26} className="text-gray-900" />

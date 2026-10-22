@@ -28,7 +28,7 @@ const WhatsApp = () => {
       container: lottieRef.current,
       renderer: 'svg',
       loop: true,
-      autoplay: true,
+      autoplay: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
       path: '/Phone.json',
     });
 
@@ -42,9 +42,10 @@ const WhatsApp = () => {
       href={whatsappLink}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed bottom-6 right-6 z-[1000] w-16 h-16 rounded-full   hover:scale-110 transition-transform duration-300"
+      aria-label="WhatsApp"
+      className="fixed bottom-6 right-6 z-[1000] w-16 h-16 rounded-full hover:scale-110 transition-transform duration-300"
     >
-      <div ref={lottieRef} className="w-full h-full" style={{ clipPath: 'inset(0 0 20% 0)' }}
+      <div ref={lottieRef} aria-hidden="true" className="w-full h-full" style={{ clipPath: 'inset(0 0 20% 0)' }}
       />
       <div className="absolute inset-0 rounded-full bg-green-400 opacity-0 group-hover:opacity-20 group-hover:animate-ping" />
 

@@ -109,13 +109,13 @@ const fetchBooking = async () => {
               <div className="flex flex-col sm:flex-row gap-4">
                 {/* <Link 
                   href="/Booking"
-                  className="flex-1 px-6 py-3 bg-yellow-400 text-gray-900 font-bold text-center rounded-xl hover:shadow-lg transition-all"
+                  className="flex-1 px-6 py-3 bg-yellow-400 text-gray-900 font-bold text-center rounded-xl hover:shadow-lg transition"
                 >
                   {t('actions.tryAgain')}
                 </Link> */}
                 <Link 
                   href="/"
-                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-900 font-semibold text-center rounded-xl hover:bg-gray-300 transition-all"
+                  className="flex-1 px-6 py-3 bg-gray-200 text-gray-900 font-semibold text-center rounded-xl hover:bg-gray-300 transition"
                 >
                   {t('actions.backHome')}
                 </Link>
@@ -151,7 +151,7 @@ const fetchBooking = async () => {
                 <div className="mt-6">
                   <button
                     onClick={() => window.location.reload()}
-                    className="px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded-xl hover:shadow-lg transition-all"
+                    className="px-6 py-3 bg-yellow-400 text-gray-900 font-bold rounded-xl hover:shadow-lg transition"
                   >
                     Check Status Again
                   </button>
@@ -324,13 +324,13 @@ const fetchBooking = async () => {
             <div className="flex flex-col sm:flex-row gap-4">
               <Link 
                 href="/"
-                className="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold text-center rounded-xl hover:shadow-lg transition-all"
+                className="flex-1 px-6 py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 font-bold text-center rounded-xl hover:shadow-lg transition"
               >
                 {t('actions.backHome')}
               </Link>
               <Link 
                 href="/contact"
-                className="flex-1 px-6 py-3 bg-gray-200 text-gray-900 font-semibold text-center rounded-xl hover:bg-gray-300 transition-all"
+                className="flex-1 px-6 py-3 bg-gray-200 text-gray-900 font-semibold text-center rounded-xl hover:bg-gray-300 transition"
               >
                 {t('actions.contactUs')}
               </Link>

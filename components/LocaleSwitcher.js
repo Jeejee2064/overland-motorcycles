@@ -24,15 +24,19 @@ export default function LocaleSwitcher() {
 
   return (
     <div className="flex items-center gap-2">
-      <Globe size={18} className="text-gray-400" />
-      <div className="flex gap-1">
+      <Globe size={18} className="text-gray-400" aria-hidden="true" />
+      <div className="flex gap-1" role="group" aria-label="Language">
         {locales.map((locale) => (
           <motion.button
             key={locale.code}
+            type="button"
             onClick={() => handleChange(locale.code)}
+            aria-pressed={params.locale === locale.code}
+            aria-label={locale.fullName}
+            lang={locale.code}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition duration-200 ${
               params.locale === locale.code
                 ? 'bg-yellow-400 text-gray-900'
                 : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800'

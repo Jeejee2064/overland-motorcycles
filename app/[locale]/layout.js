@@ -269,7 +269,7 @@ export default async function RootLayout({ children, params }) {
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#282828" />
         <meta name="format-detection" content="telephone=yes" />
         <meta name="geo.region" content="PA" />
         <meta name="geo.placename" content="Panama City" />

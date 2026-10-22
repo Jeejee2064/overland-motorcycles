@@ -11,7 +11,7 @@ export default function TourWhatsAppButton({ href, text, variant = 'primary' }) 
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`inline-flex items-center justify-center gap-2 px-8 py-4 font-bold text-lg rounded-full transition-all duration-300 min-w-[200px] ${styles}`}
+      className={`inline-flex items-center justify-center gap-2 px-8 py-4 font-bold text-lg rounded-full transition duration-300 min-w-[200px] ${styles}`}
     >
       <MessageCircle size={20} />
       {text}

@@ -75,18 +75,18 @@ const Modal = ({ isOpen, onClose, type, message, onConfirm, t }) => {
         <div className="p-6 bg-gray-800/50 flex gap-3">
           {type === 'contact' && (
             <a href={shopWhatsappLink(locale)} target="_blank" rel="noopener noreferrer"
-              className="flex-1 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-semibold transition-all text-center">
+              className="flex-1 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-semibold transition text-center">
               {t('modalWhatsApp')}
             </a>
           )}
           {onConfirm && (
             <button onClick={() => { onConfirm(); onClose(); }}
-              className={`flex-1 px-6 py-3 ${config.buttonColor} text-white rounded-xl font-semibold transition-all`}>
+              className={`flex-1 px-6 py-3 ${config.buttonColor} text-white rounded-xl font-semibold transition`}>
               {t('modalConfirm')}
             </button>
           )}
           <button onClick={onClose}
-            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-semibold transition-all">
+            className="px-6 py-3 bg-gray-700 hover:bg-gray-600 text-white rounded-xl font-semibold transition">
             {type === 'contact' ? t('modalGoBack') : t('modalClose')}
           </button>
         </div>
@@ -102,7 +102,7 @@ const ProgressDots = ({ currentStep, totalSteps }) => (
       const step = index + 1;
       return (
         <motion.div key={step} initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ delay: index * 0.1 }}>
-          <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
+          <div className={`w-2 h-2 rounded-full transition duration-300 ${
             step === currentStep ? 'bg-yellow-400 scale-125' : step < currentStep ? 'bg-yellow-400/50' : 'bg-gray-600'
           }`} />
         </motion.div>
@@ -163,7 +163,7 @@ const PromoCodeInput = ({ appliedPromo, onApply, onRemove, totalBeforeDiscount }
             −{appliedPromo.discountValue}% (−${appliedPromo.discountAmount.toFixed(2)})
           </span>
         </div>
-        <button onClick={handleRemove} className="text-gray-400 hover:text-red-400 transition-colors ml-2">
+        <button type="button" aria-label="Remove promo code" onClick={handleRemove} className="text-gray-400 hover:text-red-400 transition-colors ml-2">
           <X size={16} />
         </button>
       </motion.div>
@@ -178,11 +178,15 @@ const PromoCodeInput = ({ appliedPromo, onApply, onRemove, totalBeforeDiscount }
           <input
             ref={inputRef}
             type="text"
+            name="promoCode"
+            autoComplete="off"
+            spellCheck={false}
+            aria-label="Promo code"
             value={code}
             onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(''); }}
             onKeyDown={(e) => e.key === 'Enter' && handleApply()}
             placeholder="Promo code"
-            className="w-full pl-9 pr-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition-all text-sm uppercase tracking-widest placeholder:normal-case placeholder:tracking-normal"
+            className="w-full pl-9 pr-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition text-sm uppercase tracking-widest placeholder:normal-case placeholder:tracking-normal"
           />
         </div>
         <motion.button
@@ -190,7 +194,7 @@ const PromoCodeInput = ({ appliedPromo, onApply, onRemove, totalBeforeDiscount }
           disabled={!code.trim() || loading}
           whileHover={code.trim() && !loading ? { scale: 1.03 } : {}}
           whileTap={code.trim() && !loading ? { scale: 0.97 } : {}}
-          className={`px-5 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2 ${
+          className={`px-5 py-3 rounded-xl font-bold text-sm transition flex items-center gap-2 ${
             code.trim() && !loading
               ? 'bg-yellow-400 text-gray-900 hover:bg-yellow-300'
               : 'bg-gray-700 text-gray-500 cursor-not-allowed'
@@ -568,10 +572,10 @@ const BookingPage = () => {
 
                 <div className="grid md:grid-cols-2 gap-4 mb-6">
                   {Object.values(LOCATIONS).map((location) => (
-                    <motion.button key={location.id}
+                    <motion.button key={location.id} type="button" aria-pressed={selectedLocation === location.id}
                       onClick={() => setSelectedLocation(location.id)}
                       whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }}
-                      className={`relative rounded-2xl border-2 p-6 text-left transition-all ${
+                      className={`relative rounded-2xl border-2 p-6 text-left transition ${
                         selectedLocation === location.id ? 'border-yellow-400 bg-yellow-400/10 shadow-xl shadow-yellow-400/20' : 'border-gray-700 bg-gray-800/50 hover:border-gray-500'
                       }`}
                     >
@@ -590,7 +594,7 @@ const BookingPage = () => {
 
                 <motion.button onClick={() => setCurrentStep(2)} disabled={!canProceedStep2}
                   whileHover={canProceedStep2 ? { scale: 1.02 } : {}} whileTap={canProceedStep2 ? { scale: 0.98 } : {}}
-                  className={`w-full py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
+                  className={`w-full py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition flex items-center justify-center gap-3 ${
                     canProceedStep2 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                   }`}>
                   {t('stepContinue')} <ChevronRight size={24} />
@@ -613,10 +617,10 @@ const BookingPage = () => {
                   {Object.values(MODELS)
                     .filter(model => LOCATIONS[selectedLocation]?.models.includes(model.id))
                     .map((model) => (
-                    <motion.button key={model.id}
+                    <motion.button key={model.id} type="button" aria-pressed={selectedModel === model.id}
                       onClick={() => { setSelectedModel(model.id); setFormData(prev => ({ ...prev, bikeQuantity: '1' })); setAvailabilityError(''); setAppliedPromo(null); }}
                       whileHover={{ scale: 1.02, y: -4 }} whileTap={{ scale: 0.98 }}
-                      className={`relative rounded-2xl border-2 overflow-hidden transition-all text-left ${
+                      className={`relative rounded-2xl border-2 overflow-hidden transition text-left ${
                         selectedModel === model.id ? 'border-yellow-400 shadow-xl shadow-yellow-400/20' : 'border-gray-700 hover:border-gray-500'
                       }`}
                     >
@@ -649,12 +653,12 @@ const BookingPage = () => {
 
                 <div className="flex gap-4">
                   <motion.button onClick={() => setCurrentStep(1)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
+                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
                   <motion.button onClick={() => setCurrentStep(selectedModel === 'CFMoto700' ? 4 : 3)} disabled={!canProceedStep3}
                     whileHover={canProceedStep3 ? { scale: 1.02 } : {}} whileTap={canProceedStep3 ? { scale: 0.98 } : {}}
-                    className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
+                    className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition flex items-center justify-center gap-3 ${
                       canProceedStep3 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}>
                     {t('stepContinue')} <ChevronRight size={24} />
@@ -675,10 +679,10 @@ const BookingPage = () => {
 
                 <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3 mb-6">
                   {[1, 2, 3, 4, 5, 6].map((num) => (
-                    <motion.button key={num}
+                    <motion.button key={num} type="button" aria-pressed={formData.bikeQuantity === num.toString()}
                       onClick={() => handleBikeQuantitySelect(num)}
                       whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-                      className={`relative p-3 rounded-xl border-2 transition-all ${
+                      className={`relative p-3 rounded-xl border-2 transition ${
                         formData.bikeQuantity === num.toString()
                           ? 'border-yellow-400 bg-yellow-400/10 shadow-lg shadow-yellow-400/20'
                           : 'border-gray-700 bg-gray-800/50 hover:border-gray-600'
@@ -705,11 +709,11 @@ const BookingPage = () => {
 
                 <div className="flex gap-4">
                   <motion.button onClick={() => setCurrentStep(2)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
+                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
                   <motion.button onClick={() => setCurrentStep(4)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50">
+                    className="flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50">
                     {t('stepContinue')} <ChevronRight size={24} />
                   </motion.button>
                 </div>
@@ -770,12 +774,12 @@ const BookingPage = () => {
 
                 <div className="flex gap-4">
                   <motion.button onClick={() => setCurrentStep(selectedModel === 'CFMoto700' ? 2 : 3)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
+                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
                   <motion.button onClick={handleContinueFromDates} disabled={!canProceedStep5}
                     whileHover={canProceedStep5 ? { scale: 1.02 } : {}} whileTap={canProceedStep5 ? { scale: 0.98 } : {}}
-                    className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
+                    className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition flex items-center justify-center gap-3 ${
                       canProceedStep5 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}>
                     {t('stepContinue')} <ChevronRight size={24} />
@@ -799,9 +803,9 @@ const BookingPage = () => {
                     { label: t('email'),     name: 'email',     type: 'email', placeholder: 'john@example.com' },
                   ].map(({ label, name, type, placeholder }) => (
                     <div key={name}>
-                      <label className="block text-xs font-semibold text-gray-300 mb-1">{label} *</label>
-                      <input type={type} name={name} value={formData[name]} onChange={handleChange} required
-                        className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition-all text-base"
+                      <label htmlFor={`booking-${name}`} className="block text-xs font-semibold text-gray-300 mb-1">{label} *</label>
+                      <input id={`booking-${name}`} autoComplete={name === 'firstName' ? 'given-name' : name === 'lastName' ? 'family-name' : 'email'} type={type} name={name} value={formData[name]} onChange={handleChange} required
+                        className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition text-base"
                         placeholder={placeholder} />
                     </div>
                   ))}
@@ -812,15 +816,15 @@ const BookingPage = () => {
                       className="phone-input-dark" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-300 mb-1">{t('country')} *</label>
-                    <input type="text" name="country" value={formData.country} onChange={handleChange} required
-                      className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition-all text-base"
+                    <label htmlFor="booking-country" className="block text-xs font-semibold text-gray-300 mb-1">{t('country')} *</label>
+                    <input id="booking-country" autoComplete="country-name" type="text" name="country" value={formData.country} onChange={handleChange} required
+                      className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition text-base"
                       placeholder="USA" />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-300 mb-1">{t('hearAboutUs')}</label>
-                    <select name="hearAboutUs" value={formData.hearAboutUs} onChange={handleChange}
-                      className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition-all text-base">
+                    <label htmlFor="booking-hearAboutUs" className="block text-xs font-semibold text-gray-300 mb-1">{t('hearAboutUs')}</label>
+                    <select id="booking-hearAboutUs" name="hearAboutUs" value={formData.hearAboutUs} onChange={handleChange}
+                      className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition text-base">
                       <option value="">{t('selectOption')}</option>
                       <option value="google">{t('hearAboutOption1')}</option>
                       <option value="social">{t('hearAboutOption2')}</option>
@@ -830,9 +834,9 @@ const BookingPage = () => {
                     </select>
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-xs font-semibold text-gray-300 mb-1">{t('specialRequests')}</label>
-                    <textarea name="specialRequests" value={formData.specialRequests} onChange={handleChange} rows={3}
-                      className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition-all text-base resize-none"
+                    <label htmlFor="booking-specialRequests" className="block text-xs font-semibold text-gray-300 mb-1">{t('specialRequests')}</label>
+                    <textarea id="booking-specialRequests" name="specialRequests" value={formData.specialRequests} onChange={handleChange} rows={3}
+                      className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition text-base resize-none"
                       placeholder={t('specialRequestsPlaceholder')} />
                   </div>
                 </div>
@@ -851,8 +855,9 @@ const BookingPage = () => {
                             { label: t('email'),     field: 'email',     type: 'email', placeholder: 'jane@example.com' },
                           ].map(({ label, field, type, placeholder }) => (
                             <div key={field}>
-                              <label className="block text-xs font-semibold text-gray-300 mb-1">{label} *</label>
+                              <label htmlFor={`rider-${idx}-${field}`} className="block text-xs font-semibold text-gray-300 mb-1">{label} *</label>
                               <input
+                                id={`rider-${idx}-${field}`}
                                 type={type}
                                 value={rider[field]}
                                 onChange={(e) => {
@@ -861,7 +866,7 @@ const BookingPage = () => {
                                   setAdditionalRiders(updated);
                                 }}
                                 required
-                                className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition-all text-base"
+                                className="w-full px-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition text-base"
                                 placeholder={placeholder}
                               />
                             </div>
@@ -888,12 +893,12 @@ const BookingPage = () => {
 
                 <div className="flex gap-4">
                   <motion.button onClick={() => setCurrentStep(4)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
+                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
                   <motion.button onClick={() => setCurrentStep(6)} disabled={!canProceedStep6}
                     whileHover={canProceedStep6 ? { scale: 1.02 } : {}} whileTap={canProceedStep6 ? { scale: 0.98 } : {}}
-                    className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
+                    className={`flex-1 py-4 md:py-5 font-black text-lg md:text-xl rounded-2xl shadow-2xl transition flex items-center justify-center gap-3 ${
                       canProceedStep6 ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 hover:shadow-yellow-400/50' : 'bg-gray-700 text-gray-500 cursor-not-allowed'
                     }`}>
                     {t('stepContinue')} <ChevronRight size={24} />
@@ -917,7 +922,7 @@ const BookingPage = () => {
                   <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-700">
                     <h3 className="text-lg font-black text-white">{t('summaryMotorcycles')} & {t('summaryDates')}</h3>
                     <button onClick={() => setCurrentStep(2)}
-                      className="p-2 rounded-lg bg-yellow-400/10 hover:bg-yellow-400/20 text-yellow-400 transition-all text-xs flex items-center gap-1">
+                      className="p-2 rounded-lg bg-yellow-400/10 hover:bg-yellow-400/20 text-yellow-400 transition text-xs flex items-center gap-1">
                       <Edit2 size={14} /><span className="hidden sm:inline">{t('stepChange')}</span>
                     </button>
                   </div>
@@ -949,7 +954,7 @@ const BookingPage = () => {
                   <div className="flex items-center justify-between mb-3 pb-3 border-b border-gray-700">
                     <h3 className="text-base font-black text-white">{t('summaryContact')}</h3>
                     <button onClick={() => setCurrentStep(5)}
-                      className="p-2 rounded-lg bg-yellow-400/10 hover:bg-yellow-400/20 text-yellow-400 transition-all text-xs flex items-center gap-1">
+                      className="p-2 rounded-lg bg-yellow-400/10 hover:bg-yellow-400/20 text-yellow-400 transition text-xs flex items-center gap-1">
                       <Edit2 size={14} /><span className="hidden sm:inline">{t('stepChange')}</span>
                     </button>
                   </div>
@@ -1054,12 +1059,12 @@ const BookingPage = () => {
                 <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700 mb-6">
                   <label className="flex items-start gap-3 cursor-pointer">
                     <input type="checkbox" checked={acceptedTerms} onChange={(e) => setAcceptedTerms(e.target.checked)}
-                      className="mt-1 w-5 h-5 rounded border-2 border-gray-600 text-yellow-400 focus:ring-2 focus:ring-yellow-400/20 cursor-pointer transition-all flex-shrink-0" />
+                      className="mt-1 w-5 h-5 rounded border-2 border-gray-600 text-yellow-400 focus:ring-2 focus:ring-yellow-400/20 cursor-pointer transition flex-shrink-0" />
                     <span className="text-gray-300 leading-relaxed text-sm">
                       {t('agreement.prefix')}{' '}
-                      <a href="/terms" target="_blank" className="text-yellow-400 hover:text-yellow-300 underline font-semibold">{t('agreement.terms')}</a>{' '}
+                      <a href="/terms" target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 underline font-semibold">{t('agreement.terms')}</a>{' '}
                       {t('agreement.and')}{' '}
-                      <a href="/privacy" target="_blank" className="text-yellow-400 hover:text-yellow-300 underline font-semibold">{t('agreement.privacy')}</a>
+                      <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-yellow-400 hover:text-yellow-300 underline font-semibold">{t('agreement.privacy')}</a>
                       {t('agreement.suffix')}
                     </span>
                   </label>
@@ -1067,13 +1072,13 @@ const BookingPage = () => {
 
                 <div className="flex gap-4">
                   <motion.button onClick={() => setCurrentStep(5)} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition-all flex items-center gap-2">
+                    className="px-6 md:px-8 py-4 md:py-5 bg-gray-700 hover:bg-gray-600 text-white font-bold text-base md:text-lg rounded-2xl transition flex items-center gap-2">
                     <ChevronLeft size={20} /><span className="hidden sm:inline">{t('stepBack')}</span>
                   </motion.button>
                   <motion.button onClick={handleSubmit} disabled={!acceptedTerms || isSubmitting}
                     whileHover={acceptedTerms && !isSubmitting ? { scale: 1.02 } : {}}
                     whileTap={acceptedTerms && !isSubmitting ? { scale: 0.98 } : {}}
-                    className={`flex-1 py-4 md:py-5 font-black text-base md:text-lg rounded-2xl shadow-2xl transition-all flex items-center justify-center gap-3 ${
+                    className={`flex-1 py-4 md:py-5 font-black text-base md:text-lg rounded-2xl shadow-2xl transition flex items-center justify-center gap-3 ${
                       acceptedTerms && !isSubmitting
                         ? 'bg-gradient-to-r from-green-400 to-green-500 text-gray-900 hover:shadow-green-400/50'
                         : 'bg-gray-700 text-gray-500 cursor-not-allowed'

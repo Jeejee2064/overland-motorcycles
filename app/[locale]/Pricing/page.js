@@ -107,8 +107,10 @@ const PricingPage = () => {
               {MODELS.map((model) => (
                 <button
                   key={model.id}
+                  type="button"
+                  aria-pressed={activeModel === model.id}
                   onClick={() => setActiveModel(model.id)}
-                  className={`relative px-5 py-3 rounded-xl text-sm font-bold transition-all duration-300 ${
+                  className={`relative px-5 py-3 rounded-xl text-sm font-bold transition duration-300 ${
                     activeModel === model.id
                       ? 'bg-gray-900 text-yellow-400 shadow-lg'
                       : 'text-gray-500 hover:text-gray-800'
@@ -235,7 +237,7 @@ const PricingPage = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="flex items-start gap-4 p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition-all duration-300"
+                className="flex items-start gap-4 p-6 rounded-xl bg-gray-800/30 border border-gray-700/50 backdrop-blur-sm hover:border-yellow-400/30 transition duration-300"
               >
                 <div className="w-8 h-8 bg-yellow-400/20 rounded-full flex items-center justify-center flex-shrink-0">
                   <Check size={18} className="text-yellow-400" />

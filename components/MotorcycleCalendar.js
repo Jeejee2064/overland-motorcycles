@@ -236,7 +236,7 @@ const prevMonth = () => setCurrentDate(addMonths(currentDate, -1));
                         return (
                           <div
                             key={`${b.id ?? b.booking_id}-${b.motorcycle_id}-${b.start_date}`}
-                            className={`absolute top-2 rounded-md px-2 flex items-center justify-center ${color.bar} text-white text-xs font-medium shadow-md hover:shadow-lg hover:scale-105 transition-all cursor-pointer pointer-events-auto`}
+                            className={`absolute top-2 rounded-md px-2 flex items-center justify-center ${color.bar} text-white text-xs font-medium shadow-md hover:shadow-lg hover:scale-105 transition cursor-pointer pointer-events-auto`}
                             style={{ left: `${leftPos}px`, width: `${width}px`, height: '40px' }}
                             onClick={() => setSelectedBooking({ ...b, motorcycle_name: bike.name })}
                           >

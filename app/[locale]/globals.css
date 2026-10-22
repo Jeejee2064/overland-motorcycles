@@ -20,11 +20,36 @@
 @layer base {
   html {
     font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
   }
   body {
     font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
   }
-  
+
+  /* Visible keyboard focus everywhere (mouse clicks stay clean) */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+
+  /* Remove the 300ms tap delay / double-tap zoom on controls */
+  :where(a, button, input, select, textarea, label) {
+    touch-action: manipulation;
+  }
+
+  h1, h2 {
+    text-wrap: balance;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 /* ================================
    PHONE INPUT DARK THEME - COMPLETE

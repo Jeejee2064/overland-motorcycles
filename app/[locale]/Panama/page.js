@@ -153,7 +153,7 @@ const PanamaPage = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
-                className="text-center p-8 rounded-2xl bg-gray-50 border border-gray-200 hover:border-yellow-400 hover:shadow-lg transition-all duration-300"
+                className="text-center p-8 rounded-2xl bg-gray-50 border border-gray-200 hover:border-yellow-400 hover:shadow-lg transition duration-300"
               >
                 <div className="w-20 h-20 mx-auto mb-6 bg-yellow-400/20 rounded-full flex items-center justify-center">
                   <item.icon size={40} className="text-gray-900" />
@@ -263,7 +263,7 @@ const PanamaPage = () => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
-                className="bg-gray-50 rounded-3xl overflow-hidden border border-gray-200 hover:border-yellow-400 hover:shadow-2xl transition-all duration-300"
+                className="bg-gray-50 rounded-3xl overflow-hidden border border-gray-200 hover:border-yellow-400 hover:shadow-2xl transition duration-300"
               >
                 <div className="relative aspect-[4/3]">
                   <Image

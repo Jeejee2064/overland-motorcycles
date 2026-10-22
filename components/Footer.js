@@ -53,9 +53,12 @@ const Footer = () => {
                   <a
                     key={social.name}
                     href={social.href}
-                    className={`w-12 h-12 bg-gris/10 rounded-full flex items-center justify-center text-gris transition-all duration-300 ${social.color} hover:bg-accent/10 border border-gris/20 hover:border-accent/50`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.name}
+                    className={`w-12 h-12 bg-gris/10 rounded-full flex items-center justify-center text-gris transition duration-300 ${social.color} hover:bg-accent/10 border border-gris/20 hover:border-accent/50`}
                   >
-                    <social.icon size={20} />
+                    <social.icon size={20} aria-hidden="true" />
                   </a>
                 ))}
               </div>
@@ -105,7 +108,7 @@ const Footer = () => {
               {/* Email */}
               <a 
                 href="mailto:overlandmotorcycles@gmail.com"
-                className="flex items-center gap-3 text-gris hover:text-accent transition-all duration-300 justify-center md:justify-start group hover:scale-105"
+                className="flex items-center gap-3 text-gris hover:text-accent transition duration-300 justify-center md:justify-start group hover:scale-105"
               >
                 <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-accent/30 transition-colors duration-300">
                   <Mail size={14} className="text-accent" />
@@ -118,7 +121,7 @@ const Footer = () => {
                 href={shopWhatsappLink(locale)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-3 text-gris hover:text-accent transition-all duration-300 justify-center md:justify-start group hover:scale-105"
+                className="flex items-center gap-3 text-gris hover:text-accent transition duration-300 justify-center md:justify-start group hover:scale-105"
               >
                 <div className="w-6 h-6 bg-accent/20 rounded-full flex items-center justify-center flex-shrink-0 group-hover:bg-accent/30 transition-colors duration-300">
                   <Phone size={14} className="text-accent" />
