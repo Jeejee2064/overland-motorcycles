@@ -2,7 +2,7 @@ import { getRequestConfig } from 'next-intl/server';
 import { routing } from '../routing';
 
 // Tours copy exists in en/es/fr; other locales (pt) fall back to the English copy.
-const TOURS_LOCALES = ['en', 'es', 'fr'];
+const TOURS_LOCALES = ['en', 'es', 'fr', 'pt'];
 
 export default getRequestConfig(async ({ requestLocale }) => {
   // This typically corresponds to the `[locale]` segment
