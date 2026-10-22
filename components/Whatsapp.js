@@ -2,14 +2,16 @@
 'use client'
 import React, { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { useLocale } from 'next-intl';
+import { shopWhatsappLink } from '@/lib/whatsapp';
 
 const WhatsApp = () => {
   const lottieRef = useRef(null);
   const [lottie, setLottie] = useState(null);
   const pathname = usePathname();
+  const locale = useLocale();
 
-  const whatsappNumber = '50768051100'; // Replace with your number
-  const whatsappLink = `https://wa.me/${whatsappNumber}`;
+  const whatsappLink = shopWhatsappLink(locale);
 
   const isAdmin = pathname?.includes('/admin');
 

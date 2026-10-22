@@ -10,6 +10,7 @@ import AdminNavigation from '@/components/admin/AdminNavigation';
 import OverviewTab from '@/components/admin/OverviewTab';
 import BookingsTab from '@/components/admin/BookingsTab';
 import MessagesTab from '@/components/admin/MessagesTab';
+import NewsletterTab from '@/components/admin/NewsletterTab';
 import CalendarTab from '@/components/admin/CalendarTab';
 import MotorcyclesTab from '@/components/admin/MotorcyclesTab';
 import BookingDetailModal from '@/components/admin/BookingDetailModal';
@@ -364,6 +365,7 @@ const AdminDashboardClient = ({ role }) => {
             onDeleteMessage={handleDeleteMessage}
           />
         )}
+        {!isCoronado && activeTab === 'newsletter'     && <NewsletterTab notify={notify} withConfirm={withConfirm} />}
         {!isCoronado && activeTab === 'motorcycles'    && <MotorcyclesTab />}
         {!isCoronado && activeTab === 'revenue'        && <RevenueTab bookings={bookings} />}
         {!isCoronado && activeTab === 'analytics'      && <AnalyticsTab />}

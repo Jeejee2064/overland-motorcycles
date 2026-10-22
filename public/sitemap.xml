@@ -289,6 +289,207 @@
     <priority>0.9</priority>
   </url>
 
+  <!-- Motorcycle Tours Pages -->
+  <url>
+    <loc>https://overland-motorcycles.com/motorcycle-tours</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/es/motorcycle-tours</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/pt/motorcycle-tours</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/fr/motorcycle-tours</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours" />
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/es/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/pt/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/fr/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/5-day-panama-motorcycle-tour-central-pacific" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/es/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/pt/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/fr/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/7-day-panama-motorcycle-tour-embera-santa-fe" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/es/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/pt/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/fr/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/10-day-panama-motorcycle-tour-boquete-boca-chica" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/es/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/pt/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://overland-motorcycles.com/fr/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://overland-motorcycles.com/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://overland-motorcycles.com/es/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="fr" href="https://overland-motorcycles.com/fr/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://overland-motorcycles.com/motorcycle-tours/12-day-panama-motorcycle-tour-bocas-del-toro" />
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Privacy Pages -->
   <url>
     <loc>https://overland-motorcycles.com/privacy</loc>

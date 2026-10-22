@@ -11,6 +11,7 @@ import Footer from '../../../components/Footer';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import ButtonSecondary from '../../../components/ButtonSecondary';
 import AcomodoLink from '../../../components/AcomodoLink';
+import ToursPromoSection from '../../../components/ToursPromoSection';
 
 const PanamaPage = () => {
   const t = useTranslations('PanamaPage');
@@ -449,6 +450,8 @@ const PanamaPage = () => {
           </AcomodoLink>
         </div>
       </section>
+
+      <ToursPromoSection tone="dark" />
 
       {/* CTA Section */}
       <section id="book" className="relative min-h-screen py-32 overflow-hidden bg-background">

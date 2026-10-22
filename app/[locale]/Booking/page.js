@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { shopWhatsappLink } from '@/lib/whatsapp';
 import {
   Check, AlertCircle, MessageCircle, ChevronRight, ChevronLeft,
   Edit2, CreditCard, Tag, X, Loader2, MapPin,
@@ -37,6 +38,7 @@ const CFMOTO_PRICING = [
 
 // ─── Modal ────────────────────────────────────────────────────
 const Modal = ({ isOpen, onClose, type, message, onConfirm, t }) => {
+  const locale = useLocale();
   if (!isOpen) return null;
 
   const modalTypes = {
@@ -72,7 +74,7 @@ const Modal = ({ isOpen, onClose, type, message, onConfirm, t }) => {
         </div>
         <div className="p-6 bg-gray-800/50 flex gap-3">
           {type === 'contact' && (
-            <a href="https://wa.me/50768051100" target="_blank" rel="noopener noreferrer"
+            <a href={shopWhatsappLink(locale)} target="_blank" rel="noopener noreferrer"
               className="flex-1 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-semibold transition-all text-center">
               {t('modalWhatsApp')}
             </a>

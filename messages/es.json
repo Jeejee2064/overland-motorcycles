@@ -626,6 +626,20 @@
     "loading": "Procesando..."
   },
 
+  "Newsletter": {
+    "cta": "Suscríbete al boletín",
+    "title": "Únete al boletín de Overland",
+    "desc": "Rutas, consejos de viaje por Panamá y ofertas especiales. Sin spam, cancela cuando quieras.",
+    "homeTitle": "Recibe consejos de ruta y ofertas en Panamá",
+    "placeholder": "Tu correo electrónico",
+    "submit": "Suscribirme",
+    "sending": "Suscribiendo...",
+    "success": "¡Gracias! Ya estás suscrito.",
+    "already": "Ya estás suscrito. ¡Gracias!",
+    "invalid": "Ingresa un correo electrónico válido.",
+    "error": "Algo salió mal. Inténtalo de nuevo.",
+    "close": "Cerrar"
+  },
   "Footer": {
     "description": "Su socio de confianza para aventuras en moto en Panamá. Experimente la libertad de la carretera con nuestra flota premium Royal Enfield Himalayan.",
     "followUs": "Síguenos",

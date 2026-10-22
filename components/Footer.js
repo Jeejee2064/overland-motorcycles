@@ -1,10 +1,13 @@
 import { Clock, Phone, Mail, MapPin, Facebook, Instagram } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { shopWhatsappLink } from '@/lib/whatsapp';
 import Image from 'next/image';
 import Link from 'next/link';
+import NewsletterSignup from './NewsletterSignup';
 
 const Footer = () => {
   const t = useTranslations('Footer');
+  const locale = useLocale();
 
   const socialLinks = [
     {
@@ -57,6 +60,11 @@ const Footer = () => {
                 ))}
               </div>
             </div>
+
+            {/* Newsletter */}
+            <div className="mt-8">
+              <NewsletterSignup source="footer" variant="link" />
+            </div>
           </div>
 
           {/* Opening Hours */}
@@ -107,7 +115,7 @@ const Footer = () => {
 
               {/* WhatsApp */}
               <a 
-                href="https://wa.me/50768051100"
+                href={shopWhatsappLink(locale)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 text-gris hover:text-accent transition-all duration-300 justify-center md:justify-start group hover:scale-105"

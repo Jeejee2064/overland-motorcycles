@@ -10,6 +10,7 @@ import { useTranslations } from 'next-intl';
 const Navigation = () => {
     // We'll use the 'Navigation' namespace for all translation keys here
     const t = useTranslations('Navigation'); 
+    const tTours = useTranslations('Tours');
 
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -34,6 +35,7 @@ const Navigation = () => {
   const navItems = [
     { name: t('navFleet'), href: '/Fleet' },
     { name: t('navPanama'), href: '/Panama' },
+    { name: tTours('navLabel'), href: '/motorcycle-tours' },
     { name: t('navPricing'), href: 'Pricing' },
     { name: t('navContact'), href: '/contact' }
   ];

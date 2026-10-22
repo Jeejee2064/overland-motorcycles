@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { shopWhatsappLink } from '@/lib/whatsapp';
 import { MapPin, Clock, Mail, Phone, Send, Instagram, Facebook } from 'lucide-react';
 
 import Navigation from '../../../components/Navigation';
@@ -12,6 +13,7 @@ import { createMessage } from '@/lib/supabase/messages';
 
 const ContactPage = () => {
   const t = useTranslations('ContactPage');
+  const locale = useLocale();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -158,7 +160,7 @@ const ContactPage = () => {
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">Phone</h3>
-                  <a href="https://wa.me/50768051100" className="text-gray-600 hover:text-yellow-400 transition-colors">
+                  <a href={shopWhatsappLink(locale)} className="text-gray-600 hover:text-yellow-400 transition-colors">
                     +507 6805-1100
                   </a>
                 </div>

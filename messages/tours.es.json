@@ -1,0 +1,511 @@
+{
+  "navLabel": "Tours",
+  "common": {
+    "daysCount": "{days} días",
+    "nightsCount": "{nights} noches",
+    "from": "Desde",
+    "priceNote": "Itinerario a medida: escríbenos para recibir una cotización según tus fechas, el tamaño del grupo y la categoría de hotel.",
+    "viewTour": "Ver el tour",
+    "bookWhatsapp": "Reservar por WhatsApp",
+    "askWhatsapp": "Preguntar por WhatsApp",
+    "breadcrumbHome": "Inicio",
+    "breadcrumbTours": "Tours en moto",
+    "waMessage": "¡Hola! Me gustaría reservar el tour “{name}” de {days} días.",
+    "waMessageCustom": "¡Hola! Me gustaría organizar un tour en moto personalizado en Panamá.",
+    "waMessageInfo": "¡Hola! Me gustaría información sobre sus tours guiados en moto por Panamá.",
+    "bike": "Royal Enfield Himalayan 450",
+    "guided": "Guía privado",
+    "route": "Ruta",
+    "duration": "Duración",
+    "motorcycle": "Moto",
+    "startEnd": "Salida / Llegada",
+    "itineraryTitle": "Itinerario día a día",
+    "highlightsTitle": "Lo más destacado",
+    "includedTitle": "Qué incluye",
+    "notIncludedTitle": "No incluye",
+    "optionalTitle": "Extras opcionales",
+    "faqTitle": "Preguntas frecuentes",
+    "otherToursTitle": "Otros tours en moto por Panamá",
+    "day": "Día",
+    "includedList": [
+      "Guía privado que te acompaña durante todo el viaje",
+      "Royal Enfield Himalayan 450 y casco",
+      "Combustible durante todo el viaje",
+      "{nights} noches de alojamiento (categoría de hotel por confirmar)",
+      "Pensión completa durante todo el viaje",
+      "Itinerario privado y a medida",
+      "Asistencia durante todo el recorrido"
+    ],
+    "notIncludedList": [
+      "Vuelos internacionales",
+      "Seguro de viaje",
+      "Gastos personales"
+    ],
+    "optionalList": [
+      "Recogida en el aeropuerto y traslado al hotel",
+      "Cena de bienvenida con tu guía en un restaurante local"
+    ],
+    "startEndValue": "Overland Motorcycles, Ciudad de Panamá (recogida 8 AM)"
+  },
+  "promo": {
+    "eyebrow": "Tours guiados en moto",
+    "title": "Recorre Panamá con un guía privado",
+    "subtitle": "Cuatro tours guiados en moto de 5 a 12 días: Valle de Antón, Boquete, Boca Chica, Santa Catalina y Bocas del Toro. Moto, guía, combustible, hoteles y comidas incluidos.",
+    "cta": "Ver todos los tours en moto",
+    "daysLabel": "{days} días"
+  },
+  "meta": {
+    "hubTitle": "Tours en Moto Panamá | Aventuras Guiadas de 5 a 12 Días",
+    "hubDescription": "Tours guiados en moto por Panamá de 5 a 12 días: Boquete, Boca Chica, Santa Catalina, Bocas del Toro. Royal Enfield Himalayan 450, guía privado, combustible y hoteles incluidos. Reserva por WhatsApp.",
+    "hubKeywords": "tour en moto Panamá, tours en moto Panamá, ruta en moto Panamá, tour moto Boquete, tour moto Bocas del Toro, viaje en moto Panamá, tour guiado moto Panamá, Royal Enfield Himalayan Panamá",
+    "siteName": "Overland Motorcycles"
+  },
+  "hub": {
+    "heroTitle": "Tours en Moto por Panamá",
+    "heroSubtitle": "Aventuras guiadas y privadas de 5 a 12 días en una Royal Enfield Himalayan 450. Montañas, café, playas del Pacífico y el Caribe.",
+    "introTitle": "Tours guiados en moto por Panamá, diseñados por motociclistas que viven aquí",
+    "introBody": "Panamá es uno de los mejores destinos de Centroamérica para viajar en moto: carreteras de montaña en buen estado, rutas costeras vacías, selva, tierras altas volcánicas y dos océanos a un día de camino. Nuestros tours guiados en moto se encargan de todo: la moto, la ruta, los hoteles, el combustible y las comidas, con un guía privado que te acompaña desde Ciudad de Panamá hasta el último día. Elige un itinerario o pídenos que lo adaptemos a tus fechas y a tu ritmo.",
+    "toursTitle": "Elige tu tour en moto",
+    "toursSubtitle": "Cuatro itinerarios, un mismo estándar: guía privado, Royal Enfield Himalayan 450, hoteles y pensión completa incluidos.",
+    "whyTitle": "Por qué viajar con Overland Motorcycles",
+    "why": [
+      {
+        "title": "Guía privado",
+        "desc": "Un guía local rueda contigo durante todo el viaje: sin grandes grupos ni horarios imposibles de cambiar."
+      },
+      {
+        "title": "Todo incluido",
+        "desc": "Moto, casco, combustible, alojamiento, pensión completa y asistencia. Solo traes vuelos, seguro y gastos personales."
+      },
+      {
+        "title": "Itinerarios a medida",
+        "desc": "Cada tour se puede ajustar: un día de descanso, la excursión a Coiba, la comunidad Emberá u otra categoría de hotel."
+      },
+      {
+        "title": "Especialistas en Panamá",
+        "desc": "Tenemos una flota de motos de aventura Himalayan 450 en Ciudad de Panamá: la moto y las carreteras son nuestro trabajo diario."
+      }
+    ],
+    "stepsTitle": "Cómo reservar tu tour",
+    "steps": [
+      {
+        "title": "Elige un tour",
+        "desc": "Escoge el itinerario que encaja con tu tiempo y las regiones que quieres ver."
+      },
+      {
+        "title": "Escríbenos por WhatsApp",
+        "desc": "Dinos tus fechas y el tamaño del grupo. Confirmamos disponibilidad y te enviamos una cotización."
+      },
+      {
+        "title": "A rodar",
+        "desc": "Nos vemos a las 8 AM en Ciudad de Panamá, recibes tu moto y la explicación de la ruta, y comienza la aventura."
+      }
+    ],
+    "customTitle": "¿Quieres algo diferente?",
+    "customBody": "¿Más corto, más largo, fuera de las rutas habituales? Creamos tours en moto personalizados por Panamá. Cuéntanos qué tienes en mente.",
+    "customCta": "Planear un tour a medida",
+    "faqTitle": "Tours en moto por Panamá: tus preguntas",
+    "faq": [
+      {
+        "q": "¿Qué incluye un tour guiado en moto por Panamá?",
+        "a": "Un guía privado, una Royal Enfield Himalayan 450 con casco, combustible durante todo el viaje, alojamiento, pensión completa, un itinerario privado a medida y asistencia durante todo el recorrido. No incluye vuelos, seguro de viaje ni gastos personales."
+      },
+      {
+        "q": "¿Qué moto se usa en los tours?",
+        "a": "Todos los tours se hacen en la Royal Enfield Himalayan 450, una moto de aventura ligera y capaz, perfecta tanto para carreteras de montaña asfaltadas como para caminos más rústicos."
+      },
+      {
+        "q": "¿Cuántos días necesito para un tour en moto por Panamá?",
+        "a": "Cinco días bastan para las montañas centrales y la costa del Pacífico. Siete días suman la comunidad Emberá y Santa Fe. Con 10 días llegas a Boca Chica y Boquete, y con 12 días terminas en Bocas del Toro, en el Caribe."
+      },
+      {
+        "q": "¿Puedo hacer un tour en moto a Boquete o a Bocas del Toro?",
+        "a": "Sí. Boquete forma parte del Panama Grand Loop de 10 días y del Panama Across the Wild de 12 días, que además termina en las islas de Bocas del Toro."
+      },
+      {
+        "q": "¿Cómo reservo un tour?",
+        "a": "Escríbenos por WhatsApp con el tour que te gusta y tus fechas. Confirmamos disponibilidad, categoría de hotel y precio, y después aseguras tus fechas."
+      },
+      {
+        "q": "¿Necesito licencia de moto?",
+        "a": "Sí, necesitas una licencia de moto válida para conducir. Escríbenos por WhatsApp si tienes dudas sobre tus documentos."
+      }
+    ]
+  },
+  "detail": {
+    "heroCta": "Reservar este tour por WhatsApp",
+    "overviewTitle": "El tour de un vistazo",
+    "galleryTitle": "Fotos del recorrido",
+    "photoCredit": "Foto: {author} ({license}) vía Wikimedia Commons",
+    "ctaTitle": "¿Listo para rodar este tour?",
+    "ctaBody": "Envíanos un mensaje por WhatsApp con tus fechas y el tamaño del grupo. Te respondemos con disponibilidad y una cotización personalizada."
+  },
+  "items": {
+    "central": {
+      "name": "Ruta Central & Pacífico",
+      "tagline": "5 días · 4 noches · Valle de Antón, Santa Catalina, Cambutal, Las Tablas",
+      "metaTitle": "Tour en Moto Panamá 5 Días | Valle de Antón, Santa Catalina y Las Tablas",
+      "metaDescription": "Tour guiado de 5 días en moto por Panamá: Valle de Antón, Santa Catalina, Cambutal y Las Tablas en una Royal Enfield Himalayan 450. Guía, combustible y hoteles incluidos. Reserva por WhatsApp.",
+      "keywords": "tour moto Panamá 5 días, tour moto Valle de Antón, tour moto Santa Catalina, tour moto Azuero, Cambutal moto, tour moto Las Tablas, ruta en moto Panamá",
+      "route": "Ciudad de Panamá · Valle de Antón · Santa Catalina · Cambutal · Las Tablas · Ciudad de Panamá",
+      "intro": "La mejor primera toma de contacto con Panamá sobre dos ruedas. En cinco días recorres desde Ciudad de Panamá las tierras altas volcánicas de Valle de Antón, bajas hasta el pueblo surfista de Santa Catalina, sigues las playas salvajes de Cambutal y cruzas los pueblos tradicionales de Azuero antes de volver a la capital. Guía privado, moto y hoteles, todo resuelto.",
+      "highlights": [
+        "Valle de Antón y sus carreteras de montaña",
+        "Santa Catalina, pueblo surfista del Pacífico",
+        "Cambutal: playas vírgenes y tortugas marinas",
+        "Pueblos auténticos de Azuero alrededor de Las Tablas"
+      ],
+      "days": [
+        {
+          "title": "Ciudad de Panamá → Valle de Antón",
+          "body": "Nos vemos a las 8 AM en Overland Motorcycles para la entrega de la moto y el casco y la explicación de la ruta. Rueda hasta Valle de Antón (131 km), un valle verde dentro de un cráter rodeado de montañas. Noche en Valle de Antón."
+        },
+        {
+          "title": "Valle de Antón → Santa Catalina",
+          "body": "Rumbo a la costa del Pacífico y al pueblo surfista de Santa Catalina por una ruta costera hacia el sur. Noche en Santa Catalina."
+        },
+        {
+          "title": "Santa Catalina → Cambutal",
+          "body": "Sigue hacia el sur por la costa hasta Cambutal: playas vírgenes, tortugas marinas y naturaleza intacta. Noche en Cambutal."
+        },
+        {
+          "title": "Cambutal → Las Tablas",
+          "body": "Ruta costera de unos 84 km hasta Las Tablas. Descubre el espíritu auténtico de Panamá entre pueblos coloridos, campiñas y paisajes tradicionales. Noche en Las Tablas."
+        },
+        {
+          "title": "Las Tablas → Ciudad de Panamá",
+          "body": "Regreso por la Carretera Panamericana (unos 281 km). Entrega de las motos en Overland Motorcycles y traslado a tu hotel o al aeropuerto."
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Es el tour de 5 días un buen primer tour en moto por Panamá?",
+          "a": "Sí. Combina montañas, costa del Pacífico y pueblos tradicionales a buen ritmo, con un guía privado que se ocupa de la ruta y la logística."
+        },
+        {
+          "q": "¿Cuántas noches incluye el tour de 5 días?",
+          "a": "Cuatro noches: Valle de Antón, Santa Catalina, Cambutal y Las Tablas."
+        },
+        {
+          "q": "¿El tour sale y termina en Ciudad de Panamá?",
+          "a": "Sí. La recogida es en Overland Motorcycles, en Ciudad de Panamá, a las 8 AM del día 1, y devuelves las motos allí el día 5, con traslado a tu hotel o al aeropuerto."
+        }
+      ]
+    },
+    "grand": {
+      "name": "The Grand Panama Adventure",
+      "tagline": "7 días · 6 noches · Gamboa, Emberá, Valle de Antón, Santa Catalina, Santa Fe, Coronado",
+      "metaTitle": "Tour en Moto Panamá 7 Días | Emberá, Santa Catalina y Santa Fe",
+      "metaDescription": "Tour guiado de 7 días en moto por Panamá: Gamboa, comunidad Emberá, Valle de Antón, Santa Catalina, Santa Fe y Coronado. Royal Enfield Himalayan 450, guía y hoteles incluidos.",
+      "keywords": "tour moto Panamá 7 días, tour moto Emberá, tour moto Santa Fe Veraguas, tour moto Coiba, tour moto Santa Catalina, tour moto Canal de Panamá, Gamboa moto",
+      "route": "Gamboa · Emberá · Valle de Antón · Santa Catalina · Santa Fe · Coronado · Ciudad de Panamá",
+      "intro": "De los cauces del Canal de Panamá a la selva, de las comunidades indígenas al océano Pacífico y a las montañas de Veraguas: Panamá en su versión más auténtica. Una semana rodando con guía privado, con visita a una comunidad Emberá, la posibilidad de una excursión al Parque Nacional Coiba y un día libre en el fresco pueblo de montaña de Santa Fe.",
+      "highlights": [
+        "Gamboa, río Chagres y la selva del Canal de Panamá",
+        "Comunidad Emberá: paseo en piragua, artesanías, música y almuerzo local",
+        "Santa Catalina y Parque Nacional Coiba opcional (UNESCO)",
+        "Santa Fe: cascadas, café de altura y artesanos Ngäbe"
+      ],
+      "days": [
+        {
+          "title": "Ciudad de Panamá → Gamboa → Valle de Antón",
+          "body": "Recogida de la moto y el casco en Overland Motorcycles a las 8 AM. Primer tramo hasta Gamboa (unos 30 km): el Canal de Panamá, la reserva de selva y el río Chagres. Experiencia Emberá: paseo en piragua, visita a la comunidad, artesanías, música y almuerzo local. Por la tarde, rumbo a Valle de Antón (unos 180 km). Noche en Valle de Antón."
+        },
+        {
+          "title": "Valle de Antón → Santa Catalina",
+          "body": "Mañana tranquila en Valle de Antón: carreteras de montaña, senderos y cascadas. Por la tarde, ruta hacia la costa del Pacífico (unos 250 km). Noche en Santa Catalina."
+        },
+        {
+          "title": "Santa Catalina: Coiba y el mar",
+          "body": "Excursión opcional al Parque Nacional Coiba, Patrimonio de la Humanidad de la UNESCO, para hacer snorkel, buceo y ver fauna marina excepcional. Tarde de playa y atardecer sobre el Pacífico. Noche en Santa Catalina."
+        },
+        {
+          "title": "Santa Catalina → Santa Fe",
+          "body": "Rueda desde la costa hacia el interior, a las montañas de Veraguas (unos 169 km). Descubre las cascadas de El Bermejo, el café de altura, las orquídeas y los artesanos Ngäbe. Noche en Santa Fe."
+        },
+        {
+          "title": "Día libre en Santa Fe",
+          "body": "Senderismo hacia cascadas escondidas, baños en pozas naturales y visita al mercado artesanal Ngäbe-Buglé. Visitas opcionales a fincas de café y cacao. Segunda noche en Santa Fe."
+        },
+        {
+          "title": "Santa Fe → Coronado",
+          "body": "Continúa hacia el este por el lado Pacífico de Panamá, entre pueblos pequeños, paisajes rurales y carreteras costeras, hasta Coronado, una de las comunidades de playa más consolidadas del país. Noche en Coronado."
+        },
+        {
+          "title": "Coronado → Ciudad de Panamá",
+          "body": "Sigue la Carretera Panamericana de regreso a la capital (unos 90 km) y entrega las motos en Overland Motorcycles."
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿El tour de 7 días incluye la visita a la comunidad Emberá?",
+          "a": "Sí, el día 1 incluye paseo en piragua por el río, visita a una comunidad Emberá, artesanías, música y almuerzo local."
+        },
+        {
+          "q": "¿Puedo visitar el Parque Nacional Coiba en este tour?",
+          "a": "Coiba es una excursión opcional del día 3 desde Santa Catalina, con snorkel y buceo en un parque marino Patrimonio de la UNESCO. Dinos por WhatsApp si quieres incluirla."
+        },
+        {
+          "q": "¿Cuántas noches incluye el tour de 7 días?",
+          "a": "Seis noches: Valle de Antón, Santa Catalina (2 noches), Santa Fe (2 noches) y Coronado."
+        }
+      ]
+    },
+    "loop": {
+      "name": "The Panama Grand Loop",
+      "tagline": "10 días · 9 noches · Valle de Antón, Santa Fe, Boca Chica, Boquete, Santa Catalina, Coronado",
+      "metaTitle": "Tour en Moto Panamá 10 Días | Boquete, Boca Chica y Santa Catalina",
+      "metaDescription": "Tour guiado de 10 días en moto por Panamá: Valle de Antón, Santa Fe, Boca Chica, Boquete, Santa Catalina y Coiba. Royal Enfield Himalayan 450, guía, combustible y hoteles incluidos.",
+      "keywords": "tour moto Panamá 10 días, tour moto Boquete, tour moto Boca Chica, tour moto Chiriquí, tour moto café Panamá, ruta en moto Boquete, Panama grand loop moto",
+      "route": "Valle de Antón · Santa Fe · Boca Chica · Boquete · Santa Catalina · Coronado · Ciudad de Panamá",
+      "intro": "Un gran circuito por las montañas de Panamá, el país del café, los bosques tropicales y la costa del Pacífico, en una aventura guiada y privada pensada para descubrir el país más allá de las rutas habituales. Diez días que te llevan de Valle de Antón al archipiélago de Boca Chica, a las tierras altas cafetaleras de Boquete y al pueblo surfista de Santa Catalina, con la opción de un día en la isla de Coiba.",
+      "highlights": [
+        "Santa Fe: cascadas de El Bermejo y café de montaña",
+        "Boca Chica y su archipiélago",
+        "Boquete: café, montañas volcánicas y cascadas",
+        "Santa Catalina y Parque Nacional Coiba"
+      ],
+      "days": [
+        {
+          "title": "Ciudad de Panamá → Valle de Antón",
+          "body": "Entrega de la moto y el casco en Overland Motorcycles a las 8 AM y explicación de la ruta. Rueda hasta Valle de Antón (unos 128 km): paisajes volcánicos, cascadas, senderos, mercados locales y vistas de montaña. Noche en Valle de Antón."
+        },
+        {
+          "title": "Valle de Antón → Santa Fe",
+          "body": "Adéntrate en las montañas de Veraguas (unos 191 km). Descubre las cascadas de El Bermejo, fincas de café de altura, orquídeas y artesanos Ngäbe. Noche en Santa Fe."
+        },
+        {
+          "title": "Santa Fe → Boca Chica",
+          "body": "Rumbo a la costa Pacífica de Chiriquí (unos 225 km). Boca Chica es un tranquilo pueblo de pescadores con playas vírgenes, naturaleza exuberante y mil formas de aventura. Noche en Boca Chica."
+        },
+        {
+          "title": "Archipiélago de Boca Chica",
+          "body": "Un día de playas de arena blanca, baños en aguas cristalinas y descubrimiento de islas escondidas. Noche en Boca Chica."
+        },
+        {
+          "title": "Boca Chica → Boquete",
+          "body": "Ruta por la región cafetalera de Panamá (unos 104 km). Boquete: montañas exuberantes, café de fama mundial y cascadas. Noche en Boquete."
+        },
+        {
+          "title": "Boquete",
+          "body": "Una ruta panorámica por montañas volcánicas y tierra de café de fama mundial. Aire fresco de montaña, paisajes espectaculares y cultura panameña auténtica. Noche en Boquete."
+        },
+        {
+          "title": "Boquete → Santa Catalina",
+          "body": "De vuelta a la costa del Pacífico y al relajado pueblo surfista de Santa Catalina, rodeado de playas y naturaleza. Noche en Santa Catalina."
+        },
+        {
+          "title": "Santa Catalina: isla de Coiba",
+          "body": "Un día dedicado a la puerta de entrada al Parque Nacional Coiba: agua turquesa, abundante vida marina y algunas de las playas más vírgenes de Panamá. Noche en Santa Catalina."
+        },
+        {
+          "title": "Santa Catalina → Coronado",
+          "body": "Rueda por la costa del Pacífico, con curvas, vistas al mar y la libertad de la carretera abierta, hasta el refugio costero de Coronado. Noche en Coronado."
+        },
+        {
+          "title": "Coronado → Ciudad de Panamá",
+          "body": "El último tramo recorre carreteras costeras panorámicas, pueblos panameños auténticos y paisajes tropicales hasta Ciudad de Panamá, donde entregas las motos."
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿El tour en moto de 10 días pasa por Boquete?",
+          "a": "Sí. Los días 5 y 6 son en Boquete, con una ruta por las tierras altas del café, montañas volcánicas y cascadas."
+        },
+        {
+          "q": "¿Incluye Boca Chica?",
+          "a": "Sí, dos noches en Boca Chica con un día libre completo para explorar el archipiélago."
+        },
+        {
+          "q": "¿Cuántas noches incluye el tour de 10 días?",
+          "a": "Nueve noches: Valle de Antón, Santa Fe, Boca Chica (2), Boquete (2), Santa Catalina (2) y Coronado."
+        }
+      ]
+    },
+    "wild": {
+      "name": "Panama Across the Wild",
+      "tagline": "12 días · 11 noches · Del Pacífico a Bocas del Toro, en el Caribe",
+      "metaTitle": "Tour en Moto Panamá 12 Días | Del Pacífico a Bocas del Toro",
+      "metaDescription": "Tour guiado de 12 días en moto atravesando Panamá, de la costa del Pacífico a Bocas del Toro: Valle de Antón, Santa Fe, Santa Catalina, Boca Chica y Boquete. Guía, combustible y hoteles incluidos.",
+      "keywords": "tour moto Panamá 12 días, tour moto Bocas del Toro, Panamá de costa a costa en moto, ruta en moto Pacífico Caribe Panamá, tour moto Boquete Bocas del Toro, viaje largo en moto Panamá",
+      "route": "Ciudad de Panamá · Valle de Antón · Santa Fe · Santa Catalina · Boca Chica · Boquete · Bocas del Toro",
+      "intro": "Nuestro tour en moto más largo y completo: doce días cruzando Panamá de la costa del Pacífico al Caribe. Carreteras de montaña, tierra de café, bosques tropicales y costas remotas antes de terminar en las islas de Bocas del Toro, con un día libre para explorar el archipiélago en lancha.",
+      "highlights": [
+        "Valle de Antón con un día completo en la montaña",
+        "Cascadas de Santa Fe y Parque Nacional Coiba",
+        "Archipiélago de Boca Chica y café de Boquete",
+        "Final en Bocas del Toro, en el Caribe"
+      ],
+      "days": [
+        {
+          "title": "Ciudad de Panamá → Valle de Antón",
+          "body": "Entrega de la moto y el casco en Overland Motorcycles a las 8 AM y explicación de la ruta. Rueda hasta Valle de Antón (unos 128 km): paisajes volcánicos, cascadas, senderos y mercados locales. Noche en Valle de Antón."
+        },
+        {
+          "title": "Valle de Antón",
+          "body": "Un día completo en el valle: montañas, cascadas, naturaleza y fauna. Noche en Valle de Antón."
+        },
+        {
+          "title": "Valle de Antón → Santa Fe",
+          "body": "Adéntrate en las montañas de Veraguas (unos 191 km). Descubre las cascadas de El Bermejo, fincas de café de altura, orquídeas y artesanos Ngäbe. Noche en Santa Fe."
+        },
+        {
+          "title": "Santa Fe → Santa Catalina",
+          "body": "Bajada hacia la costa del Pacífico. Noche en Santa Catalina."
+        },
+        {
+          "title": "Santa Catalina: isla de Coiba",
+          "body": "La puerta de entrada al Parque Nacional Coiba: agua turquesa, abundante vida marina y algunas de las playas más vírgenes de Panamá. Noche en Santa Catalina."
+        },
+        {
+          "title": "Santa Catalina → Boca Chica",
+          "body": "Rumbo a Boca Chica (unos 225 km), un tranquilo pueblo de pescadores en la costa del Pacífico con playas vírgenes y naturaleza exuberante. Noche en Boca Chica."
+        },
+        {
+          "title": "Archipiélago de Boca Chica",
+          "body": "Un día de playas de arena blanca, baños en aguas cristalinas y descubrimiento de islas escondidas. Noche en Boca Chica."
+        },
+        {
+          "title": "Boca Chica → Boquete",
+          "body": "Ruta por la región cafetalera de Panamá (unos 104 km). Boquete: montañas exuberantes, café de fama mundial y cascadas. Noche en Boquete."
+        },
+        {
+          "title": "Boquete",
+          "body": "Una ruta panorámica por montañas volcánicas y tierra de café de fama mundial, con aire fresco de montaña y paisajes espectaculares. Noche en Boquete."
+        },
+        {
+          "title": "Boquete → Bocas del Toro",
+          "body": "La última etapa en moto te lleva de las montañas a la costa caribeña de Panamá (unos 200 km). Dejas las motos en lugar seguro y continúas en lancha hacia las islas de Bocas del Toro. Noche en Bocas del Toro."
+        },
+        {
+          "title": "Bocas del Toro: día libre",
+          "body": "Un día completo para descubrir el archipiélago: explora las islas en lancha, báñate en aguas cristalinas, visita playas escondidas o disfruta del ambiente caribeño. Noche en Bocas del Toro."
+        },
+        {
+          "title": "Bocas del Toro: despedida",
+          "body": "Una última mañana en el Caribe antes de seguir tu camino. Fin de la aventura Overland Motorcycles."
+        }
+      ],
+      "faq": [
+        {
+          "q": "¿Este tour en moto termina en Bocas del Toro?",
+          "a": "Sí. La última etapa en moto va de Boquete a la costa caribeña, y desde allí continúas en lancha a las islas de Bocas del Toro para las dos últimas noches."
+        },
+        {
+          "q": "¿Incluye Boquete?",
+          "a": "Sí, dos noches en Boquete a mitad del tour, con un día de ruta por las tierras altas del café."
+        },
+        {
+          "q": "¿Cuántas noches incluye el tour de 12 días?",
+          "a": "Once noches: Valle de Antón (2), Santa Fe, Santa Catalina (2), Boca Chica (2), Boquete (2) y Bocas del Toro (2)."
+        }
+      ]
+    }
+  },
+  "map": {
+    "title": "La ruta en el mapa",
+    "subtitle": "Haz clic en cada pin para ver lo que te espera en cada parada.",
+    "note": "La ruta sigue las carreteras y es indicativa. La línea azul punteada es el traslado en lancha.",
+    "start": "Salida"
+  },
+  "places": {
+    "panama": {
+      "name": "Ciudad de Panamá",
+      "highlights": [
+        "Overland Motorcycles: entrega de la moto y el casco",
+        "Explicación de la ruta antes de salir",
+        "Entrega de las motos al final del viaje"
+      ]
+    },
+    "gamboa": {
+      "name": "Gamboa",
+      "highlights": [
+        "El Canal de Panamá",
+        "Reserva de selva",
+        "Río Chagres"
+      ]
+    },
+    "embera": {
+      "name": "Comunidad Emberá",
+      "highlights": [
+        "Paseo en piragua por el río",
+        "Visita a la comunidad",
+        "Artesanías y música tradicionales",
+        "Almuerzo local"
+      ]
+    },
+    "valle": {
+      "name": "Valle de Antón",
+      "highlights": [
+        "Paisajes volcánicos",
+        "Cascadas y senderos",
+        "Mercados locales",
+        "Vistas de montaña"
+      ]
+    },
+    "santacatalina": {
+      "name": "Santa Catalina",
+      "highlights": [
+        "Ambiente relajado junto al océano",
+        "Playas y atardecer sobre el Pacífico",
+        "Excursión opcional al Parque Nacional Coiba (UNESCO): snorkel, buceo y fauna marina"
+      ]
+    },
+    "cambutal": {
+      "name": "Cambutal",
+      "highlights": [
+        "Playas vírgenes",
+        "Tortugas marinas",
+        "Naturaleza intacta"
+      ]
+    },
+    "lastablas": {
+      "name": "Las Tablas",
+      "highlights": [
+        "Pueblos coloridos",
+        "Campiña y paisajes tradicionales",
+        "El espíritu auténtico de Panamá"
+      ]
+    },
+    "santafe": {
+      "name": "Santa Fe",
+      "highlights": [
+        "Cascadas de El Bermejo",
+        "Café de altura",
+        "Orquídeas",
+        "Artesanos y mercado Ngäbe"
+      ]
+    },
+    "coronado": {
+      "name": "Coronado",
+      "highlights": [
+        "Una de las comunidades de playa más consolidadas de Panamá",
+        "Ambiente costero relajado"
+      ]
+    },
+    "bocachica": {
+      "name": "Boca Chica",
+      "highlights": [
+        "Tranquilo pueblo de pescadores en la costa del Pacífico",
+        "Playas vírgenes y naturaleza exuberante",
+        "Archipiélago de islas por explorar"
+      ]
+    },
+    "boquete": {
+      "name": "Boquete",
+      "highlights": [
+        "Café de fama mundial",
+        "Montañas volcánicas",
+        "Cascadas y aire fresco de montaña"
+      ]
+    },
+    "bocas": {
+      "name": "Bocas del Toro",
+      "highlights": [
+        "Islas y playas del Caribe",
+        "Selva",
+        "Traslado en lancha a las islas"
+      ]
+    }
+  }
+}

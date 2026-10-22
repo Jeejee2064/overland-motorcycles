@@ -1,6 +1,9 @@
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from '../routing';
 
+// Tours copy exists in en/es/fr; other locales (pt) fall back to the English copy.
+const TOURS_LOCALES = ['en', 'es', 'fr'];
+
 export default getRequestConfig(async ({ requestLocale }) => {
   // This typically corresponds to the `[locale]` segment
   let locale = await requestLocale;
@@ -10,8 +13,13 @@ export default getRequestConfig(async ({ requestLocale }) => {
     locale = routing.defaultLocale;
   }
 
+  const toursLocale = TOURS_LOCALES.includes(locale) ? locale : 'en';
+
   return {
     locale,
-    messages: (await import(`../messages/${locale}.json`)).default
+    messages: {
+      ...(await import(`../messages/${locale}.json`)).default,
+      Tours: (await import(`../messages/tours.${toursLocale}.json`)).default,
+    }
   };
 });

@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { shopWhatsappLink } from '@/lib/whatsapp';
 import Image from 'next/image';
 
 function BalanceSuccessContent() {
@@ -74,7 +75,7 @@ function BalanceSuccessContent() {
       <div className="text-5xl mb-4">⏳</div>
       <h1 className="text-2xl font-bold text-gray-800 mb-2">Almost there...</h1>
       <p className="text-gray-500 text-sm mb-6">We're still confirming your payment. If you completed the payment, everything should be fine — we'll update your booking shortly.</p>
-      <a href="https://wa.me/50768051100"
+      <a href={shopWhatsappLink()}
         className="block w-full bg-green-500 text-white py-3 rounded-xl font-semibold hover:bg-green-600 transition text-center">
         Contact us on WhatsApp
       </a>

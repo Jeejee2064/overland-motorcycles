@@ -10,12 +10,15 @@ import { HeliconiaBackground, WaveBackground, TopWaveBackground, BambooBackgroun
 import Navigation from '../../components/Navigation';
 import MountainParallax from '../../components/MountainParallax';
 import Footer from '../../components/Footer';
+import NewsletterSignup from '../../components/NewsletterSignup';
 
 import ButtonPrimary from '../../components/ButtonPrimary';
+import ToursPromoSection from '../../components/ToursPromoSection';
 import ButtonSecondary from '../../components/ButtonSecondary';
 
 const HomePage = () => {
   const t = useTranslations('HomePage');
+  const tn = useTranslations('Newsletter');
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
@@ -227,6 +230,8 @@ const HomePage = () => {
           </div>
         </div>
       </section>
+
+      <ToursPromoSection tone="light" />
 
       {/* Panama Section */}
       <section id="about" className="py-20 bg-background">
@@ -440,6 +445,15 @@ const HomePage = () => {
               <ButtonSecondary href="/contact" text={t('contact')} />
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Newsletter Section */}
+      <section className="py-16 bg-background border-t border-white/10">
+        <div className="max-w-3xl mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-3 text-accent">{tn('homeTitle')}</h2>
+          <p className="text-gray-300 mb-8">{tn('desc')}</p>
+          <NewsletterSignup source="home" />
         </div>
       </section>
 

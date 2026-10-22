@@ -8,6 +8,7 @@ import { Check, Shield, Calendar, DollarSign, FileText } from 'lucide-react';
 import Navigation from '../../../components/Navigation';
 import Footer from '../../../components/Footer';
 import ButtonPrimary from '../../../components/ButtonPrimary';
+import ToursPromoSection from '../../../components/ToursPromoSection';
 
 const HIMALAYAN_PRICING = [
   { days: 2,  price: 280 },
@@ -300,6 +301,8 @@ const PricingPage = () => {
           </motion.div>
         </div>
       </section>
+
+      <ToursPromoSection tone="dark" />
 
       {/* FAQ */}
       <section className="py-20 bg-background">

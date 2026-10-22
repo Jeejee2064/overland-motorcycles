@@ -658,6 +658,20 @@
     "loading": "Processing..."
   },
 
+  "Newsletter": {
+    "cta": "Subscribe to the newsletter",
+    "title": "Join the Overland newsletter",
+    "desc": "Ride routes, Panama travel tips and special offers. No spam, unsubscribe anytime.",
+    "homeTitle": "Get Panama ride tips & offers",
+    "placeholder": "Your email address",
+    "submit": "Subscribe",
+    "sending": "Subscribing...",
+    "success": "Thanks! You are subscribed.",
+    "already": "You are already subscribed. Thanks!",
+    "invalid": "Please enter a valid email address.",
+    "error": "Something went wrong. Please try again.",
+    "close": "Close"
+  },
   "Footer": {
     "description": "Your trusted partner for motorcycle adventures in Panama. Experience the freedom of the open road with our premium Royal Enfield Himalayan fleet.",
     "followUs": "Follow us",
