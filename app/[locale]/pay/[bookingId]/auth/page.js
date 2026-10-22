@@ -14,6 +14,7 @@ export default async function AuthPage({ params, searchParams }) {
   const index         = parseInt(sp?.index || '0');
   const locale        = (await params).locale || 'en';
   const t             = await getTranslations({ locale, namespace: 'auth' });
+  const tp            = await getTranslations({ locale, namespace: 'Pay' });
 
   const { data: booking } = await supabase
     .from('bookings')
@@ -39,8 +40,8 @@ export default async function AuthPage({ params, searchParams }) {
   }
 
   const depositLabel = booking.bike_quantity > 1
-    ? `Security Deposit #${index + 1} of ${booking.bike_quantity}`
-    : 'Security Deposit';
+    ? tp('depositTitleN', { n: index + 1, total: booking.bike_quantity })
+    : tp('depositTitle');
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">

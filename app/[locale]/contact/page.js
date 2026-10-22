@@ -270,7 +270,7 @@ const ContactPage = () => {
                       required
                       rows={6}
                       className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 outline-none transition resize-none"
-                      placeholder="Tell us about your adventure plans..."
+                      placeholder={t('messagePlaceholder')}
                     />
                   </div>
 
@@ -310,7 +310,7 @@ const ContactPage = () => {
       allowFullScreen
       loading="lazy"
       referrerPolicy="no-referrer-when-downgrade"
-      title="Overland Motorcycles Location"
+      title={t('mapTitle')}
     />
           </motion.div>
         </div>

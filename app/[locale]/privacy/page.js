@@ -62,7 +62,7 @@ const PrivacyPage = () => {
         <div className="absolute inset-0 z-0">
           <Image
             src="/moto2.webp"
-            alt="Privacy Policy Background"
+            alt={t('bgAlt')}
             fill
             className="object-cover"
             priority

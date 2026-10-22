@@ -112,7 +112,7 @@ const ProgressDots = ({ currentStep, totalSteps }) => (
 );
 
 // ─── PromoCodeInput ───────────────────────────────────────────
-const PromoCodeInput = ({ appliedPromo, onApply, onRemove, totalBeforeDiscount }) => {
+const PromoCodeInput = ({ appliedPromo, onApply, onRemove, totalBeforeDiscount, t }) => {
   const [code, setCode]       = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
@@ -163,7 +163,7 @@ const PromoCodeInput = ({ appliedPromo, onApply, onRemove, totalBeforeDiscount }
             −{appliedPromo.discountValue}% (−${appliedPromo.discountAmount.toFixed(2)})
           </span>
         </div>
-        <button type="button" aria-label="Remove promo code" onClick={handleRemove} className="text-gray-400 hover:text-red-400 transition-colors ml-2">
+        <button type="button" aria-label={t('removePromo')} onClick={handleRemove} className="text-gray-400 hover:text-red-400 transition-colors ml-2">
           <X size={16} />
         </button>
       </motion.div>
@@ -181,11 +181,11 @@ const PromoCodeInput = ({ appliedPromo, onApply, onRemove, totalBeforeDiscount }
             name="promoCode"
             autoComplete="off"
             spellCheck={false}
-            aria-label="Promo code"
+            aria-label={t('promoPlaceholder')}
             value={code}
             onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(''); }}
             onKeyDown={(e) => e.key === 'Enter' && handleApply()}
-            placeholder="Promo code"
+            placeholder={t('promoPlaceholder')}
             className="w-full pl-9 pr-3 py-3 rounded-xl border-2 border-gray-700 bg-gray-900/50 text-white outline-none focus:border-yellow-400 transition text-sm uppercase tracking-widest placeholder:normal-case placeholder:tracking-normal"
           />
         </div>
@@ -982,6 +982,7 @@ const BookingPage = () => {
                       <Tag size={14} className="text-yellow-400" /> Promo Code
                     </h3>
                     <PromoCodeInput
+                      t={t}
                       appliedPromo={appliedPromo}
                       onApply={setAppliedPromo}
                       onRemove={() => setAppliedPromo(null)}

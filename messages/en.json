@@ -1,5 +1,8 @@
 {
 "HomePage": {
+    "heroAlt": "Panama adventure",
+    "logoAlt": "Overland Motorcycles logo",
+    "bikeAlt": "Royal Enfield Himalayan",
     "hero": "Adventure starts here!",
     "heroSubtitle": "Explore Panama on Royal Enfield Himalayan 450cc motorcycles.",
     "bookTrip": "Book Your Trip",
@@ -49,6 +52,8 @@
     "content": "We are dedicated to providing the best motorcycles and gear for your adventures"
   },
 "ContactPage": {
+    "messagePlaceholder": "Tell us about your adventure plans...",
+    "mapTitle": "Overland Motorcycles location",
     "heroTitle": "Get in Touch",
     "heroSubtitle": "Ready for your next adventure? Get in touch with us",
     "getInTouch": "Contact Us",
@@ -92,6 +97,7 @@
     "closeMenu": "Close menu"
   },
   "LocaleSwitcher": {
+    "label": "Language",
     "label": "Change language",
     "en": "English",
     "es": "Español",
@@ -344,6 +350,8 @@
   },
     
   "BookingPage": {
+    "promoPlaceholder": "Promo code",
+    "removePromo": "Remove promo code",
     "heroTitle": "Book Your Adventure",
     "heroSubtitle": "Start planning your unforgettable Panama motorcycle journey",
 
@@ -544,6 +552,7 @@
     "siteName": "Overland Motorcycles Panama"
   },
    "TermsPage": {
+    "bgAlt": "Terms and conditions background",
     "heroTitle": "Terms and Conditions",
     "heroSubtitle": "Clear rules for a safe adventure. Read our rental agreement.",
     "sectionTitle": "Motorcycle Rental Agreement",
@@ -563,6 +572,7 @@
     "privacyLink": "Privacy Policy"
   },
   "PrivacyPage": {
+    "bgAlt": "Privacy policy background",
     "heroTitle": "Privacy Policy",
     "heroSubtitle": "Your information matters. Understand how we collect and protect it.",
     "lastUpdated": "Last Updated: October 1, 2025",
@@ -673,6 +683,7 @@
     "close": "Close"
   },
   "Footer": {
+    "madeBy": "Website made by",
     "description": "Your trusted partner for motorcycle adventures in Panama. Experience the freedom of the open road with our premium Royal Enfield Himalayan fleet.",
     "followUs": "Follow us",
     "openingHours": "Opening Hours",
@@ -688,5 +699,44 @@
     "allRightsReserved": "All rights reserved",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service"
+  },
+
+  "Pay": {
+    "processingAuthTitle": "Processing your authorization...",
+    "processingPaymentTitle": "Processing your payment...",
+    "pleaseWait": "Please wait, do not close this page.",
+    "authorizedTitle": "Deposit Authorized!",
+    "authorizedBody": "Your $1,000 security deposit has been successfully authorized. Your card will only be charged if damages occur.",
+    "closeSoon": "You can now close this page. We'll be in touch soon! 🏍️",
+    "almostTitle": "Almost there...",
+    "almostBody": "We're still confirming your payment. If you completed the payment, everything should be fine — we'll update your booking shortly.",
+    "contactWhatsapp": "Contact us on WhatsApp",
+    "fullPaidTitle": "Booking Fully Paid!",
+    "paymentConfirmedTitle": "Payment Confirmed!",
+    "fullPaidBody": "Your full payment of ${amount} has been received. Your booking is now confirmed.",
+    "balancePaidBody": "Your remaining balance has been received. Your booking is now fully paid.",
+    "closeSeeYou": "You can now close this page. See you soon! 🏍️",
+    "depositTitle": "Security Deposit",
+    "depositTitleN": "Security Deposit #{n} of {total}",
+    "remainingBalance": "Remaining Balance",
+    "fullPayment": "Full Payment",
+    "initialPayment": "Initial Payment (50%)",
+    "subtitleBalance": "Final payment to complete your booking.",
+    "subtitleFull": "Complete payment for your rental.",
+    "subtitleInitial": "First payment to confirm your booking.",
+    "name": "Name",
+    "motorcycle": "Motorcycle",
+    "pickupLocation": "Pickup Location",
+    "dates": "Dates",
+    "totalPrice": "Total Price",
+    "alreadyPaid": "Already Paid",
+    "amountDue": "Amount Due",
+    "payBalance": "Pay Remaining Balance",
+    "payFull": "Pay Full Amount",
+    "payInitial": "Pay Initial Deposit",
+    "redirecting": "Redirecting...",
+    "bookingNotFound": "Booking not found.",
+    "balanceAlreadyPaid": "Balance already paid. Thank you!",
+    "initialAlreadyReceived": "Initial payment already received. Thank you!"
   }
 }

@@ -1,15 +1,9 @@
 'use client';
 import { useState } from 'react';
 
-export default function BalancePayButton({ bookingId, mode = 'balance' }) {
+export default function BalancePayButton({ bookingId, mode = 'balance', labels }) {
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState(null);
-
-  const labels = {
-    balance: { idle: 'Pay Remaining Balance', loading: 'Redirecting...' },
-    full:    { idle: 'Pay Full Amount',        loading: 'Redirecting...' },
-    initial: { idle: 'Pay Initial Deposit',    loading: 'Redirecting...' },
-  };
 
   const handlePay = async () => {
     setLoading(true);
@@ -37,7 +31,7 @@ export default function BalancePayButton({ bookingId, mode = 'balance' }) {
         disabled={loading}
         className="w-full bg-black text-white py-3 rounded-xl font-semibold hover:bg-gray-800 transition disabled:opacity-50"
       >
-        {loading ? labels[mode]?.loading : labels[mode]?.idle}
+        {loading ? labels.loading : labels[mode]}
       </button>
     </div>
   );

@@ -56,7 +56,7 @@ const TermsPage = () => {
         <div className="absolute inset-0 z-0">
           <Image
             src="/moto2.webp" // Reusing your background image
-            alt="Terms and Conditions Background"
+            alt={t('bgAlt')}
             fill
             className="object-cover"
             priority

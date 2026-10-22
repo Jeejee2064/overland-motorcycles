@@ -1,5 +1,8 @@
 {
  "HomePage": {
+    "heroAlt": "Aventure au Panama",
+    "logoAlt": "Logo Overland Motorcycles",
+    "bikeAlt": "Royal Enfield Himalayan",
     "hero": "L'aventure commence ici!",
     "heroSubtitle": "Explorez le Panama en motos Royal Enfield Himalayan 450cc.",
     "bookTrip": "Réservez votre Voyage",
@@ -49,6 +52,8 @@
     "content": "Nous nous engageons à offrir les meilleures motos et équipements pour vos aventures"
   },
   "ContactPage": {
+    "messagePlaceholder": "Parlez-nous de vos projets d'aventure...",
+    "mapTitle": "Emplacement d'Overland Motorcycles",
     "heroTitle": "Contactez-nous",
     "heroSubtitle": "Prêt pour votre prochaine aventure ? Contactez-nous",
     "getInTouch": "Entrer en contact",
@@ -93,6 +98,7 @@
     "closeMenu": "Fermer le menu"
   },
   "LocaleSwitcher": {
+    "label": "Langue",
     "label": "Changer de langue",
     "en": "English",
     "es": "Español",
@@ -325,6 +331,8 @@
     "siteName": "Location de Motos Panama"
   },
 "BookingPage": {
+    "promoPlaceholder": "Code promo",
+    "removePromo": "Retirer le code promo",
   "heroTitle": "Réservez votre Aventure",
   "heroSubtitle": "Commencez à planifier votre inoubliable voyage à moto au Panama",
 
@@ -515,6 +523,7 @@
     "siteName": "Overland Motorcycles Panama"
   },
   "TermsPage": {
+    "bgAlt": "Arrière-plan des conditions générales",
     "heroTitle": "Conditions générales",
     "heroSubtitle": "Règles claires pour une aventure en toute sécurité. Lisez notre contrat de location.",
     "sectionTitle": "Contrat de location de moto",
@@ -534,6 +543,7 @@
     "privacyLink": "Politique de confidentialité"
   },
   "PrivacyPage": {
+    "bgAlt": "Arrière-plan de la politique de confidentialité",
     "heroTitle": "Politique de confidentialité",
     "heroSubtitle": "Vos informations comptent. Comprenez comment nous les collectons et protégeons.",
     "lastUpdated": "Dernière mise à jour : 1 octobre 2025",
@@ -642,6 +652,7 @@
     "close": "Fermer"
   },
   "Footer": {
+    "madeBy": "Site réalisé par",
     "description": "Votre partenaire de confiance pour des aventures moto au Panama. Vivez la liberté de la route avec notre flotte premium Royal Enfield Himalayan.",
     "followUs": "Suivez-nous",
     "openingHours": "Horaires d'ouverture",
@@ -657,5 +668,44 @@
     "allRightsReserved": "Tous droits réservés",
     "privacy": "Politique de confidentialité",
     "terms": "Conditions générales"
+  },
+
+  "Pay": {
+    "processingAuthTitle": "Traitement de votre autorisation...",
+    "processingPaymentTitle": "Traitement de votre paiement...",
+    "pleaseWait": "Veuillez patienter, ne fermez pas cette page.",
+    "authorizedTitle": "Caution autorisée !",
+    "authorizedBody": "Votre caution de 1 000 $ a bien été autorisée. Votre carte ne sera débitée qu'en cas de dommages.",
+    "closeSoon": "Vous pouvez maintenant fermer cette page. Nous vous recontacterons bientôt ! 🏍️",
+    "almostTitle": "Presque terminé...",
+    "almostBody": "Nous confirmons encore votre paiement. Si vous avez effectué le paiement, tout devrait être en ordre — nous mettrons votre réservation à jour sous peu.",
+    "contactWhatsapp": "Nous contacter sur WhatsApp",
+    "fullPaidTitle": "Réservation entièrement payée !",
+    "paymentConfirmedTitle": "Paiement confirmé !",
+    "fullPaidBody": "Nous avons bien reçu votre paiement complet de {amount} $. Votre réservation est confirmée.",
+    "balancePaidBody": "Nous avons bien reçu le solde restant. Votre réservation est entièrement payée.",
+    "closeSeeYou": "Vous pouvez maintenant fermer cette page. À bientôt ! 🏍️",
+    "depositTitle": "Caution",
+    "depositTitleN": "Caution n° {n} sur {total}",
+    "remainingBalance": "Solde restant",
+    "fullPayment": "Paiement complet",
+    "initialPayment": "Premier paiement (50 %)",
+    "subtitleBalance": "Dernier paiement pour finaliser votre réservation.",
+    "subtitleFull": "Réglez la totalité de votre location.",
+    "subtitleInitial": "Premier paiement pour confirmer votre réservation.",
+    "name": "Nom",
+    "motorcycle": "Moto",
+    "pickupLocation": "Lieu de retrait",
+    "dates": "Dates",
+    "totalPrice": "Prix total",
+    "alreadyPaid": "Déjà payé",
+    "amountDue": "Montant à payer",
+    "payBalance": "Payer le solde restant",
+    "payFull": "Payer le montant total",
+    "payInitial": "Payer le premier versement",
+    "redirecting": "Redirection...",
+    "bookingNotFound": "Réservation introuvable.",
+    "balanceAlreadyPaid": "Le solde est déjà payé. Merci !",
+    "initialAlreadyReceived": "Le premier paiement a déjà été reçu. Merci !"
   }
 }

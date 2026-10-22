@@ -66,7 +66,7 @@ const HomePage = () => {
             {!videoLoaded && (
               <Image
                 src="/hero2.jpg"
-                alt="Panama Adventure"
+                alt={t('heroAlt')}
                 fill
                 className="object-cover"
                 priority
@@ -126,7 +126,7 @@ const HomePage = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/20 to-yellow-600/20 rounded-full blur-xl" />
               <Image
                 src="/LOGOBL.svg"
-                alt="Logo Overland Motorcycles"
+                alt={t('logoAlt')}
                 fill
                 className="object-contain relative mt-8 z-10"
                 priority
@@ -306,7 +306,7 @@ const HomePage = () => {
                 >
                   <img
                     src="/royal-enfield-himalayan.png"
-                    alt="Royal Enfield Himalayan"
+                    alt={t('bikeAlt')}
                     className="w-full h-auto"
                   />
                 </motion.div>
@@ -420,7 +420,7 @@ const HomePage = () => {
         <motion.div style={{ y: yBg }} className="absolute inset-0 z-0">
           <Image
             src="/ready.jpg"
-            alt="Panama Adventure"
+            alt={t('heroAlt')}
             fill
             priority
             className="object-cover"

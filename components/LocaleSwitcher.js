@@ -14,6 +14,7 @@ const locales = [
 ];
 
 export default function LocaleSwitcher() {
+  const t = useTranslations('LocaleSwitcher');
   const router = useRouter();
   const pathname = usePathname();
   const params = useParams();
@@ -25,7 +26,7 @@ export default function LocaleSwitcher() {
   return (
     <div className="flex items-center gap-2">
       <Globe size={18} className="text-gray-400" aria-hidden="true" />
-      <div className="flex gap-1" role="group" aria-label="Language">
+      <div className="flex gap-1" role="group" aria-label={t('label')}>
         {locales.map((locale) => (
           <motion.button
             key={locale.code}

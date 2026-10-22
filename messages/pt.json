@@ -1,5 +1,8 @@
 {
   "HomePage": {
+    "heroAlt": "Aventura no Panamá",
+    "logoAlt": "Logo da Overland Motorcycles",
+    "bikeAlt": "Royal Enfield Himalayan",
     "hero": "A aventura começa aqui!",
     "heroSubtitle": "Explore o Panamá em motocicletas Royal Enfield Himalayan 450cc.",
     "bookTrip": "Reserve sua Viagem",
@@ -49,6 +52,8 @@
     "content": "Estamos dedicados a fornecer as melhores motos e equipamentos para suas aventuras"
   },
   "ContactPage": {
+    "messagePlaceholder": "Conte-nos sobre seus planos de aventura...",
+    "mapTitle": "Localização da Overland Motorcycles",
     "heroTitle": "Entre em Contato",
     "heroSubtitle": "Pronto para sua próxima aventura? Fale conosco",
     "getInTouch": "Entre em Contato",
@@ -93,6 +98,7 @@
     "closeMenu": "Fechar menu"
   },
   "LocaleSwitcher": {
+    "label": "Idioma",
     "label": "Mudar idioma",
     "en": "English",
     "es": "Español",
@@ -324,6 +330,8 @@
     "siteName": "Aluguel de Motos Panamá"
   },
 "BookingPage": {
+    "promoPlaceholder": "Código promocional",
+    "removePromo": "Remover código promocional",
   "heroTitle": "Reserve Sua Aventura",
   "heroSubtitle": "Comece a planejar sua inesquecível viagem de moto pelo Panamá",
 
@@ -513,6 +521,7 @@
     "siteName": "Overland Motorcycles Panamá"
   },
   "TermsPage": {
+    "bgAlt": "Fundo dos termos e condições",
     "heroTitle": "Termos e Condições",
     "heroSubtitle": "Regras claras para uma aventura segura. Leia nosso contrato de aluguel.",
     "sectionTitle": "Contrato de Aluguel de Motocicleta",
@@ -538,6 +547,7 @@
 
   },
   "PrivacyPage": {
+    "bgAlt": "Fundo da política de privacidade",
     "heroTitle": "Política de Privacidade",
     "heroSubtitle": "Sua informação importa. Saiba como a coletamos e protegemos.",
     "lastUpdated": "Última atualização: 1 de outubro de 2025",
@@ -646,6 +656,7 @@
       "close": "Fechar"
     },
     "Footer": {
+    "madeBy": "Site desenvolvido por",
     "description": "Seu parceiro confiável para aventuras de motocicleta no Panamá. Experimente a liberdade da estrada com nossa frota premium Royal Enfield Himalayan.",
     "followUs": "Siga-nos",
     "openingHours": "Horário de Funcionamento",
@@ -661,5 +672,44 @@
     "allRightsReserved": "Todos os direitos reservados",
     "privacy": "Política de Privacidade",
     "terms": "Termos de Serviço"
+  },
+
+  "Pay": {
+    "processingAuthTitle": "Processando sua autorização...",
+    "processingPaymentTitle": "Processando seu pagamento...",
+    "pleaseWait": "Por favor, aguarde e não feche esta página.",
+    "authorizedTitle": "Caução autorizada!",
+    "authorizedBody": "Sua caução de $1.000 foi autorizada com sucesso. Seu cartão só será cobrado se houver danos.",
+    "closeSoon": "Você já pode fechar esta página. Entraremos em contato em breve! 🏍️",
+    "almostTitle": "Quase lá...",
+    "almostBody": "Ainda estamos confirmando seu pagamento. Se você concluiu o pagamento, está tudo certo — atualizaremos sua reserva em breve.",
+    "contactWhatsapp": "Fale conosco no WhatsApp",
+    "fullPaidTitle": "Reserva totalmente paga!",
+    "paymentConfirmedTitle": "Pagamento confirmado!",
+    "fullPaidBody": "Recebemos seu pagamento total de ${amount}. Sua reserva está confirmada.",
+    "balancePaidBody": "Recebemos o saldo restante. Sua reserva está totalmente paga.",
+    "closeSeeYou": "Você já pode fechar esta página. Até breve! 🏍️",
+    "depositTitle": "Caução",
+    "depositTitleN": "Caução {n} de {total}",
+    "remainingBalance": "Saldo restante",
+    "fullPayment": "Pagamento total",
+    "initialPayment": "Pagamento inicial (50%)",
+    "subtitleBalance": "Pagamento final para concluir sua reserva.",
+    "subtitleFull": "Conclua o pagamento do seu aluguel.",
+    "subtitleInitial": "Primeiro pagamento para confirmar sua reserva.",
+    "name": "Nome",
+    "motorcycle": "Moto",
+    "pickupLocation": "Local de retirada",
+    "dates": "Datas",
+    "totalPrice": "Preço total",
+    "alreadyPaid": "Já pago",
+    "amountDue": "Valor a pagar",
+    "payBalance": "Pagar saldo restante",
+    "payFull": "Pagar valor total",
+    "payInitial": "Pagar entrada inicial",
+    "redirecting": "Redirecionando...",
+    "bookingNotFound": "Reserva não encontrada.",
+    "balanceAlreadyPaid": "O saldo já foi pago. Obrigado!",
+    "initialAlreadyReceived": "O pagamento inicial já foi recebido. Obrigado!"
   }
 }

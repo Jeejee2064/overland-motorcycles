@@ -157,7 +157,7 @@ const Footer = () => {
                 rel="noopener noreferrer"
                 className="text-white transition-colors flex items-center gap-1"
               >
-                Website made by <span className="font-semibold">Bocas Digital</span>
+                {t('madeBy')} <span className="font-semibold">Bocas Digital</span>
               </Link>
             </div>
           </div>

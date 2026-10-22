@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { getTranslations } from 'next-intl/server';
 import BalancePayButton from './BalancePayButton';
 import Image from 'next/image';
 
@@ -11,6 +12,8 @@ export default async function BalancePage({ params, searchParams }) {
   const { bookingId } = await params;
   const sp   = await searchParams;
   const mode = sp?.mode || 'balance'; // 'balance' | 'full' | 'initial'
+  const locale = (await params).locale || 'en';
+  const t = await getTranslations({ locale, namespace: 'Pay' });
 
   const { data: booking } = await supabase
     .from('bookings')
@@ -21,7 +24,7 @@ export default async function BalancePage({ params, searchParams }) {
   if (!booking) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-500">Booking not found.</p>
+        <p className="text-red-500">{t('bookingNotFound')}</p>
       </div>
     );
   }
@@ -29,7 +32,7 @@ export default async function BalancePage({ params, searchParams }) {
   if (booking.balance_status === 'captured' && mode !== 'initial') {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-green-600 text-xl font-semibold">✅ Balance already paid. Thank you!</p>
+        <p className="text-green-600 text-xl font-semibold">✅ {t('balanceAlreadyPaid')}</p>
       </div>
     );
   }
@@ -37,7 +40,7 @@ export default async function BalancePage({ params, searchParams }) {
   if (mode === 'initial' && booking.payment_status === 'paid' && booking.webhook_received) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-green-600 text-xl font-semibold">✅ Initial payment already received. Thank you!</p>
+        <p className="text-green-600 text-xl font-semibold">✅ {t('initialAlreadyReceived')}</p>
       </div>
     );
   }
@@ -47,15 +50,15 @@ export default async function BalancePage({ params, searchParams }) {
   const initialAmount   = parseFloat(booking.down_payment).toFixed(2);
 
   const titles = {
-    balance: 'Remaining Balance',
-    full:    'Full Payment',
-    initial: 'Initial Payment (50%)',
+    balance: t('remainingBalance'),
+    full:    t('fullPayment'),
+    initial: t('initialPayment'),
   };
 
   const subtitles = {
-    balance: 'Final payment to complete your booking.',
-    full:    'Complete payment for your rental.',
-    initial: 'First payment to confirm your booking.',
+    balance: t('subtitleBalance'),
+    full:    t('subtitleFull'),
+    initial: t('subtitleInitial'),
   };
 
   const amountDue = mode === 'full' ? fullAmount : mode === 'initial' ? initialAmount : balanceAmount;
@@ -70,21 +73,30 @@ export default async function BalancePage({ params, searchParams }) {
         <p className="text-gray-500 mb-6">{subtitles[mode]}</p>
 
         <div className="bg-gray-50 rounded-xl p-4 mb-6 space-y-2 text-sm text-gray-700">
-          <div className="flex justify-between"><span>Name</span><span className="font-medium">{booking.first_name} {booking.last_name}</span></div>
-          <div className="flex justify-between"><span>Motorcycle</span><span className="font-medium">{booking.motorcycle_model}</span></div>
-          <div className="flex justify-between"><span>Pickup Location</span><span className="font-medium">{booking.pickup_location || 'Panama City'}</span></div>
-          <div className="flex justify-between"><span>Dates</span><span className="font-medium">{booking.start_date} → {booking.end_date}</span></div>
-          <div className="flex justify-between"><span>Total Price</span><span className="font-medium">${fullAmount}</span></div>
+          <div className="flex justify-between"><span>{t('name')}</span><span className="font-medium">{booking.first_name} {booking.last_name}</span></div>
+          <div className="flex justify-between"><span>{t('motorcycle')}</span><span className="font-medium">{booking.motorcycle_model}</span></div>
+          <div className="flex justify-between"><span>{t('pickupLocation')}</span><span className="font-medium">{booking.pickup_location || 'Panama City'}</span></div>
+          <div className="flex justify-between"><span>{t('dates')}</span><span className="font-medium">{booking.start_date} → {booking.end_date}</span></div>
+          <div className="flex justify-between"><span>{t('totalPrice')}</span><span className="font-medium">${fullAmount}</span></div>
           {mode === 'balance' && (
-            <div className="flex justify-between"><span>Already Paid</span><span className="font-medium text-green-600">- ${initialAmount}</span></div>
+            <div className="flex justify-between"><span>{t('alreadyPaid')}</span><span className="font-medium text-green-600">- ${initialAmount}</span></div>
           )}
           <div className="flex justify-between border-t pt-2 mt-2">
-            <span className="font-semibold">Amount Due</span>
+            <span className="font-semibold">{t('amountDue')}</span>
             <span className="font-bold text-lg">${amountDue}</span>
           </div>
         </div>
 
-        <BalancePayButton bookingId={bookingId} mode={mode} />
+        <BalancePayButton
+          bookingId={bookingId}
+          mode={mode}
+          labels={{
+            balance: t('payBalance'),
+            full: t('payFull'),
+            initial: t('payInitial'),
+            loading: t('redirecting'),
+          }}
+        />
       </div>
     </div>
   );
