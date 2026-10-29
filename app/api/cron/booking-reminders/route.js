@@ -73,7 +73,7 @@ export async function GET(request) {
         // Compute duration_days if not stored
         const start = new Date(booking.start_date + 'T00:00:00');
         const end   = new Date(booking.end_date   + 'T00:00:00');
-        const duration_days = Math.ceil((end - start) / 86400000) + 1;
+        const duration_days = Math.round((end - start) / 86400000) + 1;
 
         const bookingWithDuration = { ...booking, duration_days };
 

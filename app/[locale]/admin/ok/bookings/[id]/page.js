@@ -137,7 +137,7 @@ export default function BookingSharePage() {
     if (!booking?.start_date || !booking?.end_date) return 0;
     const s = new Date(booking.start_date + 'T00:00:00');
     const e = new Date(booking.end_date   + 'T00:00:00');
-    return Math.ceil((e - s) / 86400000) + 1;
+    return Math.round((e - s) / 86400000) + 1;
   };
 
   const copyLink = () => {

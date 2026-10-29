@@ -353,7 +353,7 @@ const BookingPage = () => {
     const endD   = parseLocalDate(end);
     const minAdv = new Date(); minAdv.setHours(0,0,0,0); minAdv.setDate(minAdv.getDate() + 2);
     if (startD < minAdv) { setValidationError(''); showModal('contact', t('validation48Hours')); return false; }
-    const days = Math.ceil((endD - startD) / (1000 * 60 * 60 * 24)) + 1;
+    const days = Math.round((endD - startD) / (1000 * 60 * 60 * 24)) + 1;
     if (days < 2) { setValidationError(t('validationMinimum2Days')); return false; }
     setValidationError('');
     return true;
@@ -435,7 +435,7 @@ const BookingPage = () => {
 
   const calculateDays = () => {
     if (!startDate || !endDate) return 0;
-    return Math.ceil(Math.abs(parseLocalDate(endDate) - parseLocalDate(startDate)) / (1000 * 60 * 60 * 24)) + 1;
+    return Math.round(Math.abs(parseLocalDate(endDate) - parseLocalDate(startDate)) / (1000 * 60 * 60 * 24)) + 1;
   };
 
   const calculatePrice = () => {

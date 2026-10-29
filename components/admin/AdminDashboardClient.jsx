@@ -286,7 +286,7 @@ const AdminDashboardClient = ({ role }) => {
     if (!newBooking.start_date || !newBooking.end_date) return 0;
     const start = new Date(newBooking.start_date);
     const end   = new Date(newBooking.end_date);
-    return Math.ceil(Math.abs(end - start) / (1000 * 60 * 60 * 24)) + 1;
+    return Math.round(Math.abs(end - start) / (1000 * 60 * 60 * 24)) + 1;
   };
 
   const calculatePrice = () => calculatePriceForModel(calculateDays(), newBooking.motorcycle_model);

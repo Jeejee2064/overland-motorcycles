@@ -397,7 +397,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
     if (!editedBooking?.start_date || !editedBooking?.end_date) return 0;
     const start = new Date(editedBooking.start_date + 'T00:00:00');
     const end   = new Date(editedBooking.end_date   + 'T00:00:00');
-    return Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+    return Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1;
   };
 
   if (!booking || !editedBooking) return null;
