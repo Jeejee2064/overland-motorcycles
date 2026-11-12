@@ -14,6 +14,11 @@ async function patchMotorcycle(motorcycleId, updates) {
   return data.motorcycle;
 }
 
+const MODEL_LABELS = {
+  Himalayan: 'Royal Enfield Himalayan 450',
+  CFMoto700: 'CF Moto 700 CL-X',
+};
+
 const MotorcyclesTab = () => {
   const [motorcycles, setMotorcycles]   = useState([]);
   const [loading, setLoading]           = useState(true);
@@ -145,6 +150,11 @@ const MotorcyclesTab = () => {
               <h4 className="text-lg font-bold text-gray-900 mb-1">
                 {motorcycle.name || `Motorcycle ${motorcycle.id}`}
               </h4>
+              {motorcycle.model && (
+                <p className="text-sm font-semibold text-gray-700 mb-1">
+                  {MODEL_LABELS[motorcycle.model] || motorcycle.model}
+                </p>
+              )}
               <p className="text-sm text-gray-600 mb-4">
                 {motorcycle.is_available ? 'Ready for rental' : 'Out of service'}
               </p>
