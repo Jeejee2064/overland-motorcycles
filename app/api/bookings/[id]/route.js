@@ -25,7 +25,7 @@ export async function GET(request, { params }) {
 
     const { data: booking, error } = await supabase
       .from('bookings')
-      .select('*')
+      .select('*, booking_riders(*)')
       .eq('id', id)
       .single();
 

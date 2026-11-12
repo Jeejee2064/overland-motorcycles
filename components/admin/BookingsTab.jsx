@@ -1,5 +1,6 @@
 'use client'
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Search, Package, Link as LinkIcon, X, Copy, Mail, Send, AlertTriangle } from 'lucide-react';
 import ImportantNoteModal from '@/components/admin/ImportantNoteModal';
 
@@ -9,7 +10,6 @@ const BookingsTab = ({
   setSearchTerm,
   filterStatus,
   setFilterStatus,
-  onViewDetails,
   onAddBooking,
   role
 }) => {
@@ -280,12 +280,12 @@ const BookingsTab = ({
 
                     {/* Actions */}
                     <td className="px-6 py-4">
-                      <button
-                        onClick={() => onViewDetails(booking)}
+                      <Link
+                        href={`/admin/ok/bookings/${booking.id}`}
                         className="text-yellow-600 hover:text-yellow-700 font-semibold text-sm"
                       >
                         View
-                      </button>
+                      </Link>
                     </td>
 
                   </tr>

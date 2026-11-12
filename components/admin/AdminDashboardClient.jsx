@@ -13,7 +13,6 @@ import MessagesTab from '@/components/admin/MessagesTab';
 import NewsletterTab from '@/components/admin/NewsletterTab';
 import CalendarTab from '@/components/admin/CalendarTab';
 import MotorcyclesTab from '@/components/admin/MotorcyclesTab';
-import BookingDetailModal from '@/components/admin/BookingDetailModal';
 import AddBookingModal from '@/components/admin/AddBookingModal';
 import BookingLinkGeneratorTab from '@/components/admin/BookingLinkGeneratorTab';
 import RevenueTab from '@/components/admin/RevenueTab';
@@ -54,6 +53,9 @@ export const calculatePriceForModel = (days, model) => {
   return 0;
 };
 
+const VALID_TABS = ['calendar', 'bookings', 'messages', 'overview', 'motorcycles', 'revenue', 'newsletter', 'analytics', 'link-generator'];
+const CORONADO_TABS = ['calendar', 'bookings'];
+
 const EMPTY_BOOKING = {
   first_name:       '',
   last_name:        '',
@@ -81,11 +83,18 @@ const AdminDashboardClient = ({ role }) => {
   const router = useRouter();
   const isCoronado = role === 'coronado';
 
-  const [activeTab, setActiveTab]             = useState('calendar');
+  const [activeTab, setActiveTabState]     = useState('calendar');
+  const setActiveTab = (tab) => {
+    setActiveTabState(tab);
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', tab);
+      window.history.replaceState(null, '', url);
+    } catch {}
+  };
   const [bookings, setBookings]               = useState([]);
   const [messages, setMessages]               = useState([]);
   const [loading, setLoading]                 = useState(true);
-  const [selectedBooking, setSelectedBooking] = useState(null);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [searchTerm, setSearchTerm]           = useState('');
   const [filterStatus, setFilterStatus]       = useState('all');
@@ -127,6 +136,15 @@ const AdminDashboardClient = ({ role }) => {
     }
   };
 
+  // Restore the tab from the URL (?tab=...) so coming back from a booking page lands on it.
+  useEffect(() => {
+    const tab = new URLSearchParams(window.location.search).get('tab');
+    if (tab && VALID_TABS.includes(tab) && !(isCoronado && !CORONADO_TABS.includes(tab))) {
+      setActiveTabState(tab);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -140,41 +158,6 @@ const AdminDashboardClient = ({ role }) => {
     }
   };
 
-  const refreshSelectedBooking = async (bookingId) => {
-    try {
-      const locationFilter = isCoronado ? 'Playa Coronado' : null;
-      const freshBookings = await getAllBookings(locationFilter);
-      const updatedBooking = freshBookings.find(b => b.id === bookingId);
-      if (updatedBooking) setSelectedBooking(updatedBooking);
-      setBookings(freshBookings);
-    } catch (error) {
-      console.error('Error refreshing booking:', error);
-    }
-  };
-
-  const handleBookingUpdate = async () => {
-    if (selectedBooking) await refreshSelectedBooking(selectedBooking.id);
-    await loadData();
-  };
-
-  const handlePaymentToggle = async (bookingId, newPaidStatus) => {
-    try {
-      const updates = newPaidStatus ? { paid: true, status: 'fully paid' } : { paid: false };
-      const res = await fetch(`/api/admin/bookings/${bookingId}`, {
-        method:  'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify(updates),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to update payment');
-      await refreshSelectedBooking(bookingId);
-      await loadData();
-      notify('Payment marked as fully paid!');
-    } catch (error) {
-      notify('Error updating payment: ' + error.message, 'error');
-    }
-  };
-
   const stats = {
     totalBookings:     bookings.length,
     pendingBookings:   bookings.filter(b => b.status === 'pending').length,
@@ -184,38 +167,6 @@ const AdminDashboardClient = ({ role }) => {
     avgBookingValue:   bookings.length > 0
       ? bookings.reduce((sum, b) => sum + parseFloat(b.total_price), 0) / bookings.length
       : 0,
-  };
-
-  const handleStatusUpdate = async (bookingId, newStatus) => {
-    try {
-      const res = await fetch(`/api/admin/bookings/${bookingId}`, {
-        method:  'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ status: newStatus }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to update status');
-      await refreshSelectedBooking(bookingId);
-      await loadData();
-      notify('Status updated successfully!');
-    } catch (error) {
-      notify('Error updating status: ' + error.message, 'error');
-    }
-  };
-
-  const handleDeleteBooking = async (bookingId) => {
-    withConfirm('Delete this booking? This cannot be undone.', async () => {
-      try {
-        const res = await fetch(`/api/admin/bookings/${bookingId}`, { method: 'DELETE' });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Failed to delete booking');
-        await loadData();
-        setSelectedBooking(null);
-        notify('Booking deleted.');
-      } catch (error) {
-        notify('Error deleting booking: ' + error.message, 'error');
-      }
-    });
   };
 
   const handleMarkMessageRead = async (messageId) => {
@@ -347,7 +298,6 @@ const AdminDashboardClient = ({ role }) => {
             setSearchTerm={setSearchTerm}
             filterStatus={filterStatus}
             setFilterStatus={setFilterStatus}
-            onViewDetails={setSelectedBooking}
             onAddBooking={() => setShowAddBooking(true)}
             role={role}
           />
@@ -371,17 +321,6 @@ const AdminDashboardClient = ({ role }) => {
         {!isCoronado && activeTab === 'analytics'      && <AnalyticsTab />}
         {!isCoronado && activeTab === 'link-generator' && <BookingLinkGeneratorTab />}
       </main>
-
-      <BookingDetailModal
-        booking={selectedBooking}
-        onClose={() => setSelectedBooking(null)}
-        onStatusUpdate={handleStatusUpdate}
-        onDelete={handleDeleteBooking}
-        onPaymentToggle={handlePaymentToggle}
-        onUpdate={handleBookingUpdate}
-        notify={notify}
-        role={role}
-      />
 
       <AddBookingModal
         show={showAddBooking}
