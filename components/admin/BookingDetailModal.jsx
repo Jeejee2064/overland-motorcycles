@@ -10,7 +10,7 @@ function PaymentMailGenerator({ booking, onSent, notify, role }) {
   const isCoronado = role === 'coronado';
   const bikeCount = booking.bike_quantity || 1;
   const authCount = booking.auth_count || 0;
-  const authDone  = booking.auth_status === 'authorized';
+  const authDone  = authCount > 0;
   const balDone   = booking.balance_status === 'captured';
   const initDone  = booking.webhook_received && booking.payment_status === 'paid';
 
@@ -247,6 +247,20 @@ const MODEL_LABELS = {
   CFMoto700: 'CF Moto 700 CL-X',
 };
 
+const PayToggleButton = ({ done, disabled, onClick }) => (
+  <button
+    type="button"
+    onClick={onClick}
+    disabled={disabled}
+    className={'px-3 py-1 rounded-full text-xs font-bold border disabled:opacity-50 ' + (
+      done ? 'bg-green-100 text-green-700 border-green-300 hover:bg-green-200'
+           : 'bg-yellow-400 text-black border-yellow-500 hover:bg-yellow-300'
+    )}
+  >
+    {done ? '✅ Paid — undo' : 'Mark as paid'}
+  </button>
+);
+
 const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaymentToggle, onUpdate, notify: notifyProp, role }) => {
   const notify = notifyProp || ((msg, type) => type === 'error' ? alert('Error: ' + msg) : alert(msg));
   const isCoronado = role === 'coronado';
@@ -257,6 +271,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
   const [motorcycleSelections, setMotorcycleSelections] = useState([]);
   const [loading, setLoading]                           = useState(false);
   const [savingMotorcycle, setSavingMotorcycle]         = useState(false);
+  const [savingPayment, setSavingPayment]               = useState(false);
 
   useEffect(() => {
     if (booking) {
@@ -367,6 +382,57 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
     } finally {
       setLoading(false);
     }
+  };
+
+  // Saves payment-related fields immediately (no need to enter Edit mode).
+  const quickUpdate = async (updates, successMsg) => {
+    setSavingPayment(true);
+    try {
+      const res = await fetch(`/api/admin/bookings/${booking.id}`, {
+        method:  'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(updates),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to update payment');
+      setEditedBooking(prev => ({ ...prev, ...updates }));
+      if (onUpdate) await onUpdate();
+      notify(successMsg || 'Payment updated');
+    } catch (error) {
+      console.error('Error updating payment:', error);
+      notify('Error updating payment: ' + error.message, 'error');
+    } finally {
+      setSavingPayment(false);
+    }
+  };
+
+  const initialIsPaid = editedBooking?.payment_status === 'paid' && !!editedBooking?.webhook_received;
+  const toggleInitial = () => quickUpdate(
+    initialIsPaid
+      ? { payment_status: 'pending', webhook_received: false }
+      : { payment_status: 'paid', webhook_received: true },
+    initialIsPaid ? 'Initial payment set to pending' : 'Initial payment marked as paid'
+  );
+
+  const toggleAuth = (i) => {
+    const count  = editedBooking.auth_count || 0;
+    const qty    = editedBooking.bike_quantity || 1;
+    const isDone = count > i;
+    const newCount = isDone ? i : i + 1;
+    quickUpdate({
+      auth_count:  newCount,
+      auth_status: newCount >= qty ? 'authorized' : newCount > 0 ? 'pending' : null,
+    }, isDone ? 'Security deposit unmarked' : 'Security deposit marked as authorized');
+  };
+
+  const toggleBalance = () => {
+    const isDone = editedBooking.balance_status === 'captured';
+    quickUpdate(
+      isDone
+        ? { balance_status: 'pending', balance_paid_at: null, paid: false }
+        : { balance_status: 'captured', balance_paid_at: new Date().toISOString(), paid: true },
+      isDone ? 'Balance set to pending' : 'Balance marked as paid'
+    );
   };
 
   const handleMotorcycleChange = async (_slotIndex, newMotorcycleId, oldAssignmentId) => {
@@ -768,20 +834,13 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                   <option value="failed">❌ Failed</option>
                 </select>
               ) : (
-                <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
-                  editedBooking.webhook_received && editedBooking.payment_status === 'paid' ? 'bg-green-100 text-green-700'
-                  : editedBooking.payment_status === 'failed' ? 'bg-red-100 text-red-700'
-                  : 'bg-yellow-100 text-yellow-700'
-                )}>
-                  {editedBooking.webhook_received && editedBooking.payment_status === 'paid' ? '✅ Paid'
-                    : editedBooking.payment_status === 'failed' ? '❌ Failed' : '⏳ Pending'}
-                </span>
+                <PayToggleButton done={initialIsPaid} disabled={savingPayment} onClick={toggleInitial} />
               )}
             </div>
 
             {/* AUTH rows — one per bike */}
             {Array.from({ length: editedBooking.bike_quantity || 1 }).map((_, i) => {
-              const isAuthorized = editedBooking.auth_status === 'authorized' && (editedBooking.auth_count || 0) > i;
+              const isAuthorized = (editedBooking.auth_count || 0) > i;
               return (
                 <div key={i} className="flex items-center justify-between p-3 bg-gray-50 border border-gray-200 rounded-xl mb-3">
                   <div>
@@ -795,7 +854,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                   </div>
                   {isEditing ? (
                     <select
-                      value={isAuthorized ? 'authorized' : editedBooking.auth_status || 'not_sent'}
+                      value={isAuthorized ? 'authorized' : (editedBooking.auth_status === 'authorized' ? 'pending' : editedBooking.auth_status) || 'not_sent'}
                       onChange={(e) => {
                         const val = e.target.value;
                         handleFieldChange('auth_status', val === 'not_sent' ? null : val);
@@ -813,17 +872,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                       <option value="failed">❌ Failed</option>
                     </select>
                   ) : (
-                    <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
-                      isAuthorized ? 'bg-green-100 text-green-700'
-                      : editedBooking.auth_status === 'failed'  ? 'bg-red-100 text-red-700'
-                      : editedBooking.auth_status === 'pending' ? 'bg-blue-100 text-blue-700'
-                      : 'bg-gray-100 text-gray-500'
-                    )}>
-                      {isAuthorized ? '✅ Authorized'
-                        : editedBooking.auth_status === 'failed'  ? '❌ Failed'
-                        : editedBooking.auth_status === 'pending' ? '⏳ Pending'
-                        : '— Not sent'}
-                    </span>
+                    <PayToggleButton done={isAuthorized} disabled={savingPayment} onClick={() => toggleAuth(i)} />
                   )}
                 </div>
               );
@@ -859,17 +908,7 @@ const BookingDetailModal = ({ booking, onClose, onStatusUpdate, onDelete, onPaym
                   <option value="failed">❌ Failed</option>
                 </select>
               ) : (
-                <span className={'px-3 py-1 rounded-full text-xs font-bold ' + (
-                  editedBooking.balance_status === 'captured' ? 'bg-green-100 text-green-700'
-                  : editedBooking.balance_status === 'failed'  ? 'bg-red-100 text-red-700'
-                  : editedBooking.balance_status === 'pending' ? 'bg-blue-100 text-blue-700'
-                  : 'bg-gray-100 text-gray-500'
-                )}>
-                  {editedBooking.balance_status === 'captured' ? '✅ Paid'
-                    : editedBooking.balance_status === 'failed'  ? '❌ Failed'
-                    : editedBooking.balance_status === 'pending' ? '⏳ Pending'
-                    : '— Not sent'}
-                </span>
+                <PayToggleButton done={editedBooking.balance_status === 'captured'} disabled={savingPayment} onClick={toggleBalance} />
               )}
             </div>
 
