@@ -108,13 +108,13 @@ export default function PaymentMailGenerator({ booking, onSent, notify, role }) 
   };
 
   return (
-    <div className="border border-white/10 bg-black/30 p-3">
-      <p className="text-xs font-bold uppercase tracking-wider text-gray-300 mb-3">Send payment links</p>
+    <div className="border border-gray-200 bg-gray-50 p-3">
+      <p className="text-xs font-bold uppercase tracking-wider text-gray-700 mb-3">Send payment links</p>
       <div className="space-y-1 mb-3">
         {options.map(opt => {
           const locked = isLocked(opt);
           return (
-            <div key={opt.id} className="flex flex-wrap items-center gap-2 p-1.5 hover:bg-white/5 transition">
+            <div key={opt.id} className="flex flex-wrap items-center gap-2 p-1.5 hover:bg-gray-100 transition">
               <label className={'flex items-center gap-2 flex-1 min-w-0 ' + (locked ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer')}>
                 <input
                   type="checkbox"
@@ -123,9 +123,9 @@ export default function PaymentMailGenerator({ booking, onSent, notify, role }) 
                   onChange={() => toggle(opt.id)}
                   className="w-4 h-4 shrink-0 accent-yellow-400"
                 />
-                <span className="text-xs text-gray-200">{opt.label}</span>
+                <span className="text-xs text-gray-900">{opt.label}</span>
               </label>
-              {opt.done && <span className="text-xs text-green-400 whitespace-nowrap">✅ Done</span>}
+              {opt.done && <span className="text-xs text-green-600 whitespace-nowrap">✅ Done</span>}
               {!opt.done && locked && (
                 <span className="text-[11px] text-gray-500 whitespace-nowrap">
                   {opt.id === 'full' ? 'uncheck other options first' : 'covered by full payment'}
@@ -137,10 +137,10 @@ export default function PaymentMailGenerator({ booking, onSent, notify, role }) 
                   onClick={() => handleCopy(opt)}
                   disabled={copyingId === opt.id}
                   title="Copy payment link (doesn't send an email)"
-                  className="flex items-center gap-1 text-xs text-gray-300 hover:text-white border border-white/20 hover:border-accent px-2 py-1 transition disabled:opacity-50 whitespace-nowrap shrink-0"
+                  className="flex items-center gap-1 text-xs text-gray-700 hover:text-gray-900 border border-gray-300 hover:border-yellow-500 px-2 py-1 transition disabled:opacity-50 whitespace-nowrap shrink-0"
                 >
                   {copiedId === opt.id
-                    ? <><Check className="w-3.5 h-3.5 text-green-400" /> Copied</>
+                    ? <><Check className="w-3.5 h-3.5 text-green-600" /> Copied</>
                     : <><Copy className="w-3.5 h-3.5" /> {copyingId === opt.id ? '...' : 'Copy link'}</>}
                 </button>
               )}
@@ -151,7 +151,7 @@ export default function PaymentMailGenerator({ booking, onSent, notify, role }) 
       <button
         onClick={handleSend}
         disabled={sending || selected.length === 0}
-        className="w-full py-2 bg-accent hover:bg-white text-black font-bold uppercase tracking-wide text-xs transition disabled:opacity-50"
+        className="w-full py-2 bg-accent hover:bg-yellow-500 text-black font-bold uppercase tracking-wide text-xs transition disabled:opacity-50"
       >
         {sending ? 'Sending...' : `Send ${selected.length} link${selected.length !== 1 ? 's' : ''}`}
       </button>

@@ -29,23 +29,23 @@ const EDITABLE_FIELDS = [
 const pick = (obj) => Object.fromEntries(EDITABLE_FIELDS.map(f => [f, obj?.[f] ?? null]));
 
 const STATUS_STYLES = {
-  pending:      'bg-yellow-400/15 text-yellow-300 border-yellow-400/40',
-  confirmed:    'bg-sky-400/15 text-sky-300 border-sky-400/40',
-  'fully paid': 'bg-green-400/15 text-green-300 border-green-400/40',
-  completed:    'bg-gray-400/15 text-gray-300 border-gray-400/40',
-  cancelled:    'bg-red-400/15 text-red-300 border-red-400/40',
+  pending:      'bg-yellow-100 text-yellow-800 border-yellow-300',
+  confirmed:    'bg-sky-100 text-sky-800 border-sky-300',
+  'fully paid': 'bg-green-100 text-green-800 border-green-300',
+  completed:    'bg-gray-100 text-gray-700 border-gray-300',
+  cancelled:    'bg-red-100 text-red-800 border-red-300',
 };
 
 const inputCls =
-  'w-full px-3 py-2 bg-black/40 border border-white/20 text-white text-sm focus:border-accent focus:outline-none disabled:opacity-50';
+  'w-full px-3 py-2 bg-white border border-gray-300 text-gray-900 text-sm focus:border-yellow-500 focus:outline-none disabled:opacity-50';
 const smallSelectCls =
-  'px-2 py-1 bg-black/40 border border-white/20 text-white text-xs font-semibold focus:border-accent focus:outline-none';
+  'px-2 py-1 bg-white border border-gray-300 text-gray-900 text-xs font-semibold focus:border-yellow-500 focus:outline-none';
 
 function Card({ title, icon, aside, children, className = '' }) {
   return (
-    <section className={'bg-[#141414] border border-white/10 border-t-2 border-t-accent p-5 ' + className}>
+    <section className={'bg-white border border-gray-200 border-t-2 border-t-accent p-5 ' + className}>
       <div className="flex items-center justify-between gap-3 mb-4">
-        <h2 className="font-heading text-sm font-bold uppercase tracking-widest text-white flex items-center gap-2">
+        <h2 className="font-heading text-sm font-bold uppercase tracking-widest text-gray-900 flex items-center gap-2">
           {icon}{title}
         </h2>
         {aside}
@@ -70,8 +70,8 @@ const PayToggleButton = ({ done, disabled, onClick }) => (
     onClick={onClick}
     disabled={disabled}
     className={'px-3 py-1 text-xs font-bold border disabled:opacity-50 transition ' + (
-      done ? 'bg-green-400/15 text-green-300 border-green-400/40 hover:bg-green-400/25'
-           : 'bg-accent text-black border-accent hover:bg-white'
+      done ? 'bg-green-100 text-green-800 border-green-300 hover:bg-green-400/25'
+           : 'bg-accent text-black border-accent hover:bg-yellow-500'
     )}
   >
     {done ? '✅ Paid — undo' : 'Mark as paid'}
@@ -80,10 +80,10 @@ const PayToggleButton = ({ done, disabled, onClick }) => (
 
 function PaymentRow({ title, amount, txId, children }) {
   return (
-    <div className="flex items-center justify-between gap-3 p-3 bg-black/30 border border-white/10">
+    <div className="flex items-center justify-between gap-3 p-3 bg-gray-50 border border-gray-200">
       <div className="min-w-0">
-        <p className="font-semibold text-white text-sm">{title}</p>
-        <p className="text-xs text-gray-400">{amount}</p>
+        <p className="font-semibold text-gray-900 text-sm">{title}</p>
+        <p className="text-xs text-gray-500">{amount}</p>
         {txId && <p className="text-[11px] text-gray-500 truncate">ID: {txId}</p>}
       </div>
       {children}
@@ -363,13 +363,13 @@ export default function BookingDetailPage({ bookingId, role }) {
   };
 
   const brandBar = (
-    <div className="bg-background border-b-2 border-accent">
+    <div className="bg-white border-b-2 border-accent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         <Link href="/" className="relative block w-12 h-12" aria-label="Overland Motorcycles">
           <Image src="/logo.png" alt="Overland Motorcycles" fill sizes="48px" className="object-contain" priority />
         </Link>
-        <span className="font-heading text-sm uppercase tracking-widest text-gray-300">
-          Booking <span className="text-accent">#{String(bookingId).slice(0, 8).toUpperCase()}</span>
+        <span className="font-heading text-sm uppercase tracking-widest text-gray-700">
+          Booking <span className="text-yellow-600">#{String(bookingId).slice(0, 8).toUpperCase()}</span>
         </span>
       </div>
     </div>
@@ -377,13 +377,13 @@ export default function BookingDetailPage({ bookingId, role }) {
 
   if (loadError) {
     return (
-      <div className="min-h-screen bg-[#0b0b0b] text-white">
+      <div className="min-h-screen bg-gray-50 text-gray-900">
         {brandBar}
         <div className="max-w-xl mx-auto px-4 py-20 text-center">
-          <AlertTriangle className="mx-auto text-accent mb-4" size={36} />
+          <AlertTriangle className="mx-auto text-yellow-600 mb-4" size={36} />
           <p className="font-heading uppercase tracking-wider mb-2">Booking not available</p>
-          <p className="text-gray-400 text-sm mb-6">{loadError}</p>
-          <Link href={BACK_HREF} className="inline-block px-5 py-2 bg-accent text-black font-bold uppercase text-sm hover:bg-white transition">
+          <p className="text-gray-500 text-sm mb-6">{loadError}</p>
+          <Link href={BACK_HREF} className="inline-block px-5 py-2 bg-accent text-black font-bold uppercase text-sm hover:bg-yellow-500 transition">
             Back to bookings
           </Link>
         </div>
@@ -393,7 +393,7 @@ export default function BookingDetailPage({ bookingId, role }) {
 
   if (!booking || !draft) {
     return (
-      <div className="min-h-screen bg-[#0b0b0b] text-white">
+      <div className="min-h-screen bg-gray-50 text-gray-900">
         {brandBar}
         <div className="flex items-center justify-center py-32">
           <div className="w-12 h-12 border-4 border-accent border-t-transparent rounded-full animate-spin" role="status" aria-label="Loading" />
@@ -419,41 +419,41 @@ export default function BookingDetailPage({ bookingId, role }) {
       {isEditing ? (
         <input type={type} value={draft[field] ?? ''} onChange={(e) => setField(field, e.target.value)} className={inputCls} />
       ) : (
-        <p className="font-semibold text-white break-words">{draft[field] || '—'}</p>
+        <p className="font-semibold text-gray-900 break-words">{draft[field] || '—'}</p>
       )}
     </Field>
   );
 
   return (
-    <div className="min-h-screen bg-[#0b0b0b] text-gray-200">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
       {brandBar}
 
       {/* Sticky header */}
-      <div className="sticky top-0 z-30 bg-[#0b0b0b]/95 backdrop-blur border-b border-white/10">
+      <div className="sticky top-0 z-30 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center gap-3">
           <Link
             href={BACK_HREF}
             onClick={onBackClick}
-            className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-accent transition"
+            className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-yellow-600 transition"
           >
             <ArrowLeft size={16} /> Bookings
           </Link>
           <div className="min-w-0 flex-1">
-            <h1 className="font-heading text-xl sm:text-2xl font-bold uppercase text-white truncate">
+            <h1 className="font-heading text-xl sm:text-2xl font-bold uppercase text-gray-900 truncate">
               {fullName || 'Booking'}
             </h1>
-            <p className="text-xs font-semibold text-accent">{modelLabel} · 📍 {draft.pickup_location || 'Panama City'}</p>
+            <p className="text-xs font-semibold text-yellow-600">{modelLabel} · 📍 {draft.pickup_location || 'Panama City'}</p>
           </div>
           <span className={'text-xs font-bold uppercase px-3 py-1 border ' + (STATUS_STYLES[booking.status] || STATUS_STYLES.pending)}>
             {booking.status}
           </span>
           {draft.important_note && (
-            <span className="text-xs font-bold uppercase px-3 py-1 border bg-red-400/15 text-red-300 border-red-400/40">⚠️ Important</span>
+            <span className="text-xs font-bold uppercase px-3 py-1 border bg-red-100 text-red-800 border-red-300">⚠️ Important</span>
           )}
           {!isEditing && (
             <button
               onClick={() => setIsEditing(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-accent text-black font-bold uppercase text-sm hover:bg-white transition"
+              className="flex items-center gap-2 px-4 py-2 bg-accent text-black font-bold uppercase text-sm hover:bg-yellow-500 transition"
             >
               <Edit2 size={16} /> Edit
             </button>
@@ -487,7 +487,7 @@ export default function BookingDetailPage({ bookingId, role }) {
                       <option value="other">Other</option>
                     </select>
                   ) : (
-                    <p className="font-semibold text-white capitalize">{draft.hear_about_us || 'N/A'}</p>
+                    <p className="font-semibold text-gray-900 capitalize">{draft.hear_about_us || 'N/A'}</p>
                   )}
                 </Field>
               </div>
@@ -497,17 +497,17 @@ export default function BookingDetailPage({ bookingId, role }) {
               <Card title="Additional riders">
                 <div className="space-y-3">
                   {booking.booking_riders.map((rider) => (
-                    <div key={rider.id} className="p-3 bg-black/30 border border-white/10">
-                      <p className="text-xs font-bold text-accent mb-2 uppercase tracking-wider">Rider {rider.rider_index}</p>
+                    <div key={rider.id} className="p-3 bg-gray-50 border border-gray-200">
+                      <p className="text-xs font-bold text-yellow-600 mb-2 uppercase tracking-wider">Rider {rider.rider_index}</p>
                       <div className="grid sm:grid-cols-2 gap-2 text-sm">
-                        <div><span className="text-gray-500">Name: </span><span className="font-semibold text-white">{rider.first_name} {rider.last_name}</span></div>
+                        <div><span className="text-gray-500">Name: </span><span className="font-semibold text-gray-900">{rider.first_name} {rider.last_name}</span></div>
                         <div><span className="text-gray-500">Email: </span>{rider.email
-                          ? <a href={`mailto:${rider.email}`} className="text-accent hover:underline font-semibold break-all">{rider.email}</a>
+                          ? <a href={`mailto:${rider.email}`} className="text-yellow-600 hover:underline font-semibold break-all">{rider.email}</a>
                           : '—'}</div>
                         <div><span className="text-gray-500">Phone: </span>{rider.phone
-                          ? <a href={`https://wa.me/${rider.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-400 hover:underline font-semibold">{rider.phone}</a>
+                          ? <a href={`https://wa.me/${rider.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline font-semibold">{rider.phone}</a>
                           : '—'}</div>
-                        <div><span className="text-gray-500">Country: </span><span className="font-semibold text-white">{rider.country || '—'}</span></div>
+                        <div><span className="text-gray-500">Country: </span><span className="font-semibold text-gray-900">{rider.country || '—'}</span></div>
                       </div>
                     </div>
                   ))}
@@ -520,18 +520,18 @@ export default function BookingDetailPage({ bookingId, role }) {
                 <Field label="Start date">
                   {isEditing
                     ? <input type="date" value={draft.start_date || ''} onChange={(e) => setField('start_date', e.target.value)} className={inputCls} />
-                    : <p className="font-semibold text-white">{draft.start_date}</p>}
+                    : <p className="font-semibold text-gray-900">{draft.start_date}</p>}
                 </Field>
                 <Field label="End date">
                   {isEditing
                     ? <input type="date" value={draft.end_date || ''} onChange={(e) => setField('end_date', e.target.value)} className={inputCls} />
-                    : <p className="font-semibold text-white">{draft.end_date}</p>}
+                    : <p className="font-semibold text-gray-900">{draft.end_date}</p>}
                 </Field>
                 <Field label="Duration">
-                  <p className="font-semibold text-white">{duration} day{duration !== 1 ? 's' : ''}</p>
+                  <p className="font-semibold text-gray-900">{duration} day{duration !== 1 ? 's' : ''}</p>
                 </Field>
                 <Field label="Bike quantity">
-                  <p className="font-semibold text-white">{draft.bike_quantity}</p>
+                  <p className="font-semibold text-gray-900">{draft.bike_quantity}</p>
                 </Field>
                 <Field label="Pickup location">
                   {isEditing && !isCoronado ? (
@@ -551,7 +551,7 @@ export default function BookingDetailPage({ bookingId, role }) {
                       <option value="Playa Coronado">Playa Coronado</option>
                     </select>
                   ) : (
-                    <p className="font-semibold text-white">{draft.pickup_location || 'Panama City'}</p>
+                    <p className="font-semibold text-gray-900">{draft.pickup_location || 'Panama City'}</p>
                   )}
                 </Field>
                 <Field label="Motorcycle model">
@@ -561,7 +561,7 @@ export default function BookingDetailPage({ bookingId, role }) {
                       {draft.pickup_location !== 'Playa Coronado' && <option value="CFMoto700">CF Moto 700 CL-X</option>}
                     </select>
                   ) : (
-                    <p className="font-semibold text-accent">{modelLabel}</p>
+                    <p className="font-semibold text-yellow-600">{modelLabel}</p>
                   )}
                 </Field>
               </div>
@@ -569,7 +569,7 @@ export default function BookingDetailPage({ bookingId, role }) {
 
             <Card
               title="Assigned motorcycles"
-              icon={<Bike size={16} className="text-accent" />}
+              icon={<Bike size={16} className="text-yellow-600" />}
               aside={<span className="text-xs text-gray-500">{modelLabel}</span>}
             >
               {loadingBikes ? (
@@ -595,21 +595,21 @@ export default function BookingDetailPage({ bookingId, role }) {
                           ))}
                         </select>
                       ) : (
-                        <div className="flex items-center gap-3 bg-black/30 border border-white/10 p-3">
-                          <Bike size={16} className="text-accent" />
-                          <span className="font-semibold text-white">{slot.motorcycleName || 'Not assigned'}</span>
+                        <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-3">
+                          <Bike size={16} className="text-yellow-600" />
+                          <span className="font-semibold text-gray-900">{slot.motorcycleName || 'Not assigned'}</span>
                         </div>
                       )}
                     </div>
                   ))}
                   {slots.length === 0 && (
-                    <p className="text-center py-4 text-gray-500 text-sm bg-black/30">No motorcycle slots available</p>
+                    <p className="text-center py-4 text-gray-500 text-sm bg-gray-50">No motorcycle slots available</p>
                   )}
                   {isEditing && (
                     <p className="text-[11px] text-gray-500">Motorcycle changes are applied immediately.</p>
                   )}
                   {isEditing && available.length === 0 && (
-                    <div className="p-3 bg-yellow-400/10 border border-yellow-400/30 text-sm text-yellow-300">
+                    <div className="p-3 bg-yellow-50 border border-yellow-300 text-sm text-yellow-800">
                       ⚠️ No available {modelLabel} bikes for this date range.
                     </div>
                   )}
@@ -620,7 +620,7 @@ export default function BookingDetailPage({ bookingId, role }) {
             <Card
               title="Special requests"
               aside={isEditing && (
-                <label className="flex items-center gap-2 text-xs font-semibold text-red-300 cursor-pointer select-none">
+                <label className="flex items-center gap-2 text-xs font-semibold text-red-800 cursor-pointer select-none">
                   <input
                     type="checkbox"
                     checked={!!draft.important_note}
@@ -638,10 +638,10 @@ export default function BookingDetailPage({ bookingId, role }) {
                   rows={4}
                   aria-label="Special requests"
                   placeholder="Enter any special requests..."
-                  className={inputCls + (draft.important_note ? ' border-red-400/60' : '')}
+                  className={inputCls + (draft.important_note ? ' border-red-400' : '')}
                 />
               ) : (
-                <p className={'p-4 text-sm whitespace-pre-wrap ' + (draft.important_note ? 'bg-red-400/10 border border-red-400/30 text-red-200 font-medium' : 'bg-black/30 text-gray-300')}>
+                <p className={'p-4 text-sm whitespace-pre-wrap ' + (draft.important_note ? 'bg-red-50 border border-red-200 text-red-900 font-medium' : 'bg-gray-50 text-gray-700')}>
                   {draft.special_requests || 'No special requests'}
                 </p>
               )}
@@ -683,21 +683,21 @@ export default function BookingDetailPage({ bookingId, role }) {
                           className={inputCls + ' px-2'}
                         />
                       ) : (
-                        <p className="font-semibold text-white">${draft[field]}</p>
+                        <p className="font-semibold text-gray-900">${draft[field]}</p>
                       )}
                     </Field>
                   ))}
                 </div>
 
                 {!draft.paid && (
-                  <div className="flex justify-between pt-2 border-t border-white/10 text-sm">
-                    <span className="text-gray-400">Still to be paid</span>
-                    <span className="font-semibold text-red-400">${remaining}</span>
+                  <div className="flex justify-between pt-2 border-t border-gray-200 text-sm">
+                    <span className="text-gray-500">Still to be paid</span>
+                    <span className="font-semibold text-red-600">${remaining}</span>
                   </div>
                 )}
-                <div className="flex justify-between pt-2 border-t border-white/10 text-sm">
-                  <span className="text-white font-bold">Payment status</span>
-                  <span className={'font-bold ' + (draft.paid ? 'text-green-400' : 'text-red-400')}>{draft.paid ? 'PAID' : 'UNPAID'}</span>
+                <div className="flex justify-between pt-2 border-t border-gray-200 text-sm">
+                  <span className="text-gray-900 font-bold">Payment status</span>
+                  <span className={'font-bold ' + (draft.paid ? 'text-green-600' : 'text-red-600')}>{draft.paid ? 'PAID' : 'UNPAID'}</span>
                 </div>
 
                 <PaymentRow title="Initial payment (50%)" amount={`$${parseFloat(draft.down_payment).toFixed(2)}`} txId={draft.paguelofacil_transaction_id}>
@@ -819,21 +819,21 @@ export default function BookingDetailPage({ bookingId, role }) {
                   )}
                   <button onClick={handleSendConfirmation} disabled={sendingConfirm}
                     className={'w-full flex items-center justify-center gap-2 px-4 py-2 border font-bold uppercase text-sm transition disabled:opacity-50 ' + (
-                      confirmSent ? 'border-green-400/40 text-green-300 bg-green-400/10' : 'border-white/20 text-white hover:border-accent hover:text-accent'
+                      confirmSent ? 'border-green-300 text-green-800 bg-green-400/10' : 'border-gray-300 text-gray-900 hover:border-yellow-500 hover:text-yellow-600'
                     )}>
                     <Mail size={15} />
                     {sendingConfirm ? 'Sending…' : confirmSent ? 'Confirmation sent' : 'Send confirmation email'}
                   </button>
                   <button onClick={copyCustomerLink}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-white/20 text-white hover:border-accent hover:text-accent font-bold uppercase text-sm transition">
-                    {copied === 'customer' ? <Check size={15} className="text-green-400" /> : <Share2 size={15} />}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-gray-900 hover:border-yellow-500 hover:text-yellow-600 font-bold uppercase text-sm transition">
+                    {copied === 'customer' ? <Check size={15} className="text-green-600" /> : <Share2 size={15} />}
                     Copy customer link
                   </button>
                   {!isCoronado && Array.from({ length: booking.bike_quantity || 1 }).map((_, i) => (
                     (booking.auth_count || 0) > i ? null : (
                       <button key={i} onClick={() => copyDepositLink(i)}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-white/20 text-white hover:border-accent hover:text-accent font-bold uppercase text-sm transition">
-                        {copied === `auth_${i}` ? <Check size={15} className="text-green-400" /> : <Copy size={15} />}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-gray-900 hover:border-yellow-500 hover:text-yellow-600 font-bold uppercase text-sm transition">
+                        {copied === `auth_${i}` ? <Check size={15} className="text-green-600" /> : <Copy size={15} />}
                         Copy deposit link{booking.bike_quantity > 1 ? ` #${i + 1}` : ''}
                       </button>
                     )
@@ -851,18 +851,18 @@ export default function BookingDetailPage({ bookingId, role }) {
 
       {/* Sticky save bar */}
       {isEditing && (
-        <div className="fixed bottom-0 inset-x-0 z-40 bg-background border-t-2 border-accent">
+        <div className="fixed bottom-0 inset-x-0 z-40 bg-white border-t-2 border-accent shadow-[0_-4px_12px_rgba(0,0,0,0.08)]">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-            <p className="text-sm font-semibold text-white">
-              {dirty ? <><span className="text-accent">●</span> Unsaved changes</> : 'Editing — no changes yet'}
+            <p className="text-sm font-semibold text-gray-900">
+              {dirty ? <><span className="text-yellow-600">●</span> Unsaved changes</> : 'Editing — no changes yet'}
             </p>
             <div className="flex gap-2">
               <button onClick={handleDiscard} disabled={saving}
-                className="flex items-center gap-2 px-4 py-2 border border-white/30 text-white hover:border-white font-bold uppercase text-sm transition disabled:opacity-50">
+                className="flex items-center gap-2 px-4 py-2 border border-gray-300 text-gray-900 hover:border-gray-500 font-bold uppercase text-sm transition disabled:opacity-50">
                 <X size={16} /> Discard
               </button>
               <button onClick={handleSave} disabled={saving || !dirty}
-                className="flex items-center gap-2 px-5 py-2 bg-accent text-black hover:bg-white font-bold uppercase text-sm transition disabled:opacity-50">
+                className="flex items-center gap-2 px-5 py-2 bg-accent text-black hover:bg-yellow-500 font-bold uppercase text-sm transition disabled:opacity-50">
                 <Save size={16} /> {saving ? 'Saving...' : 'Save'}
               </button>
             </div>
@@ -881,12 +881,12 @@ export default function BookingDetailPage({ bookingId, role }) {
 
       {/* Delete confirmation */}
       {confirmDelete && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-[200] p-4" role="dialog" aria-modal="true" aria-label="Confirm deletion">
-          <div className="bg-[#141414] border border-white/10 border-t-2 border-t-red-500 p-6 max-w-sm w-full">
-            <p className="text-white font-semibold mb-6 text-center">Delete this booking? This cannot be undone.</p>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[200] p-4" role="dialog" aria-modal="true" aria-label="Confirm deletion">
+          <div className="bg-white border border-gray-200 border-t-2 border-t-red-500 p-6 max-w-sm w-full">
+            <p className="text-gray-900 font-semibold mb-6 text-center">Delete this booking? This cannot be undone.</p>
             <div className="flex gap-3">
               <button onClick={handleDelete} className="flex-1 py-2.5 bg-red-500 hover:bg-red-400 text-white font-bold uppercase text-sm transition">Delete</button>
-              <button onClick={() => setConfirmDelete(false)} className="flex-1 py-2.5 border border-white/30 text-white hover:border-white font-bold uppercase text-sm transition">Cancel</button>
+              <button onClick={() => setConfirmDelete(false)} className="flex-1 py-2.5 border border-gray-300 text-gray-900 hover:border-gray-500 font-bold uppercase text-sm transition">Cancel</button>
             </div>
           </div>
         </div>
