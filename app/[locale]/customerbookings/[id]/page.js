@@ -53,11 +53,11 @@ const DICT = {
 };
 
 const STATUS_STYLES = {
-  pending:      'bg-yellow-400/15 text-yellow-300 border-yellow-400/40',
-  confirmed:    'bg-sky-400/15 text-sky-300 border-sky-400/40',
-  'fully paid': 'bg-green-400/15 text-green-300 border-green-400/40',
-  completed:    'bg-gray-400/15 text-gray-300 border-gray-400/40',
-  cancelled:    'bg-red-400/15 text-red-300 border-red-400/40',
+  pending:      'bg-yellow-100 text-yellow-800 border-yellow-300',
+  confirmed:    'bg-sky-100 text-sky-800 border-sky-300',
+  'fully paid': 'bg-green-100 text-green-800 border-green-300',
+  completed:    'bg-gray-100 text-gray-800 border-gray-300',
+  cancelled:    'bg-red-100 text-red-800 border-red-300',
 };
 
 const money = (n) => `$${(Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -76,12 +76,12 @@ const dayCount = (start, end) => {
 
 function Row({ label, children, note }) {
   return (
-    <div className="flex items-start justify-between gap-4 py-3 border-b border-white/10 last:border-0">
+    <div className="flex items-start justify-between gap-4 py-3 border-b border-gray-200 last:border-0">
       <div>
-        <p className="text-xs uppercase tracking-wider text-gray-400">{label}</p>
+        <p className="text-xs uppercase tracking-wider text-gray-500">{label}</p>
         {note && <p className="text-[11px] text-gray-500 mt-0.5 max-w-[16rem]">{note}</p>}
       </div>
-      <div className="text-right font-semibold text-white">{children}</div>
+      <div className="text-right font-semibold text-gray-900">{children}</div>
     </div>
   );
 }
@@ -119,32 +119,32 @@ export default async function CustomerBookingPage({ params }) {
   const home = locale === 'en' ? '/' : `/${locale}`;
 
   return (
-    <div className="min-h-screen bg-[#0b0b0b] text-gray-200">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
       <CustomerBrandBar homeHref={home} />
 
       <main className="max-w-2xl mx-auto px-4 py-10">
-        <p className="text-accent font-heading uppercase tracking-widest text-sm mb-1">
+        <p className="text-yellow-600 font-heading uppercase tracking-widest text-sm mb-1">
           {t.hello} {booking.first_name}
         </p>
         <div className="flex flex-wrap items-center gap-3 mb-6">
-          <h1 className="font-heading text-3xl font-bold uppercase text-white">{t.title}</h1>
+          <h1 className="font-heading text-3xl font-bold uppercase text-gray-900">{t.title}</h1>
           <span className={'text-xs font-bold uppercase px-3 py-1 border ' + (STATUS_STYLES[booking.status] || STATUS_STYLES.pending)}>
             {t.status[booking.status] || booking.status}
           </span>
         </div>
 
-        <section className="bg-[#141414] border border-white/10 border-t-2 border-t-accent px-5 py-2">
+        <section className="bg-white border border-gray-200 border-t-2 border-t-accent px-5 py-2">
           <Row label={t.motorcycle}>
-            {booking.bike_quantity} × <span className="text-accent">{model}</span>
+            {booking.bike_quantity} × <span className="text-yellow-600">{model}</span>
           </Row>
           <Row label={t.dates}>
             <span className="block">{formatDate(booking.start_date, locale)} → {formatDate(booking.end_date, locale)}</span>
-            <span className="block text-xs text-gray-400 font-normal">{t.days(days)}</span>
+            <span className="block text-xs text-gray-500 font-normal">{t.days(days)}</span>
           </Row>
           <Row label={t.pickup}>{booking.pickup_location || 'Panama City'}</Row>
           <Row label={t.total}>{money(total)}</Row>
-          <Row label={t.paid}><span className="text-green-400">{money(paidAmount)}</span></Row>
-          <Row label={t.balance}><span className={balance > 0 ? 'text-accent' : 'text-gray-400'}>{money(balance)}</span></Row>
+          <Row label={t.paid}><span className="text-green-600">{money(paidAmount)}</span></Row>
+          <Row label={t.balance}><span className={balance > 0 ? 'text-yellow-600' : 'text-gray-500'}>{money(balance)}</span></Row>
           <Row label={t.deposit} note={t.depositNote}>{money(booking.deposit)}</Row>
         </section>
 
@@ -153,13 +153,13 @@ export default async function CustomerBookingPage({ params }) {
             href={shopWhatsappLink(locale)}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 text-center px-6 py-3 bg-accent text-black font-bold uppercase text-sm hover:bg-white transition"
+            className="flex-1 text-center px-6 py-3 bg-accent text-black font-bold uppercase text-sm hover:bg-yellow-500 transition"
           >
             {t.whatsapp}
           </a>
           <Link
             href={home}
-            className="flex-1 text-center px-6 py-3 border border-white/30 text-white font-bold uppercase text-sm hover:border-accent hover:text-accent transition"
+            className="flex-1 text-center px-6 py-3 border border-gray-300 text-gray-900 font-bold uppercase text-sm hover:border-yellow-500 hover:text-yellow-600 transition"
           >
             {t.site}
           </Link>

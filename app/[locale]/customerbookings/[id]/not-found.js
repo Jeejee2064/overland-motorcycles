@@ -15,12 +15,12 @@ export default function CustomerBookingNotFound() {
   const home = locale === 'en' ? '/' : `/${locale}`;
 
   return (
-    <div className="min-h-screen bg-[#0b0b0b] text-gray-200">
+    <div className="min-h-screen bg-gray-50 text-gray-900">
       <CustomerBrandBar homeHref={home} />
       <main className="max-w-md mx-auto px-4 py-20 text-center">
-        <h1 className="font-heading text-2xl font-bold uppercase text-white mb-3">{t.title}</h1>
-        <p className="text-gray-400 text-sm mb-8">{t.body}</p>
-        <Link href={home} className="inline-block px-6 py-3 bg-accent text-black font-bold uppercase text-sm hover:bg-white transition">
+        <h1 className="font-heading text-2xl font-bold uppercase text-gray-900 mb-3">{t.title}</h1>
+        <p className="text-gray-500 text-sm mb-8">{t.body}</p>
+        <Link href={home} className="inline-block px-6 py-3 bg-accent text-black font-bold uppercase text-sm hover:bg-yellow-500 transition">
           {t.home}
         </Link>
       </main>
