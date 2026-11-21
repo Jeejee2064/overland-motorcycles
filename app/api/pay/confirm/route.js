@@ -97,7 +97,7 @@ if (type === 'initial') {
           from:    process.env.RESEND_FROM_EMAIL,
           to:      [booking.email],
           subject: `✅ Full Payment Received — ${modelLabel}`,
-          html:    `<p>Hi ${booking.first_name}, we have received your full payment of $${totalPaid}. Your booking is confirmed. See you soon!</p>`,
+          html:    `<p>Hi ${booking.first_name}, we have received your full payment of $${parseFloat(totalPaid).toFixed(2)}. Your booking is confirmed. See you soon!</p>`,
         });
       } catch (e) { console.error('Full payment client email error', e); }
 
@@ -106,7 +106,7 @@ if (type === 'initial') {
           from:    process.env.RESEND_FROM_EMAIL,
           to:      ['overlandmotorcycles@gmail.com'],
           subject: `💰 FULL PAYMENT — ${booking.first_name} ${booking.last_name}`,
-          html:    `<p>Full rental payment received.<br/>Booking: ${bookingId}<br/>Pickup: ${booking.pickup_location || 'Panama City'}<br/>Amount: $${totalPaid}<br/>Transaction: ${codOper}</p>`,
+          html:    `<p>Full rental payment received.<br/>Booking: ${bookingId}<br/>Pickup: ${booking.pickup_location || 'Panama City'}<br/>Amount: $${parseFloat(totalPaid).toFixed(2)}<br/>Transaction: ${codOper}</p>`,
         });
       } catch (e) { console.error('Full payment internal email error', e); }
 
@@ -186,7 +186,7 @@ if (type === 'initial') {
           from:    process.env.RESEND_FROM_EMAIL,
           to:      ['overlandmotorcycles@gmail.com'],
           subject: `💰 BALANCE PAID — ${booking.first_name} ${booking.last_name}`,
-          html:    `<p>Remaining balance paid.<br/>Booking: ${bookingId}<br/>Pickup: ${booking.pickup_location || 'Panama City'}<br/>Amount: $${totalPaid}<br/>Transaction: ${codOper}</p>`,
+          html:    `<p>Remaining balance paid.<br/>Booking: ${bookingId}<br/>Pickup: ${booking.pickup_location || 'Panama City'}<br/>Amount: $${parseFloat(totalPaid).toFixed(2)}<br/>Transaction: ${codOper}</p>`,
         });
       } catch (e) { console.error('Balance internal email error', e); }
 

@@ -64,7 +64,7 @@ function BalanceSuccessContent() {
       </h1>
       <p className="text-gray-500 text-sm mb-6">
         {isFull
-          ? t('fullPaidBody', { amount: totalPaid })
+          ? t('fullPaidBody', { amount: (parseFloat(totalPaid) || 0).toFixed(2) })
           : t('balancePaidBody')}
       </p>
       <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-sm text-green-700">

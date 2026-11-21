@@ -229,7 +229,7 @@ const BookingsTab = ({
 
                     {/* Price */}
                     <td className="px-6 py-4 text-sm font-semibold text-gray-900">
-                      ${parseFloat(booking.total_price).toFixed(0)}
+                      ${parseFloat(booking.total_price).toFixed(2)}
                     </td>
 
                     {/* Payments — 3 dots */}

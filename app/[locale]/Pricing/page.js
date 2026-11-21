@@ -185,7 +185,7 @@ const PricingPage = () => {
                             {item.days} {item.days === 1 ? t('day') : t('daysPlural')}
                           </td>
                           <td className="px-6 py-4 text-right text-gray-900 font-bold text-lg">
-                            ${item.price}
+                            ${Number(item.price).toFixed(2)}
                           </td>
                         </motion.tr>
                       ))}

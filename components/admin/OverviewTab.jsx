@@ -22,7 +22,7 @@ const OverviewTab = ({ stats, bookings, messages }) => {
     },
     {
       label: 'Total Revenue',
-      value: `$${stats.totalRevenue.toFixed(0)}`,
+      value: `$${stats.totalRevenue.toFixed(2)}`,
       icon: DollarSign,
       bgColor: 'bg-green-100',
       iconColor: 'text-green-600',

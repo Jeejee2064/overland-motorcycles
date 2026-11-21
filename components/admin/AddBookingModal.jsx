@@ -180,7 +180,7 @@ const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, c
                   <span className="font-semibold">Duration:</span> {calculateDays()} days
                   {calculatePrice() > 0 && (
                     <span className="ml-3">
-                      <span className="font-semibold">Per-bike rate:</span> ${calculatePrice()}
+                      <span className="font-semibold">Per-bike rate:</span> ${Number(calculatePrice()).toFixed(2)}
                     </span>
                   )}
                 </p>
@@ -226,10 +226,10 @@ const AddBookingModal = ({ show, onClose, newBooking, setNewBooking, onSubmit, c
             {newBooking.total_price > 0 && (
               <div className="mt-3 p-4 bg-green-50 border border-green-200 rounded-lg">
                 <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div><span className="text-gray-600">Total Rental:</span><span className="font-bold text-gray-900 ml-2">${newBooking.total_price}</span></div>
-                  <div><span className="text-gray-600">Down Payment:</span><span className="font-bold text-green-600 ml-2">${newBooking.down_payment}</span></div>
-                  <div><span className="text-gray-600">At Pickup:</span><span className="font-bold text-blue-600 ml-2">${(newBooking.total_price - newBooking.down_payment + newBooking.deposit).toFixed(2)}</span></div>
-                  <div><span className="text-gray-600">Deposit:</span><span className="font-bold text-gray-900 ml-2">${newBooking.deposit}</span></div>
+                  <div><span className="text-gray-600">Total Rental:</span><span className="font-bold text-gray-900 ml-2">${(parseFloat(newBooking.total_price) || 0).toFixed(2)}</span></div>
+                  <div><span className="text-gray-600">Down Payment:</span><span className="font-bold text-green-600 ml-2">${(parseFloat(newBooking.down_payment) || 0).toFixed(2)}</span></div>
+                  <div><span className="text-gray-600">At Pickup:</span><span className="font-bold text-blue-600 ml-2">${((parseFloat(newBooking.total_price) || 0) - (parseFloat(newBooking.down_payment) || 0) + (parseFloat(newBooking.deposit) || 0)).toFixed(2)}</span></div>
+                  <div><span className="text-gray-600">Deposit:</span><span className="font-bold text-gray-900 ml-2">${(parseFloat(newBooking.deposit) || 0).toFixed(2)}</span></div>
                 </div>
               </div>
             )}

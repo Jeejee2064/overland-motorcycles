@@ -242,7 +242,7 @@ const fetchBooking = async () => {
                   </div>
                   <div className="flex justify-between pt-2 border-t border-gray-200">
                     <span className="text-gray-600">{t('details.downPayment')}:</span>
-                    <span className="text-green-600 font-bold">${bookingDetails.booking.down_payment} ({t('details.paid')} ✓)</span>
+                    <span className="text-green-600 font-bold">${(parseFloat(bookingDetails.booking.down_payment) || 0).toFixed(2)} ({t('details.paid')} ✓)</span>
                   </div>
                 </div>
               </div>
