@@ -462,13 +462,14 @@ const BookingPage = () => {
   const promoDiscount    = appliedPromo ? appliedPromo.discountAmount : 0;
   const discountedRental = Math.max(0, totalRentalPrice - promoDiscount);
 
-  const itbmsTax         = discountedRental * 0.07;
-  const subtotalWithTax  = discountedRental + itbmsTax;
-  const cardFee          = subtotalWithTax * 0.035;
-  const totalWithAllFees = subtotalWithTax + cardFee;
+  const round2           = (n) => Math.round(n * 100) / 100;
+  const itbmsTax         = round2(discountedRental * 0.07);
+  const subtotalWithTax  = round2(discountedRental + itbmsTax);
+  const cardFee          = round2(subtotalWithTax * 0.035);
+  const totalWithAllFees = round2(subtotalWithTax + cardFee);
   const totalDeposit     = 1000 * numBikes;
-  const downPayment      = totalWithAllFees / 2;
-  const remainingPayment = totalWithAllFees / 2;
+  const downPayment      = round2(totalWithAllFees / 2);
+  const remainingPayment = round2(totalWithAllFees - downPayment);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

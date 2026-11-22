@@ -248,7 +248,7 @@ const AdminDashboardClient = ({ role }) => {
       const numBikes         = newBooking.motorcycle_model === 'CFMoto700' ? 1 : newBooking.bike_quantity;
       const totalRentalPrice = rentalPrice * numBikes;
       const totalDeposit     = 1000 * numBikes;
-      const downPayment      = totalRentalPrice / 2;
+      const downPayment      = Math.round(totalRentalPrice * 100 / 2) / 100;
       setNewBooking(prev => ({
         ...prev,
         total_price:   totalRentalPrice,

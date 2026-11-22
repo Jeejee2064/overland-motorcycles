@@ -225,7 +225,7 @@ export async function POST(request) {
     /* -------------------------------------------------
        7️⃣ Emails
     --------------------------------------------------*/
-    const remainingPayment = updatedBooking.total_price - updatedBooking.down_payment;
+    const remainingPayment = Math.round((updatedBooking.total_price - updatedBooking.down_payment) * 100) / 100;
     const modelLabel       = MODEL_LABELS[motorcycleModel] || motorcycleModel;
     const shortageWarning  = hasShortage;
 

@@ -683,7 +683,7 @@ export default function BookingDetailPage({ bookingId, role }) {
                           className={inputCls + ' px-2'}
                         />
                       ) : (
-                        <p className="font-semibold text-gray-900">${draft[field]}</p>
+                        <p className="font-semibold text-gray-900">${(parseFloat(draft[field]) || 0).toFixed(2)}</p>
                       )}
                     </Field>
                   ))}

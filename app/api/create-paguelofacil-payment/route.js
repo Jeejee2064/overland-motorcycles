@@ -111,8 +111,8 @@ export async function POST(request) {
           bike_quantity:     parseInt(bikeQuantity),
           motorcycle_model:  motorcycleModel,   // ← saved to DB
           pickup_location:   pickupLocation,    // ← saved to DB
-          down_payment:      parseFloat(downPayment),
-          total_price:       parseFloat(totalRentalPrice),
+          down_payment:      Math.round(parseFloat(downPayment) * 100) / 100,
+          total_price:       Math.round(parseFloat(totalRentalPrice) * 100) / 100,
           deposit:           parseFloat(totalDeposit),
           status:            'pending',
           payment_status:    'pending',
