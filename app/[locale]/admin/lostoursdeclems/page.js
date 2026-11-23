@@ -39,6 +39,7 @@ export default async function ToursAdminPage({ params }) {
       image: state.image,
       price: state.price,
       photos: state.gallery.length,
+      hidden: !!row?.published?.hidden,
       hasDraft: !!row?.draft,
       neverPublished: !builtinIds.includes(id) && Object.keys(row?.published ?? {}).length === 0,
       publishedAt: row?.published_at ?? null,

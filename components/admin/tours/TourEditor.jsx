@@ -8,6 +8,7 @@ import {
   ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Eye, ExternalLink, ImagePlus, Loader2, Plus, Rocket, Star, Trash2, X,
 } from 'lucide-react';
 import { COPY_LOCALES, LOCALE_LABELS } from '@/lib/tours-shared';
+import ConfirmDialog from './ConfirmDialog';
 import { uploadTourPhoto } from './photos';
 import { btnGhost, btnPrimary, btnSecondary, field, focus, priceFmt } from './ui';
 
@@ -84,6 +85,8 @@ export default function TourEditor({ tourId, info, initial, initialHasDraft }) {
   const [uploads, setUploads] = useState([]); // placeholders while photos are uploading
   const [dragging, setDragging] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [removeOpen, setRemoveOpen] = useState(false);
+  const [removeError, setRemoveError] = useState(null);
   const fileInput = useRef(null);
   const heroInput = useRef(null);
 
@@ -212,13 +215,13 @@ export default function TourEditor({ tourId, info, initial, initialHasDraft }) {
   };
 
   const remove = async () => {
-    if (!window.confirm('Supprimer définitivement ce tour (textes, photos et prix) ? Il disparaîtra du site.')) return;
     setBusy('delete');
+    setRemoveError(null);
     try {
-      await call('delete', false);
+      await call(info.builtin ? 'remove' : 'delete', false);
       router.push('/admin/lostoursdeclems');
     } catch (e) {
-      setStatus({ type: 'error', text: e.message });
+      setRemoveError(e.message);
       setBusy(null);
     }
   };
@@ -499,17 +502,31 @@ export default function TourEditor({ tourId, info, initial, initialHasDraft }) {
                   </div>
                 </Card>
 
-                <Card title="Supprimer ce tour" hint="Définitif : le tour, ses textes et son prix disparaissent du site.">
-                  <button type="button" onClick={remove} disabled={!!busy}
-                    className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-red-200 text-red-700 font-semibold hover:bg-red-50 disabled:opacity-50 ${focus}`}>
-                    <Trash2 size={16} /> Supprimer ce tour
-                  </button>
-                </Card>
               </>
             )}
+            <Card title={info.builtin ? 'Retirer ce tour du site' : 'Supprimer ce tour'}
+              hint={info.builtin ? 'Le tour n’apparaît plus sur le site. Vous pourrez le remettre en ligne depuis la liste des tours.' : 'Définitif : le tour, ses textes et son prix disparaissent du site.'}>
+              <button type="button" onClick={() => { setRemoveError(null); setRemoveOpen(true); }} disabled={!!busy}
+                className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl border border-red-200 text-red-700 font-semibold hover:bg-red-50 disabled:opacity-50 ${focus}`}>
+                <Trash2 size={16} /> {info.builtin ? 'Retirer ce tour' : 'Supprimer ce tour'}
+              </button>
+            </Card>
           </div>
         )}
       </main>
+
+      {removeOpen && (
+        <ConfirmDialog
+          title={info.builtin ? `Retirer « ${name} » du site ?` : `Supprimer « ${name} » ?`}
+          confirmLabel={info.builtin ? 'Oui, retirer' : 'Oui, supprimer'}
+          busy={busy === 'delete'} error={removeError}
+          onConfirm={remove} onClose={() => setRemoveOpen(false)}
+        >
+          {info.builtin
+            ? 'Les visiteurs ne verront plus ce tour. Vos textes et vos photos sont conservés et vous pourrez le remettre en ligne à tout moment.'
+            : 'Le tour, ses textes, son prix et ses photos seront supprimés définitivement. Cette action ne peut pas être annulée.'}
+        </ConfirmDialog>
+      )}
 
       {/* Actions */}
       <div className="fixed bottom-0 inset-x-0 bg-white border-t border-gray-200 z-30">

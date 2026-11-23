@@ -4,7 +4,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Link } from '@/navigation';
-import { ArrowUpRight, Clock, ImageIcon, LogOut, Pencil, Plus } from 'lucide-react';
+import { ArrowUpRight, Clock, ImageIcon, LogOut, Pencil, Plus, Trash2 } from 'lucide-react';
+import ConfirmDialog from './ConfirmDialog';
 import { btnPrimary, btnSecondary, btnGhost, field, focus, priceFmt } from './ui';
 
 const dateFmt = (iso) =>
@@ -70,6 +71,29 @@ function NewTourDialog({ onClose }) {
 export default function ToursDashboard({ tours, setupError }) {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
+  const [target, setTarget] = useState(null); // tour being removed
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState(null);
+
+  const act = async (tour, action) => {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/admin/tours/${tour.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Action impossible.');
+      setTarget(null);
+      router.refresh();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  };
 
   const logout = async () => {
     await fetch('/api/admin-logout', { method: 'POST' });
@@ -132,10 +156,10 @@ export default function ToursDashboard({ tours, setupError }) {
                 </span>
                 <span
                   className={`absolute top-3 right-3 text-xs font-bold px-3 py-1 rounded-full ${
-                    tour.hasDraft ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'
+                    tour.hidden ? 'bg-gray-200 text-gray-700' : tour.hasDraft ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-800'
                   }`}
                 >
-                  {tour.neverPublished ? 'Nouveau · pas en ligne' : tour.hasDraft ? 'Modifications non publiées' : 'En ligne'}
+                  {tour.hidden ? 'Retiré du site' : tour.neverPublished ? 'Nouveau · pas en ligne' : tour.hasDraft ? 'Modifications non publiées' : 'En ligne'}
                 </span>
               </Link>
               <div className="p-5 flex flex-col flex-1">
@@ -150,15 +174,38 @@ export default function ToursDashboard({ tours, setupError }) {
                   <span className="text-xs text-gray-400">
                     {tour.publishedAt ? `Dernière mise en ligne le ${dateFmt(tour.publishedAt)}` : tour.custom ? 'Jamais mis en ligne' : 'Version d’origine'}
                   </span>
-                  <Link href={`/admin/lostoursdeclems/${tour.id}`} className={btnPrimary}>
-                    <Pencil size={16} /> Modifier
-                  </Link>
+                  <span className="flex items-center gap-1">
+                    {tour.hidden ? (
+                      <button type="button" onClick={() => act(tour, 'restore')} disabled={busy} className={btnGhost}>Remettre en ligne</button>
+                    ) : (
+                      <button type="button" onClick={() => { setError(null); setTarget(tour); }} aria-label={`${tour.custom ? 'Supprimer' : 'Retirer'} ${tour.name}`}
+                        title={tour.custom ? 'Supprimer' : 'Retirer du site'}
+                        className={`w-10 h-10 inline-flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 ${focus}`}>
+                        <Trash2 size={18} />
+                      </button>
+                    )}
+                    <Link href={`/admin/lostoursdeclems/${tour.id}`} className={btnPrimary}>
+                      <Pencil size={16} /> Modifier
+                    </Link>
+                  </span>
                 </div>
               </div>
             </li>
           ))}
         </ul>
       </main>
+      {target && (
+        <ConfirmDialog
+          title={target.custom ? `Supprimer « ${target.name} » ?` : `Retirer « ${target.name} » du site ?`}
+          confirmLabel={target.custom ? 'Oui, supprimer' : 'Oui, retirer'}
+          busy={busy} error={error}
+          onConfirm={() => act(target, target.custom ? 'delete' : 'remove')} onClose={() => setTarget(null)}
+        >
+          {target.custom
+            ? 'Le tour, ses textes, son prix et ses photos seront supprimés définitivement. Cette action ne peut pas être annulée.'
+            : 'Les visiteurs ne verront plus ce tour. Vos textes et vos photos sont conservés et vous pourrez le remettre en ligne à tout moment.'}
+        </ConfirmDialog>
+      )}
       {creating && <NewTourDialog onClose={() => setCreating(false)} />}
     </div>
   );

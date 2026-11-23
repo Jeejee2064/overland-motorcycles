@@ -41,6 +41,18 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ success: true });
     }
 
+    // Built-in tours live in the code: "removing" one hides it from the site (reversible).
+    if (action === 'remove' || action === 'restore') {
+      if (!builtin) return NextResponse.json({ error: 'Action inconnue.' }, { status: 400 });
+      const published = { ...(row?.published ?? {}), hidden: action === 'remove' };
+      const { error } = await supabase
+        .from('tour_content')
+        .upsert({ tour_id: id, published, draft: row?.draft ?? null, updated_at: now }, { onConflict: 'tour_id' });
+      if (error) throw error;
+      refreshPublicSite();
+      return NextResponse.json({ success: true });
+    }
+
     if (action === 'discard') {
       if (!builtin && Object.keys(row.published ?? {}).length === 0) {
         return NextResponse.json({ error: 'Ce tour n’est pas encore en ligne : supprimez-le plutôt.' }, { status: 400 });
@@ -60,6 +72,8 @@ export async function PUT(request, { params }) {
     } catch (e) {
       return NextResponse.json({ error: e.message }, { status: 400 });
     }
+
+    if (row?.published?.hidden) state.hidden = true; // publishing edits does not bring a removed tour back
 
     if (!builtin) {
       // Once online, the page address stays put (links and Google rankings depend on it).

@@ -8,7 +8,7 @@ import TourMapLoader from '@/components/TourMapLoader';
 import TourWhatsAppButton from '@/components/TourWhatsAppButton';
 import { Link } from '@/navigation';
 import { ROUTE_LEGS } from '@/lib/tour-routes';
-import { TOURS, PLACES, formatPrice, whatsappLink } from '@/lib/tours';
+import { PLACES, formatPrice, visibleTours, whatsappLink } from '@/lib/tours';
 import { mediaUrl } from '@/lib/tours-shared';
 import { BASE_URL, breadcrumbSchema, faqSchema, localizedPath } from '@/lib/tours-seo';
 
@@ -93,7 +93,7 @@ export default function TourDetailView({ t, locale, tour, gallery }) {
   const roads = legs.map((leg) => leg.road);
   const boats = legs.filter((leg) => leg.boat).map((leg) => leg.boat);
   const path = [...roads.flat(), ...boats.flat()];
-  const otherTours = [...TOURS, ...t.raw('custom')].filter((other) => other.id !== tour.id);
+  const otherTours = visibleTours(t).filter((other) => other.id !== tour.id);
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-background">

@@ -19,7 +19,7 @@ async function loadTour(locale, slug) {
   const t = await getTranslations({ locale, namespace: 'Tours' });
   // Built-in tours first, then the ones created from /admin/lostoursdeclems.
   const base = getTourBySlug(slug) ?? t.raw('custom').find((tour) => tour.slug === slug);
-  if (!base) return null;
+  if (!base || t.raw('hidden').includes(base.id)) return null;
   const overrides = t.raw('overrides');
   const tour = withOverrides(base, overrides);
   const gallery = overrides?.[tour.id]?.gallery ?? (TOUR_IMAGES[tour.id] ?? []).map(normalizePhoto);

@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/navigation';
-import { TOURS } from '@/lib/tours';
+import { visibleTours } from '@/lib/tours';
 import TourCard from './TourCard';
 
 // Teaser block linking to the tours hub. `tone` follows the background of the host page.
@@ -30,7 +30,7 @@ export default function ToursPromoSection({ tone = 'dark' }) {
         </div>
 
         <div className={`grid sm:grid-cols-2 lg:grid-cols-4 gap-6 ${isDark ? '' : 'bg-background rounded-[2rem] p-6'}`}>
-          {[...TOURS, ...t.raw('custom')].map((tour) => (
+          {visibleTours(t).map((tour) => (
             <TourCard key={tour.id} tour={tour} />
           ))}
         </div>

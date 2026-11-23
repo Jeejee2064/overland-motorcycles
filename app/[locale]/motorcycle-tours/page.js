@@ -7,7 +7,7 @@ import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 import TourCard from '@/components/TourCard';
 import TourWhatsAppButton from '@/components/TourWhatsAppButton';
-import { TOURS, whatsappLink } from '@/lib/tours';
+import { visibleTours, whatsappLink } from '@/lib/tours';
 import {
   BASE_URL,
   buildMetadata,
@@ -43,7 +43,7 @@ export default async function MotorcycleToursPage({ params }) {
   const faq = t.raw('hub.faq');
   const why = t.raw('hub.why');
   const steps = t.raw('hub.steps');
-  const allTours = [...TOURS, ...t.raw('custom')];
+  const allTours = visibleTours(t);
 
   const itemListSchema = {
     '@context': 'https://schema.org',
