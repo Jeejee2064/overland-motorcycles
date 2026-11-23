@@ -22,7 +22,8 @@ export default function AdminPage() {
       });
 
       if (res.ok) {
-        router.push('/admin/ok');
+        const { role } = await res.json().catch(() => ({}));
+        router.push(role === 'tours' ? '/admin/lostoursdeclems' : '/admin/ok');
       } else {
         setError('Incorrect password');
       }

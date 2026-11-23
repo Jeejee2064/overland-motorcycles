@@ -2,11 +2,13 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Clock, Moon, ArrowUpRight } from 'lucide-react';
 import { Link } from '@/navigation';
-import { formatPrice, whatsappLink } from '@/lib/tours';
+import { formatPrice, whatsappLink, withOverrides } from '@/lib/tours';
 import TourWhatsAppButton from './TourWhatsAppButton';
 
-export default function TourCard({ tour, priority = false }) {
+export default function TourCard({ tour: baseTour, priority = false }) {
   const t = useTranslations('Tours');
+  // Price / photo edited from /admin/lostoursdeclems.
+  const tour = withOverrides(baseTour, t.raw('overrides'));
   const name = t(`items.${tour.id}.name`);
   const href = `/motorcycle-tours/${tour.slug}`;
   const waHref = whatsappLink(t('common.waMessage', { name, days: tour.days }));

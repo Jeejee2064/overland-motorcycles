@@ -1,7 +1,8 @@
 import { getRequestConfig } from 'next-intl/server';
 import { routing } from '../routing';
+import { applyPublishedContent } from '@/lib/tours-content';
 
-// Tours copy exists in en/es/fr; other locales (pt) fall back to the English copy.
+// Tours copy exists in en/es/fr/pt; unknown locales fall back to the English copy.
 const TOURS_LOCALES = ['en', 'es', 'fr', 'pt'];
 
 export default getRequestConfig(async ({ requestLocale }) => {
@@ -14,12 +15,14 @@ export default getRequestConfig(async ({ requestLocale }) => {
   }
 
   const toursLocale = TOURS_LOCALES.includes(locale) ? locale : 'en';
+  const tours = (await import(`../messages/tours.${toursLocale}.json`)).default;
 
   return {
     locale,
     messages: {
       ...(await import(`../messages/${locale}.json`)).default,
-      Tours: (await import(`../messages/tours.${toursLocale}.json`)).default,
+      // Built-in tour copy + whatever was edited and published from /admin/lostoursdeclems.
+      Tours: await applyPublishedContent(toursLocale, tours),
     }
   };
 });

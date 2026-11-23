@@ -30,7 +30,7 @@ export default function ToursPromoSection({ tone = 'dark' }) {
         </div>
 
         <div className={`grid sm:grid-cols-2 lg:grid-cols-4 gap-6 ${isDark ? '' : 'bg-background rounded-[2rem] p-6'}`}>
-          {TOURS.map((tour) => (
+          {[...TOURS, ...t.raw('custom')].map((tour) => (
             <TourCard key={tour.id} tour={tour} />
           ))}
         </div>

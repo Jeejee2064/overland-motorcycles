@@ -43,12 +43,13 @@ export default async function MotorcycleToursPage({ params }) {
   const faq = t.raw('hub.faq');
   const why = t.raw('hub.why');
   const steps = t.raw('hub.steps');
+  const allTours = [...TOURS, ...t.raw('custom')];
 
   const itemListSchema = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: t('hub.heroTitle'),
-    itemListElement: TOURS.map((tour, index) => ({
+    itemListElement: allTours.map((tour, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: t(`items.${tour.id}.name`),
@@ -118,7 +119,7 @@ export default async function MotorcycleToursPage({ params }) {
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">{t('hub.toursSubtitle')}</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {TOURS.map((tour, index) => (
+            {allTours.map((tour, index) => (
               <TourCard key={tour.id} tour={tour} priority={index < 2} />
             ))}
           </div>

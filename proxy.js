@@ -1,14 +1,27 @@
 import { NextResponse } from 'next/server';
 import createMiddleware from 'next-intl/middleware';
 import { routing } from './routing';
-import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from './lib/admin-auth';
+import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken, canEditTours } from './lib/admin-auth';
 
 const intlMiddleware = createMiddleware(routing);
 
 const ADMIN_OK_PATTERN = /^\/(?:(en|es|pt|fr)\/)?admin\/(?:ok|lepetitcoindecharly)(\/.*)?$/;
 
+const ADMIN_TOURS_PATTERN = /^\/(?:(en|es|pt|fr)\/)?admin\/lostoursdeclems(\/.*)?$/;
+
 export default async function proxy(request) {
   const { pathname } = request.nextUrl;
+
+  const toursMatch = pathname.match(ADMIN_TOURS_PATTERN);
+  if (toursMatch) {
+    const allowed = await canEditTours((name) => request.cookies.get(name)?.value);
+    if (!allowed) {
+      const localePrefix = toursMatch[1] ? `/${toursMatch[1]}` : '';
+      return NextResponse.redirect(new URL(`${localePrefix}/admin`, request.url));
+    }
+    return intlMiddleware(request);
+  }
+
   const match = pathname.match(ADMIN_OK_PATTERN);
 
   if (match) {
