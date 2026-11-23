@@ -1,48 +1,15 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { Check, Shield, Calendar, DollarSign, FileText } from 'lucide-react';
 
+import { DEFAULT_PRICING, fetchPricing } from '@/lib/pricing';
 import Navigation from '../../../components/Navigation';
 import Footer from '../../../components/Footer';
 import ButtonPrimary from '../../../components/ButtonPrimary';
 import ToursPromoSection from '../../../components/ToursPromoSection';
-
-const HIMALAYAN_PRICING = [
-  { days: 2,  price: 280 },
-  { days: 3,  price: 400 },
-  { days: 4,  price: 530 },
-  { days: 5,  price: 660 },
-  { days: 6,  price: 790 },
-  { days: 7,  price: 899 },
-  { days: 8,  price: 1010 },
-  { days: 9,  price: 1175 },
-  { days: 10, price: 1230 },
-  { days: 11, price: 1290 },
-  { days: 12, price: 1350 },
-  { days: 13, price: 1380 },
-  { days: 14, price: 1420 },
-  { days: 21, price: 1800 },
-];
-
-const CFMOTO_PRICING = [
-  { days: 2,  price: 340 },
-  { days: 3,  price: 480 },
-  { days: 4,  price: 640 },
-  { days: 5,  price: 790 },
-  { days: 6,  price: 950 },
-  { days: 7,  price: 1080 },
-  { days: 8,  price: 1210 },
-  { days: 9,  price: 1410 },
-  { days: 10, price: 1480 },
-  { days: 11, price: 1550 },
-  { days: 12, price: 1620 },
-  { days: 13, price: 1660 },
-  { days: 14, price: 1700 },
-  { days: 21, price: 2160 },
-];
 
 const MODELS = [
   {
@@ -51,7 +18,7 @@ const MODELS = [
     cc: '450cc',
     type: 'Adventure Touring',
     qty: 'Fleet of 6',
-    pricing: HIMALAYAN_PRICING,
+    pricingKey: 'Himalayan',
     accent: 'yellow',
     bookParam: '?model=Himalayan',
   },
@@ -61,7 +28,7 @@ const MODELS = [
     cc: '700cc',
     type: 'Sport Adventure',
     qty: '1 Available',
-    pricing: CFMOTO_PRICING,
+    pricingKey: 'CFMoto700',
     accent: 'orange',
     bookParam: '?model=CFMoto700',
   },
@@ -70,6 +37,8 @@ const MODELS = [
 const PricingPage = () => {
   const t = useTranslations('PricingPage');
   const [activeModel, setActiveModel] = useState('himalayan');
+  const [pricingTables, setPricingTables] = useState(DEFAULT_PRICING);
+  useEffect(() => { fetchPricing().then(setPricingTables); }, []);
 
   const currentModel = MODELS.find(m => m.id === activeModel);
 
@@ -173,7 +142,7 @@ const PricingPage = () => {
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-200">
-                      {currentModel.pricing.map((item, index) => (
+                      {(pricingTables[currentModel.pricingKey] ?? []).filter(p => p.days >= 2).map((item, index) => (
                         <motion.tr
                           key={item.days}
                           initial={{ opacity: 0, x: -10 }}

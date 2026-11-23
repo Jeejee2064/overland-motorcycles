@@ -15,26 +15,10 @@ import Footer from '../../../components/Footer';
 import BookingCalendar from '../../../components/BookingCalendar';
 import CFMotoCalendar from '../../../components/CFMotoCalendar';
 import { checkBikesAvailableByModel } from '@/lib/supabase/bookings';
+import { DEFAULT_PRICING, fetchPricing } from '@/lib/pricing';
 import { trackEvent, getSessionId, getVisitorId } from '@/lib/analytics/track';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
-
-// ─── Pricing tables ───────────────────────────────────────────
-const HIMALAYAN_PRICING = [
-  { days: 1,  price: 280 }, { days: 2,  price: 280 }, { days: 3,  price: 400 },
-  { days: 4,  price: 530 }, { days: 5,  price: 660 }, { days: 6,  price: 790 },
-  { days: 7,  price: 899 }, { days: 8,  price: 1010 }, { days: 9,  price: 1175 },
-  { days: 10, price: 1230 }, { days: 11, price: 1290 }, { days: 12, price: 1350 },
-  { days: 13, price: 1380 }, { days: 14, price: 1420 }, { days: 21, price: 1800 },
-];
-
-const CFMOTO_PRICING = [
-  { days: 1,  price: 340 }, { days: 2,  price: 340 }, { days: 3,  price: 480 },
-  { days: 4,  price: 640 }, { days: 5,  price: 790 }, { days: 6,  price: 950 },
-  { days: 7,  price: 1080 }, { days: 8,  price: 1210 }, { days: 9,  price: 1410 },
-  { days: 10, price: 1480 }, { days: 11, price: 1550 }, { days: 12, price: 1620 },
-  { days: 13, price: 1660 }, { days: 14, price: 1700 }, { days: 21, price: 2160 },
-];
 
 // ─── Modal ────────────────────────────────────────────────────
 const Modal = ({ isOpen, onClose, type, message, onConfirm, t }) => {
@@ -243,7 +227,6 @@ const BookingPage = () => {
       shortLabel: t('modelHimalayanShort'),
       cc: '450cc',
       maxBikes: 6,
-      pricing: HIMALAYAN_PRICING,
       image: '/himalayan.jpg',
       specs: [t('modelHimalayanSpec1'), t('modelHimalayanSpec2'), t('modelHimalayanSpec3')],
     },
@@ -253,11 +236,13 @@ const BookingPage = () => {
       shortLabel: t('modelCFMotoShort'),
       cc: '700cc',
       maxBikes: 1,
-      pricing: CFMOTO_PRICING,
       image: '/CFMoto.jpeg',
       specs: [t('modelCFMotoSpec1'), t('modelCFMotoSpec2'), t('modelCFMotoSpec3')],
     },
   };
+
+  const [pricingTables, setPricingTables]       = useState(DEFAULT_PRICING);
+  useEffect(() => { fetchPricing().then(setPricingTables); }, []);
 
   const [currentStep, setCurrentStep]             = useState(1);
   const [selectedLocation, setSelectedLocation]   = useState(null);
@@ -327,7 +312,7 @@ const BookingPage = () => {
   const closeModal = () => setModal({ isOpen: false, type: 'info', message: '', onConfirm: null });
 
   const currentModelConfig = selectedModel ? MODELS[selectedModel] : null;
-  const currentPricing     = currentModelConfig?.pricing ?? HIMALAYAN_PRICING;
+  const currentPricing     = pricingTables[selectedModel] ?? pricingTables.Himalayan;
 
   const parseLocalDate = (dateStr) => {
     if (!dateStr) return new Date();

@@ -5,7 +5,7 @@ import { ADMIN_SESSION_COOKIE, verifyAdminSessionToken } from './lib/admin-auth'
 
 const intlMiddleware = createMiddleware(routing);
 
-const ADMIN_OK_PATTERN = /^\/(?:(en|es|pt|fr)\/)?admin\/ok(\/.*)?$/;
+const ADMIN_OK_PATTERN = /^\/(?:(en|es|pt|fr)\/)?admin\/(?:ok|lepetitcoindecharly)(\/.*)?$/;
 
 export default async function proxy(request) {
   const { pathname } = request.nextUrl;
