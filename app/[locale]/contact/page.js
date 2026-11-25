@@ -50,20 +50,17 @@ const ContactPage = () => {
         message: ''
       });
 
-      // Also submit to Formspree as backup
-      const formspreeData = new FormData();
-      formspreeData.append('name', formData.name);
-      formspreeData.append('email', formData.email);
-      formspreeData.append('phone', formData.phone);
-      formspreeData.append('message', formData.message);
-
-      fetch('https://formspree.io/f/xblzydjy', {
+      // Notify the admin by email (our own API, via Resend) - non-blocking
+      fetch('/api/contact-notification', {
         method: 'POST',
-        body: formspreeData,
-        headers: {
-          'Accept': 'application/json'
-        }
-      }).catch(err => console.log('Formspree backup failed:', err));
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message
+        })
+      }).catch(err => console.log('Contact notification failed:', err));
 
     } catch (error) {
       console.error('Message error:', error);
