@@ -15,7 +15,7 @@ import Footer from '../../../components/Footer';
 import BookingCalendar from '../../../components/BookingCalendar';
 import CFMotoCalendar from '../../../components/CFMotoCalendar';
 import { checkBikesAvailableByModel } from '@/lib/supabase/bookings';
-import { DEFAULT_PRICING, fetchPricing } from '@/lib/pricing';
+import { DEFAULT_PRICING, fetchPricingData, tiersForRental, computeRentalPrice } from '@/lib/pricing';
 import { trackEvent, getSessionId, getVisitorId } from '@/lib/analytics/track';
 import PhoneInput from 'react-phone-number-input';
 import 'react-phone-number-input/style.css';
@@ -242,7 +242,8 @@ const BookingPage = () => {
   };
 
   const [pricingTables, setPricingTables]       = useState(DEFAULT_PRICING);
-  useEffect(() => { fetchPricing().then(setPricingTables); }, []);
+  const [pricingPeriods, setPricingPeriods]     = useState([]);
+  useEffect(() => { fetchPricingData().then(d => { setPricingTables(d.pricing); setPricingPeriods(d.periods); }); }, []);
 
   const [currentStep, setCurrentStep]             = useState(1);
   const [selectedLocation, setSelectedLocation]   = useState(null);
@@ -312,7 +313,6 @@ const BookingPage = () => {
   const closeModal = () => setModal({ isOpen: false, type: 'info', message: '', onConfirm: null });
 
   const currentModelConfig = selectedModel ? MODELS[selectedModel] : null;
-  const currentPricing     = pricingTables[selectedModel] ?? pricingTables.Himalayan;
 
   const parseLocalDate = (dateStr) => {
     if (!dateStr) return new Date();
@@ -426,17 +426,7 @@ const BookingPage = () => {
   const calculatePrice = () => {
     const days = calculateDays();
     if (days === 0) return 0;
-    const exact  = currentPricing.find(p => p.days === days);
-    if (exact) return exact.price;
-    const sorted = [...currentPricing].sort((a, b) => a.days - b.days);
-    for (let i = 0; i < sorted.length - 1; i++) {
-      if (days > sorted[i].days && days < sorted[i + 1].days) return sorted[i + 1].price;
-    }
-    if (days > 21) {
-      const last = sorted[sorted.length - 1];
-      return Math.round((last.price / last.days) * days);
-    }
-    return 0;
+    return computeRentalPrice(tiersForRental(pricingTables, pricingPeriods, selectedModel ?? 'Himalayan', startDate), days);
   };
 
   const rentalPrice      = calculatePrice();

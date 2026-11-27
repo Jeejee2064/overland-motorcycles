@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { DEFAULT_PRICING, PRICING_MODELS, fetchPricing } from '@/lib/pricing';
+import PeriodsEditor, { ViewSwitch } from './PeriodsEditor';
 
 const MODELS = {
   Himalayan: { name: 'Royal Enfield Himalayan', cc: '450 cc' },
@@ -25,6 +26,7 @@ export default function PricingEditor() {
   const [saving, setSaving] = useState(false);
   const [simDays, setSimDays] = useState('5');
   const [curve, setCurve] = useState({});
+  const [view, setView] = useState('standard');
 
   useEffect(() => {
     fetchPricing().then((p) => {
@@ -51,6 +53,7 @@ export default function PricingEditor() {
   }, [rows]);
   const hasProblems = problems.some(Boolean) || !rows.some((r) => Number(r.days) === BASE_DAYS);
 
+  if (view === 'periods') return <PeriodsEditor view={view} onViewChange={setView} />;
   if (!pricing) return <div className="min-h-screen bg-gray-50 flex items-center justify-center text-gray-400">Chargement…</div>;
 
   const setRows = (next) => { setPricing({ ...pricing, [model]: next }); setCurve({ ...curve, [model]: null }); setStatus(null); };
@@ -124,6 +127,8 @@ export default function PricingEditor() {
       </header>
 
       <main className="max-w-2xl mx-auto px-5 py-8 pb-36 space-y-6">
+        <ViewSwitch view={view} onChange={setView} />
+
         {/* Moto */}
         <div role="tablist" aria-label="Moto" className="flex gap-2 flex-wrap">
           {PRICING_MODELS.map((m) => {

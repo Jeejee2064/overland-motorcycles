@@ -25,5 +25,13 @@ export async function GET() {
   for (const row of data) {
     (pricing[row.model] ??= []).push({ days: row.days, price: Number(row.price) });
   }
-  return NextResponse.json({ pricing }, { headers: { 'Cache-Control': 'no-store' } });
+  // Seasonal periods are optional: if the table isn't there yet, serve none.
+  const { data: periodRows, error: periodError } = await supabase
+    .from('pricing_periods')
+    .select('id, name, start_date, end_date, tiers')
+    .order('start_date', { ascending: true });
+  if (periodError) console.error('Error reading pricing_periods:', periodError);
+  const periods = periodError ? [] : periodRows;
+
+  return NextResponse.json({ pricing, periods }, { headers: { 'Cache-Control': 'no-store' } });
 }

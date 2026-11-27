@@ -17,41 +17,7 @@ import AddBookingModal from '@/components/admin/AddBookingModal';
 import BookingLinkGeneratorTab from '@/components/admin/BookingLinkGeneratorTab';
 import RevenueTab from '@/components/admin/RevenueTab';
 import AnalyticsTab from '@/components/admin/AnalyticsTab';
-
-const HIMALAYAN_PRICING = [
-  { days: 1,  price: 280 }, { days: 2,  price: 280 }, { days: 3,  price: 400 },
-  { days: 4,  price: 530 }, { days: 5,  price: 660 }, { days: 6,  price: 790 },
-  { days: 7,  price: 899 }, { days: 8,  price: 1010 }, { days: 9,  price: 1175 },
-  { days: 10, price: 1230 }, { days: 11, price: 1290 }, { days: 12, price: 1350 },
-  { days: 13, price: 1380 }, { days: 14, price: 1420 }, { days: 21, price: 1800 },
-];
-
-const CFMOTO_PRICING = [
-  { days: 1,  price: 340 }, { days: 2,  price: 340 }, { days: 3,  price: 480 },
-  { days: 4,  price: 640 }, { days: 5,  price: 790 }, { days: 6,  price: 950 },
-  { days: 7,  price: 1080 }, { days: 8,  price: 1210 }, { days: 9,  price: 1410 },
-  { days: 10, price: 1480 }, { days: 11, price: 1550 }, { days: 12, price: 1620 },
-  { days: 13, price: 1660 }, { days: 14, price: 1700 }, { days: 21, price: 2160 },
-];
-
-export const getPricingTable = (model) =>
-  model === 'CFMoto700' ? CFMOTO_PRICING : HIMALAYAN_PRICING;
-
-export const calculatePriceForModel = (days, model) => {
-  if (days === 0) return 0;
-  const table  = getPricingTable(model);
-  const exact  = table.find(p => p.days === days);
-  if (exact) return exact.price;
-  const sorted = [...table].sort((a, b) => a.days - b.days);
-  for (let i = 0; i < sorted.length - 1; i++) {
-    if (days > sorted[i].days && days < sorted[i + 1].days) return sorted[i + 1].price;
-  }
-  if (days > 21) {
-    const last = sorted[sorted.length - 1];
-    return Math.round((last.price / last.days) * days);
-  }
-  return 0;
-};
+import { DEFAULT_PRICING, fetchPricingData, tiersForRental, computeRentalPrice } from '@/lib/pricing';
 
 const VALID_TABS = ['calendar', 'bookings', 'messages', 'overview', 'motorcycles', 'revenue', 'newsletter', 'analytics', 'link-generator'];
 const CORONADO_TABS = ['calendar', 'bookings'];
@@ -240,7 +206,13 @@ const AdminDashboardClient = ({ role }) => {
     return Math.round(Math.abs(end - start) / (1000 * 60 * 60 * 24)) + 1;
   };
 
-  const calculatePrice = () => calculatePriceForModel(calculateDays(), newBooking.motorcycle_model);
+  const [livePricing, setLivePricing] = useState({ pricing: DEFAULT_PRICING, periods: [] });
+  useEffect(() => { fetchPricingData().then(setLivePricing); }, []);
+
+  const calculatePrice = () => computeRentalPrice(
+    tiersForRental(livePricing.pricing, livePricing.periods, newBooking.motorcycle_model, newBooking.start_date),
+    calculateDays()
+  );
 
   useEffect(() => {
     if (newBooking.start_date && newBooking.end_date) {
@@ -257,7 +229,7 @@ const AdminDashboardClient = ({ role }) => {
         bike_quantity: prev.motorcycle_model === 'CFMoto700' ? 1 : prev.bike_quantity,
       }));
     }
-  }, [newBooking.start_date, newBooking.end_date, newBooking.bike_quantity, newBooking.motorcycle_model]);
+  }, [newBooking.start_date, newBooking.end_date, newBooking.bike_quantity, newBooking.motorcycle_model, livePricing]);
 
   useEffect(() => {
     const qty = newBooking.motorcycle_model === 'CFMoto700' ? 1 : newBooking.bike_quantity;
